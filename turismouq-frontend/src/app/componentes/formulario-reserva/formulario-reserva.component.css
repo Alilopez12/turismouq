@@ -1,0 +1,561 @@
+/* ==========================================================================
+   FORMULARIO DE RESERVA — EXPEDIA / AIRBNB CHECKOUT & LIVE FEED
+   ========================================================================== */
+
+.encabezado-checkout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.badges-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge-plsql-proc {
+  font-family: var(--fuente-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: var(--color-acento-indigo-claro);
+  color: var(--color-acento-indigo);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.encabezado-checkout h2 {
+  font-size: 1.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.subtexto {
+  color: var(--color-texto-apagado);
+  font-size: 0.92rem;
+}
+
+.cuadricula-reservas {
+  display: grid;
+  grid-template-columns: 1.05fr 1.35fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .cuadricula-reservas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Checkout Card */
+.tarjeta-checkout {
+  padding: 1.85rem;
+  border-radius: 20px;
+}
+
+.bloque-paso {
+  margin-bottom: 0.5rem;
+}
+
+.cabecera-paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.numero-paso {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--color-secundario);
+  color: #FFFFFF;
+  font-family: var(--fuente-titulos);
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.titulo-paso {
+  font-size: 1.08rem;
+  margin-bottom: 0.15rem;
+  color: var(--color-secundario);
+}
+
+.subtitulo-paso {
+  font-size: 0.82rem;
+  color: var(--color-texto-apagado);
+}
+
+.subtitulo-paso code {
+  font-size: 0.76rem;
+  background: #F1F5F9;
+  color: var(--color-secundario);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.divisor-pasos {
+  height: 1px;
+  background: var(--color-borde);
+  margin: 1.35rem 0;
+}
+
+.fila-formulario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 560px) {
+  .fila-formulario {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-icono-caja {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icono-input {
+  position: absolute;
+  left: 0.85rem;
+  width: 17px;
+  height: 17px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.control-input.con-icono {
+  padding-left: 2.55rem;
+}
+
+.btn-confirmar-checkout {
+  margin-top: 1rem;
+}
+
+/* Voucher Recién Creado */
+.voucher-confirmado {
+  background: linear-gradient(135deg, #1E243A 0%, #0F172A 100%);
+  color: #FFFFFF;
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.voucher-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+  margin-bottom: 1rem;
+}
+
+.etiqueta-voucher {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #FDA4AF;
+  margin-bottom: 0.2rem;
+}
+
+.voucher-cabecera h4 {
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.codigo-voucher {
+  font-family: var(--fuente-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  padding: 0.28rem 0.75rem;
+  border-radius: 8px;
+}
+
+.voucher-cuerpo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+.dato-voucher {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.dato-voucher small {
+  font-size: 0.72rem;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dato-voucher strong {
+  font-size: 0.92rem;
+  color: #F8FAFC;
+}
+
+.total-voucher {
+  color: #FDA4AF !important;
+  font-size: 1.08rem !important;
+}
+
+/* Feed de Reservas Recientes */
+.tarjeta-feed {
+  padding: 1.65rem;
+  border-radius: 20px;
+}
+
+.cabecera-feed {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.cabecera-feed h3 {
+  margin-bottom: 0.2rem;
+}
+
+.texto-ayuda {
+  color: var(--color-texto-apagado);
+  font-size: 0.85rem;
+}
+
+.texto-ayuda code {
+  background: #F1F5F9;
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  color: var(--color-acento-indigo);
+}
+
+.pildora-contador-feed {
+  background: #F1F5F9;
+  color: var(--color-secundario);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.id-transaccion {
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+  background: #F1F5F9;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+}
+
+.celda-cliente {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.avatar-cliente {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primario-claro);
+  color: var(--color-primario-oscuro);
+  font-family: var(--fuente-titulos);
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nombre-cliente {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--color-secundario);
+  line-height: 1.2;
+}
+
+.doc-cliente {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  color: var(--color-texto-apagado);
+}
+
+.fechas-estadia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.76rem;
+}
+
+.fecha-tag {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  color: #334155;
+}
+
+.flecha-fecha {
+  color: var(--color-primario);
+  font-weight: 700;
+}
+
+.monto-reserva {
+  font-family: var(--fuente-titulos);
+  font-size: 0.96rem;
+  color: var(--color-secundario);
+}
+
+/* ==========================================================================
+   BANCO DE PRUEBAS DOCENTE (TEST BENCH PL/SQL)
+   ========================================================================== */
+.banner-banco-pruebas {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  border-radius: 18px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+  color: #FFFFFF;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.banco-pruebas-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.badges-banco {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.45rem;
+}
+
+.insignia-banco {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: rgba(224, 86, 36, 0.25);
+  color: #FF8A65;
+  border: 1px solid rgba(224, 86, 36, 0.4);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.badge-docente {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.25);
+  color: #93C5FD;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.banco-pruebas-titulo h3 {
+  font-size: 1.25rem;
+  color: #FFFFFF;
+  margin: 0 0 0.3rem 0;
+  font-family: var(--fuente-titulos);
+}
+
+.banco-pruebas-titulo p {
+  color: #94A3B8;
+  font-size: 0.86rem;
+  margin: 0;
+  max-width: 650px;
+}
+
+.banco-pruebas-titulo p code {
+  background: rgba(255, 255, 255, 0.12);
+  color: #E2E8F0;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+}
+
+.badge-caso {
+  font-family: var(--fuente-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  letter-spacing: 0.03em;
+}
+
+.badge-caso.badge-exito {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.badge-caso.badge-error {
+  background: rgba(239, 68, 68, 0.25);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.banco-pruebas-botones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+  .banco-pruebas-botones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .banco-pruebas-botones {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn-prueba {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: #FFFFFF;
+}
+
+.btn-prueba:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-prueba.activo {
+  border-color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+}
+
+.btn-prueba-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+.btn-codigo {
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+}
+
+.codigo-commit {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34D399;
+}
+
+.codigo-20001 {
+  background: rgba(245, 158, 11, 0.25);
+  color: #FBBF24;
+}
+
+.codigo-20003 {
+  background: rgba(139, 92, 246, 0.25);
+  color: #C084FC;
+}
+
+.codigo-20002 {
+  background: rgba(239, 68, 68, 0.25);
+  color: #F87171;
+}
+
+.btn-tag {
+  font-size: 0.7rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.btn-tag.tag-error {
+  color: #F87171;
+}
+
+.btn-nombre {
+  font-size: 0.92rem;
+  color: #FFFFFF;
+  font-family: var(--fuente-titulos);
+}
+
+.btn-desc {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  line-height: 1.25;
+}
+
+.banco-pruebas-detalle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.84rem;
+  color: #E2E8F0;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.icono-info-banco {
+  color: #38BDF8;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.texto-info-banco strong {
+  color: #FFFFFF;
+  margin-right: 0.35rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

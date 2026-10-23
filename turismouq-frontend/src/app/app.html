@@ -1,0 +1,141 @@
+<header class="barra-navegacion">
+  <div class="contenedor-barra">
+    <!-- Marca / Brand -->
+    <a routerLink="/catalogo" class="marca">
+      <div class="logo-emblema" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 19.5h20L12 2z" />
+          <path d="M12 10.5l-4.5 9h9l-4.5-9z" fill="rgba(255,255,255,0.28)" />
+          <circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+        </svg>
+      </div>
+      <div class="marca-textos">
+        <div class="marca-linea-superior">
+          <span class="marca-titulo">TurismoUQ</span>
+          <span class="marca-badge">2026</span>
+        </div>
+        <p class="marca-subtitulo">QuindíoStays · Oracle 21c</p>
+      </div>
+    </a>
+
+    <!-- Floating Segmented Pill Navigation Dock -->
+    <nav class="muelle-navegacion" aria-label="Navegación Principal">
+      <a routerLink="/catalogo" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+        <span>Explorar Destinos</span>
+      </a>
+
+      <a routerLink="/reservas" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <path d="M9 16l2 2 4-4"></path>
+        </svg>
+        <span>Reservar Estadía</span>
+      </a>
+
+      <a routerLink="/liquidaciones" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+          <line x1="6" y1="15" x2="10" y2="15"></line>
+        </svg>
+        <span>Liquidar Lotes</span>
+      </a>
+
+      <a routerLink="/analitica" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Data Studio (8 SQL)</span>
+      </a>
+
+      <a routerLink="/auditoria" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <polyline points="9 12 11 14 15 10"></polyline>
+        </svg>
+        <span>Auditoría</span>
+      </a>
+
+      <a routerLink="/tablespace" routerLinkActive="activo" class="enlace-pildora">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+        </svg>
+        <span>Tablespace Storage</span>
+      </a>
+    </nav>
+
+    <!-- Estado Motor Oracle -->
+    <div class="estado-motor">
+      <div class="pildora-estado" title="Conexión activa al motor Oracle Database 21c Express Edition">
+        <span class="punto-pulso"></span>
+        <span class="texto-estado">XEPDB1 Online</span>
+        <span class="tag-plsql">PL/SQL</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="cuerpo-aplicacion">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="pie-pagina">
+  <div class="contenedor">
+    <div class="cuadricula-pie">
+      <div class="columna-pie">
+        <div class="marca-pie">
+          <div class="logo-emblema-mini">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 19.5h20L12 2z" />
+            </svg>
+          </div>
+          <span class="titulo-pie-marca">TurismoUQ · QuindíoStays</span>
+        </div>
+        <p class="descripcion-pie">
+          Plataforma de reservas turísticas, liquidación masiva de anfitriones y analítica avanzada sobre motor relacional Oracle Database 21c XE.
+        </p>
+      </div>
+
+      <div class="columna-pie">
+        <h4 class="titulo-columna-pie">Arquitectura PL/SQL & Storage</h4>
+        <ul class="lista-pie">
+          <li><code>TBS_HISTORICO_RESERVAS</code> · Storage Engine & ILM</li>
+          <li><code>PKG_TURISMO_UQ.fn_valor_estadia</code> · Cotizador ponderado</li>
+          <li><code>PKG_TURISMO_UQ.sp_crear_reserva</code> · Transacción atómica</li>
+          <li><code>PKG_TURISMO_UQ.sp_liquidar_reservas</code> · Cursor explícito</li>
+          <li><code>TRG_AUDITORIA_TARIFA_STMT</code> · Trazabilidad de tarifas</li>
+        </ul>
+      </div>
+
+      <div class="columna-pie">
+        <h4 class="titulo-columna-pie">Contexto Académico</h4>
+        <p class="texto-institucional">
+          <strong>Proyecto Integrador · Bases de Datos II (12338)</strong><br />
+          Universidad del Quindío · Facultad de Ingeniería<br />
+          Programa de Ingeniería de Sistemas y Computación · Armenia, Quindío
+        </p>
+      </div>
+    </div>
+
+    <div class="barra-inferior-pie">
+      <span>© 2026 TurismoUQ · QuindíoStays. Todos los derechos reservados.</span>
+      <div class="etiquetas-pie">
+        <span class="chip-pie">60 Alojamientos</span>
+        <span class="chip-pie">12 Municipios</span>
+        <span class="chip-pie">TBS_HISTORICO (9.3 MB)</span>
+        <span class="chip-pie">Oracle 21c XEPDB1</span>
+      </div>
+    </div>
+  </div>
+</footer>

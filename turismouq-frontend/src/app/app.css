@@ -1,0 +1,343 @@
+/* ==========================================================================
+   GLOBAL SHELL — AIRBNB FLOATING GLASS HEADER & SEGMENTED PILL DOCK
+   ========================================================================== */
+
+.barra-navegacion {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-borde);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: box-shadow 0.2s ease;
+}
+
+.contenedor-barra {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0.7rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Brand Left */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-emblema {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(255, 56, 92, 0.28);
+  transition: transform 0.2s ease;
+}
+
+.marca:hover .logo-emblema {
+  transform: scale(1.04) rotate(-2deg);
+}
+
+.marca-textos {
+  display: flex;
+  flex-direction: column;
+}
+
+.marca-linea-superior {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.marca-titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-primario);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.marca-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--color-primario-claro);
+  color: var(--color-primario-oscuro);
+  padding: 0.12rem 0.42rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+
+.marca-subtitulo {
+  font-size: 0.72rem;
+  color: var(--color-texto-apagado);
+  font-weight: 500;
+  margin: 0.1rem 0 0 0;
+}
+
+/* Center Floating Segmented Pill Dock */
+.muelle-navegacion {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: #F3F4F6;
+  padding: 0.28rem;
+  border-radius: 9999px;
+  border: 1px solid #E5E7EB;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.enlace-pildora {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.46rem 0.82rem;
+  border-radius: 9999px;
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: #4B5563;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.icono-nav {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.enlace-pildora:hover {
+  color: var(--color-secundario);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.enlace-pildora.activo {
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.28);
+}
+
+.enlace-pildora.activo .icono-nav {
+  transform: scale(1.06);
+}
+
+/* Right Engine Status Pill */
+.estado-motor {
+  flex-shrink: 0;
+}
+
+.pildora-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde-fuerte);
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.punto-pulso {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #0284C7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+  animation: pulsoMotor 2s infinite;
+}
+
+@keyframes pulsoMotor {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(2, 132, 199, 0.05);
+  }
+}
+
+.texto-estado {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.tag-plsql {
+  font-family: var(--fuente-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  background: var(--color-acento-indigo-claro);
+  color: var(--color-acento-indigo);
+  padding: 0.1rem 0.38rem;
+  border-radius: 6px;
+}
+
+/* Main Content Area */
+.cuerpo-aplicacion {
+  min-height: calc(100vh - 260px);
+}
+
+/* Responsive Navigation */
+@media (max-width: 1240px) {
+  .contenedor-barra {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .muelle-navegacion {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .estado-motor {
+    display: none;
+  }
+
+  .enlace-pildora {
+    padding: 0.42rem 0.7rem;
+    font-size: 0.76rem;
+  }
+}
+
+/* ==========================================================================
+   EDITORIAL 3-COLUMN FOOTER
+   ========================================================================== */
+
+.pie-pagina {
+  background: var(--color-secundario);
+  color: #CBD5E1;
+  padding: 2.75rem 0 1.75rem;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cuadricula-pie {
+  display: grid;
+  grid-template-columns: 1.3fr 1.2fr 1.1fr;
+  gap: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 860px) {
+  .cuadricula-pie {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.marca-pie {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.logo-emblema-mini {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titulo-pie-marca {
+  font-family: var(--fuente-titulos);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.descripcion-pie {
+  font-size: 0.85rem;
+  color: #94A3B8;
+  line-height: 1.6;
+}
+
+.titulo-columna-pie {
+  font-family: var(--fuente-titulos);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  margin-bottom: 0.85rem;
+}
+
+.lista-pie {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: #94A3B8;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-pie code {
+  color: #FDA4AF;
+  font-size: 0.78rem;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.texto-institucional {
+  font-size: 0.84rem;
+  color: #94A3B8;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.texto-institucional strong {
+  color: #F8FAFC;
+}
+
+.barra-inferior-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1.35rem;
+  font-size: 0.8rem;
+  color: #64748B;
+}
+
+.etiquetas-pie {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip-pie {
+  background: rgba(255, 255, 255, 0.06);
+  color: #CBD5E1;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}

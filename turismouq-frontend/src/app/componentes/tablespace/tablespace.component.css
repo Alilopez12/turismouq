@@ -1,0 +1,931 @@
+/* ==========================================================================
+   MODULO TABLESPACE & STORAGE ENGINE — TURISMOUQ QUINDÍOSTAYS 2026
+   ========================================================================== */
+
+.modulo-tablespace {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+/* Cabecera del Módulo */
+.cabecera-modulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2.25rem;
+}
+
+.insignia-modulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(79, 70, 229, 0.08);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  color: #4F46E5;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.punto-pulso {
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  animation: pulsoVerde 2s infinite;
+}
+
+@keyframes pulsoVerde {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.titulo-modulo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.subtitulo-modulo {
+  font-size: 0.95rem;
+  color: #64748B;
+  margin: 0;
+  max-width: 780px;
+  line-height: 1.5;
+}
+
+.subtitulo-modulo code {
+  background: #F1F5F9;
+  color: #0F172A;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+}
+
+.boton-refrescar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
+  padding: 0.7rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.boton-refrescar:hover:not(:disabled) {
+  border-color: #CBD5E1;
+  background: #F8FAFC;
+  transform: translateY(-1px);
+}
+
+.icono-btn {
+  width: 18px;
+  height: 18px;
+}
+
+.icono-btn.girando {
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Spinner y Alertas */
+.tarjeta-cargando {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+}
+
+.spinner-coral {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #F1F5F9;
+  border-top-color: #FF385C;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+  margin: 0 auto 1.25rem;
+}
+
+.alerta-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  color: #B91C1C;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+/* Bento KPI Cards */
+.cuadricula-bento-kpi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.tarjeta-kpi {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 1.4rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tarjeta-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.kpi-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.kpi-etiqueta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpi-icono {
+  font-size: 1.25rem;
+}
+
+.kpi-valor-grande {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 0.4rem;
+}
+
+.kpi-valor-grande.estado-online {
+  color: #059669;
+}
+
+.kpi-unidad {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.kpi-detalle {
+  font-size: 0.8rem;
+  color: #64748B;
+  line-height: 1.4;
+}
+
+.kpi-detalle code {
+  background: #F1F5F9;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Medidor de Almacenamiento */
+.seccion-medidor-almacenamiento {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.encabezado-medidor {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.1rem;
+  gap: 1rem;
+}
+
+.medidor-titulo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 0.25rem;
+}
+
+.medidor-ruta code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: #475569;
+  background: #F8FAFC;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.medidor-porcentajes {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.chip-medidor-porcentaje {
+  background: #FFF1F2;
+  border: 1px solid #FFE4E6;
+  color: #E11D48;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.chip-medidor-max {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.barra-progreso-contenedor {
+  height: 14px;
+  background: #F1F5F9;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  border: 1px solid #E2E8F0;
+}
+
+.barra-progreso-llenado {
+  height: 100%;
+  background: linear-gradient(90deg, #FF385C, #E31C5F);
+  border-radius: 9999px;
+  transition: width 0.8s ease-in-out;
+}
+
+.detalles-datafile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+.item-datafile {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.subetiqueta-df {
+  color: #94A3B8;
+  margin-right: 0.35rem;
+}
+
+.badge-ilimitada {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #A7F3D0;
+}
+
+/* Barra de Pestañas / Segmented Tabs */
+.barra-pestanas {
+  display: flex;
+  gap: 0.5rem;
+  background: #F1F5F9;
+  padding: 0.4rem;
+  border-radius: 14px;
+  margin-bottom: 1.75rem;
+  overflow-x: auto;
+}
+
+.pestana-boton {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pestana-boton:hover {
+  color: #0F172A;
+}
+
+.pestana-boton.activa {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* Panel de Pestaña */
+.panel-pestana {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Comparativa de Tablespaces (Pestaña 1) */
+.comparativa-tablespaces-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tarjeta-comparativa {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 1.75rem;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.tarjeta-comparativa.historico-destacada {
+  border-color: rgba(255, 56, 92, 0.25);
+  background: linear-gradient(180deg, #FFFFFF, #FFF9FA);
+}
+
+.tarjeta-comp-cabecera {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.icono-comp {
+  font-size: 2.2rem;
+  background: #F8FAFC;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  border: 1px solid #E2E8F0;
+}
+
+.tag-tipo-ts {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #FF385C;
+  letter-spacing: 0.04em;
+}
+
+.tarjeta-comparativa.users-estandar .tag-tipo-ts {
+  color: #4F46E5;
+}
+
+.titulo-comp {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0.15rem 0 0;
+}
+
+.desc-comp {
+  font-size: 0.9rem;
+  color: #64748B;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.metricas-comp-lista {
+  border-top: 1px solid #F1F5F9;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fila-metrica-comp {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.fila-metrica-comp strong {
+  color: #0F172A;
+}
+
+.badge-ro {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #A7F3D0;
+}
+
+.badge-rw {
+  background: #EFF6FF;
+  color: #2563EB;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #BFDBFE;
+}
+
+/* Diagrama de Arquitectura */
+.caja-diagrama-arquitectura {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 1.75rem;
+  text-align: center;
+}
+
+.titulo-diagrama {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 1.5rem;
+}
+
+.flujo-arquitectura-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nodo-flujo {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nodo-flujo.cliente-app {
+  border-color: #CBD5E1;
+  background: #FFFFFF;
+}
+
+.nodo-icono {
+  font-size: 1.8rem;
+}
+
+.nodo-sub {
+  font-size: 0.75rem;
+  color: #64748B;
+}
+
+.flecha-flujo {
+  font-size: 1.5rem;
+  color: #94A3B8;
+}
+
+.nodo-flujo.bifurcacion {
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.rama {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1.25rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  min-width: 240px;
+}
+
+.rama.rama-historico {
+  border-color: #FF385C;
+  background: #FFF9FA;
+}
+
+.nodo-badge-rama {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #4F46E5;
+}
+
+.rama.rama-historico .nodo-badge-rama {
+  color: #FF385C;
+}
+
+.rama strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  color: #0F172A;
+}
+
+.rama small {
+  font-size: 0.78rem;
+  color: #64748B;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Filtros y Tablas */
+.barra-filtros-interna {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.filtro-rotulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.grupo-botones-filtro {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-filtro {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-filtro:hover {
+  background: #F8FAFC;
+  color: #0F172A;
+}
+
+.btn-filtro.activo {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+}
+
+.tabla-contenedor {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.tabla-estilizada {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.tabla-estilizada th {
+  background: #F8FAFC;
+  padding: 0.9rem 1.25rem;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid #E2E8F0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tabla-estilizada td {
+  padding: 0.95rem 1.25rem;
+  border-bottom: 1px solid #F1F5F9;
+  color: #1E293B;
+}
+
+.tabla-estilizada tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-estilizada tr:hover td {
+  background: #F8FAFC;
+}
+
+.nombre-segmento-celda {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.icono-seg {
+  font-size: 1.1rem;
+}
+
+.codigo-nombre-seg,
+.codigo-tabla {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0F172A;
+  background: #F1F5F9;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+}
+
+.badge-tipo-seg {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+
+.badge-tipo-seg.tipo-tabla {
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+}
+
+.badge-tipo-seg.tipo-indice {
+  background: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #FDE68A;
+}
+
+.chip-ts {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.chip-ts.badge-historico {
+  background: #FFF1F2;
+  color: #E11D48;
+  border: 1px solid #FECDD3;
+}
+
+.chip-ts.badge-users {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+}
+
+.tier-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+}
+
+.tier-badge.tier-olap {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.tier-badge.tier-oltp {
+  background: #F8FAFC;
+  color: #64748B;
+  border: 1px solid #E2E8F0;
+}
+
+.fuente-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.texto-secundario {
+  color: #64748B;
+  font-size: 0.82rem;
+}
+
+/* Pilares de Arquitectura (Pestaña 4) */
+.pilares-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.tarjeta-pilar {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.pilar-icono-circulo {
+  width: 54px;
+  height: 54px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.pilar-numero {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #FF385C;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.35rem;
+}
+
+.pilar-titulo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 0.85rem;
+  line-height: 1.35;
+}
+
+.pilar-desc {
+  font-size: 0.88rem;
+  color: #64748B;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  flex-grow: 1;
+}
+
+.pilar-desc code {
+  background: #F1F5F9;
+  color: #0F172A;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+}
+
+.pilar-beneficios {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid #F1F5F9;
+  padding-top: 1rem;
+}
+
+.chip-beneficio {
+  display: inline-flex;
+  align-items: center;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+}
+
+.chip-beneficio::before {
+  content: "✓";
+  color: #10B981;
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+
+/* Tarjeta Código SQL (Pestaña 5) */
+.tarjeta-codigo-sql {
+  background: #0B0F19;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.barra-codigo-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #1F2937;
+}
+
+.codigo-titulo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.circulo-mac {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.circulo-mac.r { background: #EF4444; }
+.circulo-mac.a { background: #F59E0B; }
+.circulo-mac.v { background: #10B981; }
+
+.codigo-archivo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: #9CA3AF;
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.boton-copiar {
+  background: #1F2937;
+  border: 1px solid #374151;
+  color: #E5E7EB;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.boton-copiar:hover {
+  background: #374151;
+  color: #FFFFFF;
+}
+
+.bloque-codigo {
+  margin: 0;
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #E5E7EB;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cuadricula-bento-kpi,
+  .detalles-datafile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .comparativa-tablespaces-grid,
+  .pilares-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cabecera-modulo {
+    flex-direction: column;
+  }
+  .cuadricula-bento-kpi,
+  .detalles-datafile-grid {
+    grid-template-columns: 1fr;
+  }
+}

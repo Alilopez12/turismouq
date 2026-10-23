@@ -1,0 +1,629 @@
+/* ==========================================================================
+   DETALLE DE ALOJAMIENTO — AIRBNB SPLIT LISTING & STICKY PL/SQL QUOTER
+   ========================================================================== */
+
+/* Breadcrumb */
+.migas-pan {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.35rem;
+  font-size: 0.85rem;
+}
+
+.pildora-regreso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde-fuerte);
+  color: var(--color-secundario);
+  font-weight: 600;
+  padding: 0.42rem 0.9rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.pildora-regreso:hover {
+  border-color: var(--color-primario);
+  color: var(--color-primario);
+  transform: translateX(-2px);
+}
+
+.separador-miga {
+  color: #CBD5E1;
+}
+
+.miga-actual {
+  color: var(--color-texto-apagado);
+  font-weight: 500;
+}
+
+/* Showcase Header */
+.showcase-propiedad {
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde);
+  border-radius: 22px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--sombra-suave);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.showcase-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+
+.badge-superhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.26rem 0.7rem;
+  border-radius: 9999px;
+}
+
+.badge-id-alojamiento {
+  font-family: var(--fuente-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 0.22rem 0.6rem;
+  border-radius: 6px;
+}
+
+.titulo-showcase {
+  font-family: var(--fuente-titulos);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.meta-ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  font-size: 0.92rem;
+  color: var(--color-texto-apagado);
+}
+
+.item-meta-ubicacion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.item-meta-ubicacion svg {
+  color: var(--color-primario);
+}
+
+.item-meta-ubicacion strong {
+  color: var(--color-texto);
+}
+
+.punto-meta {
+  color: #CBD5E1;
+}
+
+/* Host Card */
+.tarjeta-superhost {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 0.9rem 1.25rem;
+  border-radius: 16px;
+}
+
+.avatar-host-grande {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  font-family: var(--fuente-titulos);
+  font-size: 1.2rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.25);
+}
+
+.datos-propietario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.etiqueta-host {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primario);
+}
+
+.nombre-host {
+  font-size: 0.95rem;
+  color: var(--color-secundario);
+}
+
+.telefono-host {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-texto-apagado);
+}
+
+/* Split Grid */
+.cuadricula-detalle {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .cuadricula-detalle {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left Column: Room Selector */
+.tarjeta-seccion-habs {
+  padding: 1.75rem;
+}
+
+.cabecera-habs {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.subtexto {
+  font-size: 0.88rem;
+  color: var(--color-texto-apagado);
+}
+
+.contador-habs {
+  background: var(--color-secundario);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.lista-habitaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.item-habitacion {
+  padding: 1.1rem 1.25rem;
+  border-radius: 14px;
+  border: 1.5px solid var(--color-borde);
+  background: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.item-habitacion:hover {
+  border-color: #B0B0B0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.item-habitacion.seleccionada {
+  border-color: var(--color-primario);
+  background: linear-gradient(to right, #FFF0F3 0%, #FFFFFF 100%);
+  box-shadow: 0 6px 18px rgba(255, 56, 92, 0.12);
+}
+
+.icono-cama-caja {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #F1F5F9;
+  color: var(--color-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.item-habitacion.seleccionada .icono-cama-caja {
+  background: var(--color-primario);
+  color: #FFFFFF;
+}
+
+.info-hab {
+  flex: 1;
+}
+
+.fila-titulo-hab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.2rem;
+}
+
+.fila-titulo-hab h4 {
+  font-size: 1.02rem;
+  margin: 0;
+  color: var(--color-secundario);
+}
+
+.codigo-hab {
+  font-family: var(--fuente-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748B;
+  background: #F1F5F9;
+  padding: 0.1rem 0.45rem;
+  border-radius: 5px;
+}
+
+.detalle-cama {
+  font-size: 0.84rem;
+  color: var(--color-texto-apagado);
+}
+
+.meta-hab {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.pildora-capacidad {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: var(--color-secundario);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.32rem 0.7rem;
+  border-radius: 9999px;
+}
+
+.radio-indicador {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.radio-indicador.activo {
+  background: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #FFFFFF;
+}
+
+/* Garantías */
+.tarjeta-garantias {
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.item-garantia {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.icono-garantia {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--color-acento-indigo-claro);
+  color: var(--color-acento-indigo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-garantia h4 {
+  font-size: 0.92rem;
+  margin-bottom: 0.15rem;
+}
+
+.item-garantia p {
+  font-size: 0.83rem;
+  color: var(--color-texto-apagado);
+  line-height: 1.5;
+}
+
+.item-garantia code {
+  font-size: 0.78rem;
+  color: var(--color-acento-indigo);
+  background: var(--color-acento-indigo-claro);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* Right Column: Sticky Floating Booking & PL/SQL Quoter Card */
+.tarjeta-cotizador-sticky {
+  position: sticky;
+  top: 100px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #DDDDDD;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: 1.75rem;
+}
+
+.cabecera-cotizador {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-borde);
+  margin-bottom: 1.15rem;
+}
+
+.subtitulo-cotizador {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--color-primario);
+  margin-bottom: 0.2rem;
+}
+
+.cabecera-cotizador h3 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.badge-funcion {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--color-secundario);
+  color: #FFFFFF;
+  padding: 0.28rem 0.6rem;
+  border-radius: 8px;
+}
+
+/* Tarifas por Temporada */
+.cuadricula-tarifas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+}
+
+.tarjeta-tarifa {
+  background: #F8FAFC;
+  padding: 0.85rem;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.tarjeta-tarifa.tarifa-alta {
+  background: #FFF8F9;
+  border-color: #FECDD3;
+}
+
+.precio-noche {
+  font-family: var(--fuente-titulos);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+}
+
+.precio-noche small {
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-texto-apagado);
+}
+
+/* Unified 2-Cell Check-In / Check-Out Date Picker Box */
+.caja-fechas-airbnb {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1.5px solid #B0B0B0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  background: #FFFFFF;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.caja-fechas-airbnb:focus-within {
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 0 2px rgba(30, 36, 58, 0.12);
+}
+
+.celda-fecha {
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.celda-fecha-derecha {
+  border-left: 1px solid #B0B0B0;
+}
+
+.etiqueta-celda {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-secundario);
+  margin-bottom: 0.2rem;
+}
+
+.input-fecha-airbnb {
+  border: none;
+  outline: none;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Estado Cotización */
+.estado-cotizacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.25rem;
+  background: #F8FAFC;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  color: var(--color-texto-apagado);
+}
+
+.spinner-mini {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #E2E8F0;
+  border-top-color: var(--color-primario);
+  border-radius: 50%;
+  animation: giroMini 0.7s linear infinite;
+}
+
+@keyframes giroMini {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Resumen Cotización */
+.btn-reservar-airbnb {
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  margin-bottom: 0.65rem;
+}
+
+.nota-sin-cargo {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-texto-apagado);
+  margin-bottom: 1.15rem;
+}
+
+.desglose-lineas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-borde);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.fila-resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--color-texto-apagado);
+}
+
+.fila-resumen strong {
+  color: var(--color-texto);
+}
+
+.fila-ponderacion {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.badge-ponderacion {
+  font-family: var(--fuente-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  background: #F1F5F9;
+  color: var(--color-secundario);
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.total-resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.1rem;
+}
+
+.etiqueta-total {
+  display: block;
+  font-family: var(--fuente-titulos);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+}
+
+.sub-total-impuestos {
+  font-size: 0.74rem;
+  color: var(--color-texto-apagado);
+}
+
+.valor-total {
+  font-family: var(--fuente-titulos);
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--color-primario);
+}
+
+.valor-total small {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}

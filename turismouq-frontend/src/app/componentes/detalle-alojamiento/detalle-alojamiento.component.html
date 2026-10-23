@@ -1,0 +1,246 @@
+<div class="contenedor" *ngIf="alojamiento">
+  <!-- Migas de Pan / Breadcrumb Pill -->
+  <div class="migas-pan">
+    <a routerLink="/catalogo" class="pildora-regreso">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Volver al Catálogo del Quindío</span>
+    </a>
+    <span class="separador-miga">/</span>
+    <span class="miga-actual">{{ alojamiento.municipio.nombre }}</span>
+    <span class="separador-miga">/</span>
+    <span class="miga-actual">{{ alojamiento.nombre }}</span>
+  </div>
+
+  <!-- Showcase Header Estilo Airbnb Listing -->
+  <section class="showcase-propiedad">
+    <div class="showcase-info">
+      <div class="showcase-badges">
+        <span class="insignia insignia-finca">{{ alojamiento.tipoAlojamiento.nombre }}</span>
+        <span class="badge-superhost">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          4.95 · Superanfitrión Verificado
+        </span>
+        <span class="badge-id-alojamiento">ID #{{ alojamiento.idAlojamiento }}</span>
+      </div>
+
+      <h1 class="titulo-showcase">{{ alojamiento.nombre }}</h1>
+
+      <div class="meta-ubicacion">
+        <span class="item-meta-ubicacion">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <strong>{{ alojamiento.municipio.nombre }}, Quindío</strong> · {{ alojamiento.direccion }}
+        </span>
+        <span class="punto-meta">•</span>
+        <span class="item-meta-ubicacion">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+          </svg>
+          Capacidad total: <strong>{{ alojamiento.capacidad }} personas</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Tarjeta Anfitrión -->
+    <div class="tarjeta-superhost">
+      <div class="avatar-host-grande">
+        {{ alojamiento.propietario.nombres.charAt(0) }}
+      </div>
+      <div class="datos-propietario">
+        <span class="etiqueta-host">Anfitrión Titular</span>
+        <strong class="nombre-host">{{ alojamiento.propietario.nombres }}</strong>
+        <span class="telefono-host">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          {{ alojamiento.telefono }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Split View: Selector de Habitaciones (Izquierda) + Sticky Cotizador PL/SQL (Derecha) -->
+  <div class="cuadricula-detalle">
+    <!-- Columna Izquierda: Habitaciones Disponibles -->
+    <div class="columna-habitaciones">
+      <div class="tarjeta tarjeta-seccion-habs">
+        <div class="cabecera-habs">
+          <div>
+            <h3>Selecciona tu Habitación</h3>
+            <p class="subtexto">Haz clic en cualquier unidad para consultar sus tarifas por temporada y cotizar en vivo</p>
+          </div>
+          <span class="contador-habs">{{ habitaciones.length }} unidades</span>
+        </div>
+
+        <div class="lista-habitaciones">
+          <div
+            *ngFor="let h of habitaciones"
+            class="item-habitacion"
+            [class.seleccionada]="habitacionSeleccionada?.idHabitacion === h.idHabitacion"
+            (click)="seleccionarHabitacion(h)"
+          >
+            <div class="icono-cama-caja">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 4v16"></path>
+                <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
+                <path d="M2 17h20"></path>
+                <path d="M6 8v9"></path>
+              </svg>
+            </div>
+
+            <div class="info-hab">
+              <div class="fila-titulo-hab">
+                <h4>{{ h.numeroNombre }}</h4>
+                <span class="codigo-hab">HAB #{{ h.idHabitacion }}</span>
+              </div>
+              <p class="detalle-cama">
+                <span>Configuración: <strong>{{ h.tipoCama || 'Cama Doble Estándar' }}</strong></span>
+              </p>
+            </div>
+
+            <div class="meta-hab">
+              <span class="pildora-capacidad">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                {{ h.capacidad }} pers.
+              </span>
+
+              <div class="radio-indicador" [class.activo]="habitacionSeleccionada?.idHabitacion === h.idHabitacion">
+                <svg *ngIf="habitacionSeleccionada?.idHabitacion === h.idHabitacion" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garantías de Reserva Airbnb / Oracle -->
+      <div class="tarjeta-garantias">
+        <div class="item-garantia">
+          <div class="icono-garantia">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <div>
+            <h4>Cálculo Ponderado en Motor Oracle 21c</h4>
+            <p>La función almacenada <code>PKG_TURISMO_UQ.fn_valor_estadia</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja.</p>
+          </div>
+        </div>
+
+        <div class="item-garantia">
+          <div class="icono-garantia">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div>
+            <h4>Protección Anti-Solapamiento por Trigger</h4>
+            <p>Al continuar tu reserva, el motor verifica disponibilidad real en la tabla <code>RESERVA</code> antes de confirmar la transacción.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Sticky Floating Booking & PL/SQL Quoter Card -->
+    <div class="columna-cotizador">
+      <div class="tarjeta-cotizador-sticky" *ngIf="habitacionSeleccionada">
+        <div class="cabecera-cotizador">
+          <div>
+            <span class="subtitulo-cotizador">COTIZADOR INTERACTIVO PL/SQL</span>
+            <h3>{{ habitacionSeleccionada.numeroNombre }}</h3>
+          </div>
+          <span class="badge-funcion">fn_valor_estadia</span>
+        </div>
+
+        <!-- Tarifas Base por Temporada -->
+        <div class="cuadricula-tarifas">
+          <div *ngFor="let t of tarifasHabitacion" class="tarjeta-tarifa" [class.tarifa-alta]="t.temporada.nombre.includes('ALTA')">
+            <span class="insignia" [ngClass]="t.temporada.nombre.includes('ALTA') ? 'insignia-alta' : 'insignia-baja'">
+              {{ t.temporada.nombre }}
+            </span>
+            <p class="precio-noche">
+              ${{ t.precioNoche | number:'1.0-0' }}
+              <small>COP / noche</small>
+            </p>
+          </div>
+        </div>
+
+        <!-- Selector de Fechas Unificado Estilo Airbnb -->
+        <div class="caja-fechas-airbnb">
+          <div class="celda-fecha">
+            <label class="etiqueta-celda">LLEGADA (CHECK-IN)</label>
+            <input type="date" class="input-fecha-airbnb" [(ngModel)]="fechaCheckIn" (change)="calcularCotizacion()" />
+          </div>
+          <div class="celda-fecha celda-fecha-derecha">
+            <label class="etiqueta-celda">SALIDA (CHECK-OUT)</label>
+            <input type="date" class="input-fecha-airbnb" [(ngModel)]="fechaCheckOut" (change)="calcularCotizacion()" />
+          </div>
+        </div>
+
+        <!-- Estado Calculando -->
+        <div *ngIf="cargandoCotizacion" class="estado-cotizacion">
+          <div class="spinner-mini"></div>
+          <span>Ejecutando <code>fn_valor_estadia</code> en Oracle XE...</span>
+        </div>
+
+        <!-- Alerta de Error -->
+        <div *ngIf="errorCotizacion" class="alerta alerta-error">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{{ errorCotizacion }}</span>
+        </div>
+
+        <!-- Desglose de la Cotización -->
+        <div *ngIf="cotizacion && !cargandoCotizacion" class="resumen-cotizacion">
+          <button class="btn btn-primario ancho-completo btn-reservar-airbnb" (click)="irAReservar()">
+            <span>Reservar esta Habitación</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <p class="nota-sin-cargo">No se realizará ningún cobro hasta confirmar en el siguiente paso</p>
+
+          <div class="desglose-lineas">
+            <div class="fila-resumen">
+              <span>Duración de la estadía</span>
+              <strong>{{ cotizacion.totalNoches }} noches</strong>
+            </div>
+            <div class="fila-resumen">
+              <span>Unidad seleccionada</span>
+              <strong>{{ habitacionSeleccionada.numeroNombre }} (ID #{{ habitacionSeleccionada.idHabitacion }})</strong>
+            </div>
+            <div class="fila-resumen fila-ponderacion">
+              <span>Ponderación de temporadas</span>
+              <span class="badge-ponderacion">{{ cotizacion.descripcionTemporadas }}</span>
+            </div>
+          </div>
+
+          <div class="total-resumen">
+            <div>
+              <span class="etiqueta-total">Total estimado</span>
+              <small class="sub-total-impuestos">Calculado por Oracle PL/SQL</small>
+            </div>
+            <span class="valor-total">${{ cotizacion.totalPagar | number:'1.0-0' }} <small>COP</small></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

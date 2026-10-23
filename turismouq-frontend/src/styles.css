@@ -1,0 +1,347 @@
+/* ==========================================================================
+   TURISMOUQ · QUINDÍOSTAYS — SISTEMA DE DISEÑO GLOBAL (AIRBNB 2026 + EXPEDIA + STRIPE)
+   Paleta: Rausch Coral (#FF385C), Midnight Navy (#1E243A), Electric Indigo (#4F46E5)
+   ========================================================================== */
+
+:root {
+  --color-primario: #FF385C;
+  --color-primario-oscuro: #D70466;
+  --color-primario-claro: #FFF0F3;
+  --color-secundario: #1E243A;
+  --color-secundario-hover: #0F172A;
+  --color-acento-indigo: #4F46E5;
+  --color-acento-indigo-claro: #EEF2FF;
+  --color-acento-oro: #F59E0B;
+  --color-acento-oro-claro: #FEF3C7;
+  --color-fondo: #F7F7F9;
+  --color-tarjeta: #FFFFFF;
+  --color-texto: #222222;
+  --color-texto-apagado: #6A6A6A;
+  --color-borde: #EBEBEB;
+  --color-borde-fuerte: #DDDDDD;
+  --color-exito: #0284C7;
+  --color-peligro: #E11D48;
+  --color-aviso: #D97706;
+
+  --gradiente-coral: linear-gradient(135deg, #FF385C 0%, #E61E4D 50%, #D70466 100%);
+  --gradiente-navy: linear-gradient(135deg, #1E243A 0%, #0F172A 100%);
+  --gradiente-indigo: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+
+  --sombra-suave: 0 2px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --sombra-media: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --sombra-fuerte: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --sombra-coral: 0 8px 24px rgba(255, 56, 92, 0.28);
+
+  --radio-borde: 16px;
+  --radio-pildora: 9999px;
+  --fuente-titulos: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --fuente-cuerpo: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --fuente-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--fuente-cuerpo);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+code, pre {
+  font-family: var(--fuente-mono);
+}
+
+/* Tipografía de Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-secundario);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+/* Contenedor Principal */
+.contenedor {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .contenedor {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* Tarjetas */
+.tarjeta {
+  background: var(--color-tarjeta);
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-suave);
+  padding: 1.5rem;
+  border: 1px solid var(--color-borde);
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.35rem;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-primario {
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(255, 56, 92, 0.25);
+}
+
+.btn-primario:hover:not(:disabled) {
+  background: linear-gradient(135deg, #E61E4D 0%, #D70466 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-coral);
+}
+
+.btn-secundario {
+  background: var(--color-secundario);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(30, 36, 58, 0.18);
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background: var(--color-secundario-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+}
+
+.btn-esquema {
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-borde-fuerte);
+  color: var(--color-texto);
+}
+
+.btn-esquema:hover:not(:disabled) {
+  border-color: var(--color-secundario);
+  background: #F9FAFB;
+  color: var(--color-secundario);
+}
+
+.btn-grande {
+  padding: 0.95rem 1.65rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 14px;
+}
+
+.ancho-completo {
+  width: 100%;
+}
+
+/* Formularios */
+.grupo-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.etiqueta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-secundario);
+  letter-spacing: 0.01em;
+}
+
+.control-input,
+select.control-input {
+  width: 100%;
+  padding: 0.72rem 0.95rem;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.94rem;
+  border: 1.5px solid var(--color-borde-fuerte);
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  color: var(--color-texto);
+  transition: all 0.2s ease;
+}
+
+.control-input:hover {
+  border-color: #B0B0B0;
+}
+
+.control-input:focus {
+  border-color: var(--color-primario);
+  outline: none;
+  box-shadow: 0 0 0 3.5px rgba(255, 56, 92, 0.14);
+}
+
+/* Tablas Modernas (Stripe / Linear Style) */
+.tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid var(--color-borde);
+  background: #FFFFFF;
+}
+
+.tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.tabla-datos th {
+  background-color: #F8FAFC;
+  color: var(--color-texto-apagado);
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--color-borde);
+  white-space: nowrap;
+}
+
+.tabla-datos td {
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid #F1F5F9;
+  color: var(--color-texto);
+  vertical-align: middle;
+}
+
+.tabla-datos tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.tabla-datos tbody tr:hover {
+  background-color: #FFF8F9;
+}
+
+.tabla-datos tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Insignias / Badges */
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: var(--radio-pildora);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.insignia-finca {
+  background-color: #FFF0F3;
+  color: #D70466;
+  border: 1px solid rgba(255, 56, 92, 0.2);
+}
+
+.insignia-glamping {
+  background-color: #FEF3C7;
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.insignia-hotel {
+  background-color: #EEF2FF;
+  color: #4338CA;
+  border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+.insignia-hostal {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid rgba(2, 132, 199, 0.2);
+}
+
+.insignia-alta {
+  background-color: #FFF1F2;
+  color: #E11D48;
+  border: 1px solid rgba(225, 29, 72, 0.22);
+}
+
+.insignia-baja {
+  background-color: #F0F9FF;
+  color: #0284C7;
+  border: 1px solid rgba(2, 132, 199, 0.22);
+}
+
+/* Alertas */
+.alerta {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.alerta-exito {
+  background-color: #F0F9FF;
+  color: #0C4A6E;
+  border: 1px solid #BAE6FD;
+  border-left: 4px solid #0284C7;
+}
+
+.alerta-error {
+  background-color: #FFF1F2;
+  color: #881337;
+  border: 1px solid #FECDD3;
+  border-left: 4px solid #E11D48;
+}
+
+.alerta-info {
+  background-color: #EEF2FF;
+  color: #1E1B4B;
+  border: 1px solid #C7D2FE;
+  border-left: 4px solid #4F46E5;
+}

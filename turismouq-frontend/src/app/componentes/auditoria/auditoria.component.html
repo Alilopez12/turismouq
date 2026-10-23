@@ -1,0 +1,121 @@
+<div class="contenedor">
+  <!-- Encabezado de Seguridad y Cumplimiento -->
+  <header class="encabezado-auditoria">
+    <div>
+      <div class="badges-seguridad">
+        <span class="insignia insignia-finca">SECURITY & COMPLIANCE LOG</span>
+        <span class="badge-trigger">TRG_AUDITORIA_TARIFA_STMT</span>
+      </div>
+      <h2>Auditoría de Sentencias sobre Tarifas</h2>
+      <p class="subtexto">
+        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en Oracle 21c
+      </p>
+    </div>
+
+    <button class="btn btn-secundario" (click)="cargarAuditorias()" [disabled]="cargando">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+      <span>Refrescar Bitácora</span>
+    </button>
+  </header>
+
+  <!-- Tarjeta Principal de Bitácora -->
+  <div class="tarjeta tarjeta-bitacora">
+    <div class="cabecera-auditoria">
+      <div class="titulo-bitacora-grupo">
+        <div class="icono-escudo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h3>Historial de Modificaciones en Tabla TARIFA</h3>
+          <p class="sub-bitacora">Monitoreo continuo sobre la tabla de auditoría <code>AUDITORIA_TARIFA</code></p>
+        </div>
+      </div>
+
+      <span class="contador-eventos" *ngIf="!cargando">
+        {{ registros.length }} eventos auditados
+      </span>
+    </div>
+
+    <div *ngIf="cargando" class="estado-auditoria">
+      <div class="spinner-coral"></div>
+      <p>Recuperando trazas de auditoría desde Oracle 21c...</p>
+    </div>
+
+    <div class="tabla-contenedor" *ngIf="!cargando && registros.length > 0">
+      <table class="tabla-datos">
+        <thead>
+          <tr>
+            <th>ID Log</th>
+            <th>Operación DML</th>
+            <th>Habitación</th>
+            <th>Temporada</th>
+            <th>Comparativa de Tarifa (Anterior → Nuevo)</th>
+            <th>Usuario Oracle</th>
+            <th>Fecha y Hora</th>
+            <th>Detalle de Sentencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of registros">
+            <td>
+              <span class="id-log-mono">#{{ a.ID_AUDITORIA }}</span>
+            </td>
+            <td>
+              <span
+                class="insignia"
+                [ngClass]="a.TIPO_OPERACION === 'UPDATE' ? 'insignia-hotel' : (a.TIPO_OPERACION === 'INSERT' ? 'insignia-baja' : 'insignia-alta')"
+              >
+                {{ a.TIPO_OPERACION }}
+              </span>
+            </td>
+            <td>
+              <span class="chip-hab-auditoria">Hab #{{ a.ID_HABITACION }}</span>
+            </td>
+            <td>
+              <span class="insignia" [ngClass]="a.ID_TEMPORADA === 1 ? 'insignia-baja' : 'insignia-glamping'">
+                {{ a.ID_TEMPORADA === 1 ? 'Temporada Baja' : 'Temporada Alta' }}
+              </span>
+            </td>
+            <td>
+              <div class="comparativa-precios">
+                <span class="precio-antiguo">
+                  {{ a.PRECIO_ANTERIOR ? ('$' + (a.PRECIO_ANTERIOR | number:'1.0-0')) : 'N/A' }}
+                </span>
+                <svg class="flecha-cambio" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+                <span class="precio-nuevo-badge">
+                  ${{ a.PRECIO_NUEVO | number:'1.0-0' }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <code class="badge-usuario-oracle">{{ a.USUARIO_ORACLE }}</code>
+            </td>
+            <td class="celda-fecha-log">{{ a.FECHA_ACCION }}</td>
+            <td>
+              <span class="detalle-sentencia">{{ a.DETALLE_SENTENCIA }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!cargando && registros.length === 0" class="alerta alerta-info">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+      <span>
+        Aún no se han registrado eventos en la tabla <code>AUDITORIA_TARIFA</code>. Al modificar una tarifa en Oracle o mediante el sistema se registrará la traza automáticamente.
+      </span>
+    </div>
+  </div>
+</div>

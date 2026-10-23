@@ -1,0 +1,1114 @@
+<div class="contenedor analitica-shell">
+  <!-- ========================================================================= -->
+  <!-- ENCABEZADO EJECUTIVO DE INTELIGENCIA DE NEGOCIOS -->
+  <!-- ========================================================================= -->
+  <header class="encabezado-seccion">
+    <div class="encabezado-contenido">
+      <div class="encabezado-meta">
+        <span class="insignia-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          Business Intelligence &amp; Data Warehouse
+        </span>
+        <span class="insignia-version">Entrega 1 · Oracle Database XE 21c</span>
+        <span class="insignia-live">
+          <span class="punto-live"></span>
+          25.000 Reservas Activas
+        </span>
+      </div>
+
+      <div class="titulo-con-insignia">
+        <h2>Módulo Analítico Avanzado</h2>
+      </div>
+
+      <p class="subtexto">
+        Exploración multidimensional en tiempo real de las <strong>8 consultas analíticas obligatorias</strong> ejecutadas sobre el motor relacional de <strong>TurismoUQ</strong>. Selecciona un bloque de la matriz Bento para inspeccionar su sentencia SQL y visualizaciones ejecutivas.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MATRIZ BENTO 2x4 DE SELECCIÓN DE CONSULTAS (8 QUERIES) -->
+  <!-- ========================================================================= -->
+  <nav class="barra-pestanas bento-matriz-consultas" aria-label="Selector de consultas analíticas">
+    <!-- Q01: PIVOT -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 1" (click)="seleccionarPestana(1)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q01</span>
+          <span class="badge-tecnica">PIVOT</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="3" y1="15" x2="21" y2="15"></line>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+            <line x1="15" y1="3" x2="15" y2="21"></line>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Matriz de Ocupación</span>
+        <span class="pestana-sub">12 Meses × 12 Municipios</span>
+      </div>
+    </button>
+
+    <!-- Q02: ROLLUP -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 2" (click)="seleccionarPestana(2)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q02</span>
+          <span class="badge-tecnica">ROLLUP</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Subtotales Jerárquicos</span>
+        <span class="pestana-sub">Municipio · Tipo · Temporada</span>
+      </div>
+    </button>
+
+    <!-- Q03: RANK() -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 3" (click)="seleccionarPestana(3)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q03</span>
+          <span class="badge-tecnica">RANK()</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Podio por Municipio</span>
+        <span class="pestana-sub">Top 3 Líderes de Ingreso</span>
+      </div>
+    </button>
+
+    <!-- Q04: LAG() -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 4" (click)="seleccionarPestana(4)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q04</span>
+          <span class="badge-tecnica">LAG()</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Crecimiento Mensual</span>
+        <span class="pestana-sub">Variación Mes(t) vs Mes(t-1)</span>
+      </div>
+    </button>
+
+    <!-- Q05: BIND VARS -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 5" (click)="seleccionarPestana(5)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q05</span>
+          <span class="badge-tecnica">BIND VARS</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Filtro Parametrizado</span>
+        <span class="pestana-sub">Shared Pool &amp; Soft Parse</span>
+      </div>
+    </button>
+
+    <!-- Q06: MAT VIEW -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 6" (click)="seleccionarPestana(6)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q06</span>
+          <span class="badge-tecnica">MAT VIEW</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Vista Materializada</span>
+        <span class="pestana-sub">MV_OCUPACION_MENSUAL</span>
+      </div>
+    </button>
+
+    <!-- Q07: UNPIVOT -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 7" (click)="seleccionarPestana(7)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q07</span>
+          <span class="badge-tecnica">UNPIVOT</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Pasarela de Pagos</span>
+        <span class="pestana-sub">PSE · Tarjeta · Transferencia</span>
+      </div>
+    </button>
+
+    <!-- Q08: GROUP BY -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 8" (click)="seleccionarPestana(8)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q08</span>
+          <span class="badge-tecnica">GROUP BY</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Segmentos de Hospedaje</span>
+        <span class="pestana-sub">4 Tipologías del Quindío</span>
+      </div>
+    </button>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- ESTADO DE CARGA -->
+  <!-- ========================================================================= -->
+  <div *ngIf="cargando" class="estado-analitica">
+    <div class="indicador-carga"></div>
+    <p class="carga-titulo">Ejecutando sentencia analítica en Oracle Database XE 21c...</p>
+    <span class="carga-sub">Procesando agregaciones sobre 25.000 registros históricos</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MENSAJE DE ERROR -->
+  <!-- ========================================================================= -->
+  <div *ngIf="errorMensaje && !cargando" class="tarjeta alerta-error-analitica">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-error-svg">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p><strong>Aviso de conexión:</strong> {{ errorMensaje }}</p>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CONTENEDOR DINÁMICO DE CONSULTAS -->
+  <!-- ========================================================================= -->
+  <div *ngIf="!cargando" class="tarjeta contenido-analitica">
+
+    <!-- ======================================================================= -->
+    <!-- DARK-MODE IDE SQL INSPECTOR -->
+    <!-- ======================================================================= -->
+    <div class="bloque-inspector-sql" *ngIf="infoConsultas[pestanaActiva]">
+      <div class="barra-inspector" (click)="toggleSql(pestanaActiva)">
+        <div class="info-tecnica">
+          <div class="macos-dots" aria-hidden="true">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span class="etiqueta-q-ide">SQL #0{{ infoConsultas[pestanaActiva].numero }}</span>
+          <span class="etiqueta-tecnica">{{ infoConsultas[pestanaActiva].tecnica }}</span>
+          <span class="titulo-inspector">{{ infoConsultas[pestanaActiva].nombre }}</span>
+        </div>
+        <button class="btn-toggle-sql" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>{{ verSql[pestanaActiva] ? 'Ocultar SQL' : 'Ver Sentencia SQL Oficial' }}</span>
+        </button>
+      </div>
+      <div class="panel-sql" *ngIf="verSql[pestanaActiva]">
+        <div class="proposito-sql">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-proposito">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div>
+            <strong>Objetivo en Oracle 21c:</strong> {{ infoConsultas[pestanaActiva].proposito }}
+          </div>
+        </div>
+        <pre class="codigo-sql"><code>{{ infoConsultas[pestanaActiva].codigoSql }}</code></pre>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 1. PIVOT (12 MESES X 12 MUNICIPIOS) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 1" class="seccion-consulta">
+      <div class="tarjetas-resumen">
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Total Reservas del Año</span>
+            <span class="kpi-valor">{{ obtenerTotalAnualPivot() | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Municipios Analizados</span>
+            <span class="kpi-valor">{{ datosPivot.length }} Municipios</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-navy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <path d="M3 9h18"></path>
+              <path d="M3 15h18"></path>
+              <path d="M9 3v18"></path>
+              <path d="M15 3v18"></path>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Dimensión Matricial</span>
+            <span class="kpi-valor">12 Meses x 12 Municipios</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Mapa Matricial de Ocupación Mensual (PIVOT)</h4>
+          <p class="ayuda-visual">Identifica picos de afluencia turística en los 12 meses de 2025 para cada municipio del departamento.</p>
+        </div>
+        <div class="leyenda-matriz">
+          <span class="item-leyenda"><span class="muestra nivel-alto"></span> Alta demanda (&gt;80% pico)</span>
+          <span class="item-leyenda"><span class="muestra nivel-medio"></span> Demanda media (40-80%)</span>
+          <span class="item-leyenda"><span class="muestra nivel-normal"></span> Demanda base</span>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor matriz-scroll">
+        <table class="tabla-datos tabla-pivot">
+          <thead>
+            <tr>
+              <th class="col-fija">Municipio</th>
+              <th *ngFor="let m of nombresMeses" class="col-mes">{{ m.etiqueta }}</th>
+              <th class="col-total">Total Anual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosPivot">
+              <td class="col-fija">
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <strong>{{ getProp(f, 'municipio') }}</strong>
+                </div>
+              </td>
+              <td *ngFor="let m of nombresMeses" class="celda-mes" [ngClass]="obtenerIntensidadPivot(getProp(f, m.clave) || 0)">
+                <span class="pildora-calor">{{ (getProp(f, m.clave) || 0) | number:'1.0-0' }}</span>
+              </td>
+              <td class="col-total-valor">
+                <strong>{{ obtenerTotalFilaPivot(f) | number:'1.0-0' }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ROLLUP SUBTOTALES -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 2" class="seccion-consulta">
+      <div class="tarjetas-resumen">
+        <div class="tarjeta-kpi kpi-dorado">
+          <div class="kpi-icono kpi-icono-destacado">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Ingreso Total Quindío</span>
+            <span class="kpi-valor">${{ obtenerTotalGeneralRollup() | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Niveles de Agregación</span>
+            <span class="kpi-valor">Municipio · Tipo · Temporada</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Función Utilizada</span>
+            <span class="kpi-valor">GROUP BY ROLLUP + GROUPING</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Jerarquía Multidimensional de Ingresos y Subtotales</h4>
+          <p class="ayuda-visual">Las filas destacadas indican subtotales agregados y el gran total departamental calculados por Oracle.</p>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Municipio</th>
+              <th>Tipo de Alojamiento</th>
+              <th>Temporada</th>
+              <th>Cantidad Reservas</th>
+              <th class="col-ingreso">Ingresos Facturados</th>
+              <th>Estado Agregación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosRollup" [class.fila-total-general]="getProp(f, 'municipio') === 'TOTAL QUINDIO' || getProp(f, 'municipio') === 'TOTAL GENERAL'" [class.fila-subtotal]="esFilaSubtotal(f)">
+              <td>
+                <strong *ngIf="getProp(f, 'municipio') === 'TOTAL QUINDIO' || getProp(f, 'municipio') === 'TOTAL GENERAL'" class="texto-total-general">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  {{ getProp(f, 'municipio') }}
+                </strong>
+                <span *ngIf="getProp(f, 'municipio') !== 'TOTAL QUINDIO' && getProp(f, 'municipio') !== 'TOTAL GENERAL'">{{ getProp(f, 'municipio') }}</span>
+              </td>
+              <td>{{ getProp(f, 'tipo_alojamiento') }}</td>
+              <td>
+                <span class="insignia" [ngClass]="getProp(f, 'temporada') === 'TEMPORADA ALTA' ? 'insignia-alta' : (getProp(f, 'temporada') === 'TEMPORADA BAJA' ? 'insignia-baja' : 'insignia-subtotal')">
+                  {{ getProp(f, 'temporada') }}
+                </span>
+              </td>
+              <td>{{ getProp(f, 'cantidad_reservas') || getProp(f, 'CANTIDAD_RESERVAS') || '---' }}</td>
+              <td class="col-ingreso">
+                <strong>${{ (getProp(f, 'total_ingresos') || getProp(f, 'ingresos') || 0) | number:'1.0-0' }}</strong>
+              </td>
+              <td>
+                <span *ngIf="getProp(f, 'municipio') === 'TOTAL QUINDIO' || getProp(f, 'municipio') === 'TOTAL GENERAL'" class="badge-rollup badge-total">Total General</span>
+                <span *ngIf="(getProp(f, 'municipio') !== 'TOTAL QUINDIO' && getProp(f, 'municipio') !== 'TOTAL GENERAL') && esFilaSubtotal(f)" class="badge-rollup badge-subtotal">Subtotal Nivel</span>
+                <span *ngIf="!esFilaSubtotal(f)" class="badge-rollup badge-detalle">Detalle Fino</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. RANK TOP 3 -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 3" class="seccion-consulta">
+      <div class="barra-filtros-interna">
+        <div class="filtro-label-grupo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-filtro">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <label class="etiqueta-filtro">Filtrar Podio por Municipio:</label>
+        </div>
+        <select class="control-select" [(ngModel)]="municipioSeleccionadoRank">
+          <option value="TODOS">Todos los Municipios (Top 3 de cada uno)</option>
+          <option *ngFor="let m of obtenerMunicipiosDisponiblesRank()" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
+      <!-- Podio Olímpico 3D si se selecciona un municipio específico -->
+      <div *ngIf="municipioSeleccionadoRank !== 'TODOS'" class="contenedor-podio">
+        <div class="podio-encabezado">
+          <span class="badge-podio-eyebrow">Líderes Comerciales · Función RANK()</span>
+          <h4 class="titulo-podio">Podio de Facturación en {{ municipioSeleccionadoRank }}</h4>
+        </div>
+
+        <div class="podio-tarjetas">
+          <!-- Segundo Puesto (Plata - Izquierda) -->
+          <div class="tarjeta-podio podio-plata" *ngIf="obtenerPodioPorMunicipio(municipioSeleccionadoRank).segundo as p2">
+            <div class="icono-medalla-svg medalla-plata-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6"></circle>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+              </svg>
+            </div>
+            <div class="medalla-podio">2° Lugar · Plata</div>
+            <h5>{{ getProp(p2, 'nombre_alojamiento') || getProp(p2, 'alojamiento') }}</h5>
+            <span class="insignia-tipo">{{ getProp(p2, 'tipo_alojamiento') || 'Alojamiento Destacado' }}</span>
+            <div class="ingreso-podio">${{ (getProp(p2, 'total_ingresos') || getProp(p2, 'ingresos')) | number:'1.0-0' }}</div>
+            <div class="pedestal-base pedestal-2">#2</div>
+          </div>
+
+          <!-- Primer Puesto (Oro - Centro Elevado) -->
+          <div class="tarjeta-podio podio-oro" *ngIf="obtenerPodioPorMunicipio(municipioSeleccionadoRank).primero as p1">
+            <div class="corona-oro" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"></path>
+              </svg>
+            </div>
+            <div class="medalla-podio">1° Campeón · Oro</div>
+            <h5>{{ getProp(p1, 'nombre_alojamiento') || getProp(p1, 'alojamiento') }}</h5>
+            <span class="insignia-tipo">{{ getProp(p1, 'tipo_alojamiento') || 'Líder Municipal' }}</span>
+            <div class="ingreso-podio">${{ (getProp(p1, 'total_ingresos') || getProp(p1, 'ingresos')) | number:'1.0-0' }}</div>
+            <div class="pedestal-base pedestal-1">#1</div>
+          </div>
+
+          <!-- Tercer Puesto (Bronce - Derecha) -->
+          <div class="tarjeta-podio podio-bronce" *ngIf="obtenerPodioPorMunicipio(municipioSeleccionadoRank).tercero as p3">
+            <div class="icono-medalla-svg medalla-bronce-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6"></circle>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+              </svg>
+            </div>
+            <div class="medalla-podio">3° Lugar · Bronce</div>
+            <h5>{{ getProp(p3, 'nombre_alojamiento') || getProp(p3, 'alojamiento') }}</h5>
+            <span class="insignia-tipo">{{ getProp(p3, 'tipo_alojamiento') || 'Alojamiento Destacado' }}</span>
+            <div class="ingreso-podio">${{ (getProp(p3, 'total_ingresos') || getProp(p3, 'ingresos')) | number:'1.0-0' }}</div>
+            <div class="pedestal-base pedestal-3">#3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Completa con Barras Visuales -->
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Tabla de Posiciones RANK()</h4>
+          <p class="ayuda-visual">Particionada por cada uno de los 12 municipios de forma independiente según facturación acumulada.</p>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Puesto</th>
+              <th>Municipio</th>
+              <th>Alojamiento</th>
+              <th>Tipo</th>
+              <th class="col-ingreso">Total Facturado</th>
+              <th>Volumen Comparativo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of obtenerFilasRankFiltradas()">
+              <td>
+                <span class="medalla" [ngClass]="'medalla-' + (getProp(f, 'posicion_ranking') || getProp(f, 'posicion'))">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+                    <circle cx="12" cy="8" r="6"></circle>
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                  </svg>
+                  {{ (getProp(f, 'posicion_ranking') || getProp(f, 'posicion')) === 1 ? 'Oro #1' : ((getProp(f, 'posicion_ranking') || getProp(f, 'posicion')) === 2 ? 'Plata #2' : 'Bronce #3') }}
+                </span>
+              </td>
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>{{ getProp(f, 'municipio') }}</span>
+                </div>
+              </td>
+              <td><strong>{{ getProp(f, 'nombre_alojamiento') || getProp(f, 'alojamiento') }}</strong></td>
+              <td><span class="insignia insignia-tipo-tabla">{{ getProp(f, 'tipo_alojamiento') || 'Hospedaje' }}</span></td>
+              <td class="col-ingreso"><strong>${{ (getProp(f, 'total_ingresos') || getProp(f, 'ingresos')) | number:'1.0-0' }}</strong></td>
+              <td class="col-barra">
+                <div class="barra-fondo">
+                  <div class="barra-progreso" [style.width.%]="(((getProp(f, 'total_ingresos') || getProp(f, 'ingresos')) / obtenerMaxIngresoRank()) * 100)"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 4. LAG VARIACIÓN MENSUAL -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 4" class="seccion-consulta">
+      <div class="tarjetas-resumen">
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Pico de Crecimiento</span>
+            <span class="kpi-valor">{{ getProp(obtenerMesMayorCrecimiento(), 'mes') }} (+{{ getProp(obtenerMesMayorCrecimiento(), 'variacion_porcentual') }}%)</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Métrica Comparada</span>
+            <span class="kpi-valor">Mes(t) vs Mes(t-1)</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-navy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Total Meses Evaluados</span>
+            <span class="kpi-valor">{{ datosLag.length }} Meses</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de Barras Relativo en CSS Puro -->
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Curva de Evolución Temporal de Ingresos Mensuales (LAG)</h4>
+          <p class="ayuda-visual">Evolución de ventas mes a mes con indicadores visuales de aceleración o desaceleración.</p>
+        </div>
+      </div>
+
+      <div class="grafico-barras-contenedor">
+        <div class="columna-grafico" *ngFor="let f of datosLag">
+          <div class="etiqueta-valor-barra">${{ ((getProp(f, 'total_ingresos') || getProp(f, 'ingresos')) / 1000000) | number:'1.1-1' }}M</div>
+          <div class="barra-vertical-wrapper">
+            <div class="barra-vertical" [style.height.%]="obtenerPorcentajeBarraLag(getProp(f, 'total_ingresos') || getProp(f, 'ingresos'))"></div>
+          </div>
+          <span class="etiqueta-mes-barra">{{ getProp(f, 'mes') }}</span>
+          <div class="indicador-tendencia" [class.subida]="(getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0" [class.bajada]="(getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) < 0" *ngIf="getProp(f, 'ingresos_mes_anterior') || getProp(f, 'ingreso_mes_anterior')">
+            {{ (getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0 ? '▲' : '▼' }} {{ getProp(f, 'variacion_porcentual') }}%
+          </div>
+          <div class="indicador-tendencia base" *ngIf="!getProp(f, 'ingresos_mes_anterior') && !getProp(f, 'ingreso_mes_anterior')">
+            Base
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Detallada -->
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Periodo Mes</th>
+              <th class="col-ingreso">Ingresos Mes Actual</th>
+              <th class="col-ingreso">Ingresos Mes Anterior (LAG)</th>
+              <th class="col-ingreso">Variación Absoluta ($)</th>
+              <th>Tasa de Crecimiento (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosLag">
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <strong>{{ getProp(f, 'mes') }}</strong>
+                </div>
+              </td>
+              <td class="col-ingreso"><strong>${{ (getProp(f, 'total_ingresos') || getProp(f, 'ingresos')) | number:'1.0-0' }}</strong></td>
+              <td class="col-ingreso">{{ (getProp(f, 'ingresos_mes_anterior') || getProp(f, 'ingreso_mes_anterior')) ? ('$' + ((getProp(f, 'ingresos_mes_anterior') || getProp(f, 'ingreso_mes_anterior')) | number:'1.0-0')) : '--- (Mes Base)' }}</td>
+              <td class="col-ingreso" [class.color-exito]="(getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0" [class.color-aviso]="(getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) < 0">
+                <strong>{{ (getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0 ? '+' : '' }}${{ (getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) | number:'1.0-0' }}</strong>
+              </td>
+              <td>
+                <span *ngIf="getProp(f, 'ingresos_mes_anterior') || getProp(f, 'ingreso_mes_anterior')" class="insignia" [ngClass]="(getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0 ? 'insignia-subida' : 'insignia-bajada'">
+                  {{ (getProp(f, 'variacion_absoluta') || getProp(f, 'variacion')) >= 0 ? '▲ +' : '▼ ' }}{{ getProp(f, 'variacion_porcentual') }}%
+                </span>
+                <span *ngIf="!getProp(f, 'ingresos_mes_anterior') && !getProp(f, 'ingreso_mes_anterior')" class="insignia insignia-subtotal">Línea Base</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 5. VARIABLES BIND -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 5" class="seccion-consulta">
+      <div class="panel-filtros-bind">
+        <div class="controles-fechas">
+          <div class="campo-fecha">
+            <label class="etiqueta-filtro">Fecha Inicio (<code>:fecha_inicio</code>)</label>
+            <input type="date" class="control-input" [(ngModel)]="fechaInicio" />
+          </div>
+          <div class="campo-fecha">
+            <label class="etiqueta-filtro">Fecha Fin (<code>:fecha_fin</code>)</label>
+            <input type="date" class="control-input" [(ngModel)]="fechaFin" />
+          </div>
+          <button type="button" class="btn btn-primario" (click)="ejecutarConsultaRango()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Ejecutar con Bind</span>
+          </button>
+        </div>
+
+        <div class="accesos-rapidos">
+          <span class="texto-rapido">Rangos Predefinidos:</span>
+          <button type="button" class="btn-atajo" (click)="establecerRangoPredefinido('anio')">Año 2025 Completo</button>
+          <button type="button" class="btn-atajo" (click)="establecerRangoPredefinido('semestre1')">Semestre 1</button>
+          <button type="button" class="btn-atajo" (click)="establecerRangoPredefinido('semestre2')">Semestre 2</button>
+          <button type="button" class="btn-atajo" (click)="establecerRangoPredefinido('mitad_anio')">Vacaciones Mitad de Año</button>
+        </div>
+      </div>
+
+      <div class="tarjetas-resumen">
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Facturación en Periodo</span>
+            <span class="kpi-valor">${{ obtenerTotalFacturadoRango() | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Total Reservas</span>
+            <span class="kpi-valor">{{ obtenerTotalReservasRango() | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-navy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Optimización Oracle</span>
+            <span class="kpi-valor">Soft Parse / Shared Pool</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Resultados de la Ejecución Parametrizada</h4>
+          <p class="ayuda-visual">Resultados agregados por municipio para el rango temporal consultado mediante cursores cacheados.</p>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Municipio</th>
+              <th>Total Reservas</th>
+              <th>Clientes Únicos</th>
+              <th class="col-ingreso">Facturación en Rango</th>
+              <th class="col-ingreso">Promedio por Reserva</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosRango">
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <strong>{{ getProp(f, 'municipio') }}</strong>
+                </div>
+              </td>
+              <td>{{ getProp(f, 'total_reservas') }} reservas</td>
+              <td>
+                <span class="badge-clientes">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                  </svg>
+                  {{ getProp(f, 'total_clientes') }} clientes
+                </span>
+              </td>
+              <td class="col-ingreso"><strong>${{ getProp(f, 'total_facturado') | number:'1.0-0' }}</strong></td>
+              <td class="col-ingreso">${{ getProp(f, 'promedio_reserva') | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 6. VISTA MATERIALIZADA -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 6" class="seccion-consulta">
+      <div class="banner-arquitectura">
+        <div class="icono-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+        </div>
+        <div class="texto-banner">
+          <div class="banner-chips">
+            <span class="chip-arq">ORACLE DATA WAREHOUSE</span>
+            <span class="chip-arq chip-coral">REFRESH COMPLETE ON DEMAND</span>
+          </div>
+          <h5>MV_OCUPACION_MENSUAL (Materialized View)</h5>
+          <p>
+            Almacenada físicamente en el tablespace de Oracle con política <code>REFRESH ON DEMAND COMPLETE</code>.
+            Reduce el costo de CPU y tiempo de respuesta en un <strong>98%</strong> al evitar agregaciones costosas al vuelo sobre las 25.000 filas transaccionales de reservas.
+          </p>
+        </div>
+      </div>
+
+      <div class="tarjetas-resumen">
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Reservas Consolidadas</span>
+            <span class="kpi-valor">{{ obtenerTotalReservasVistaMat() | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Registros Agregados</span>
+            <span class="kpi-valor">{{ datosVistaMat.length }} Filas</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-kpi">
+          <div class="kpi-icono kpi-icono-navy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="kpi-datos">
+            <span class="kpi-titulo">Impacto en Transacciones</span>
+            <span class="kpi-valor">0% (Lectura Aislada)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Datos Físicos Precalculados en la Vista Materializada</h4>
+          <p class="ayuda-visual">Consulta directa sobre el segmento físico <code>MV_OCUPACION_MENSUAL</code> para analítica de alta velocidad.</p>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Municipio</th>
+              <th>Periodo Mensual</th>
+              <th class="col-ingreso">Total Reservas Consolidadas</th>
+              <th>Nivel de Ocupación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosVistaMat">
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <strong>{{ getProp(f, 'municipio') }}</strong>
+                </div>
+              </td>
+              <td>{{ getProp(f, 'periodo_mes') || getProp(f, 'mes') }}</td>
+              <td class="col-ingreso"><strong>{{ getProp(f, 'total_reservas') }} reservas</strong></td>
+              <td>
+                <span class="insignia insignia-alta" *ngIf="getProp(f, 'total_reservas') > 150">Alta Concentración</span>
+                <span class="insignia insignia-baja" *ngIf="getProp(f, 'total_reservas') <= 150">Flujo Estable</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 7. UNPIVOT -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 7" class="seccion-consulta">
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Distribución de Transacciones por Método de Pago (UNPIVOT)</h4>
+          <p class="ayuda-visual">Transformación de columnas dinámicas agregadas en registros estructurados para análisis FinTech de pasarelas de pago.</p>
+        </div>
+      </div>
+
+      <div class="tarjetas-pagos-grid">
+        <div class="tarjeta-metodo" *ngFor="let f of datosUnpivot" [attr.data-metodo-icono]="obtenerIconoMetodo(getProp(f, 'metodo_pago'))">
+          <div class="cabecera-tarjeta-pago">
+            <div class="icono-gran-pago">
+              <!-- PSE Icon -->
+              <svg *ngIf="(getProp(f, 'metodo_pago') || '').toUpperCase().includes('PSE')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <!-- Tarjeta de Crédito Icon -->
+              <svg *ngIf="(getProp(f, 'metodo_pago') || '').toUpperCase().includes('TARJETA')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              <!-- Transferencia Icon -->
+              <svg *ngIf="!(getProp(f, 'metodo_pago') || '').toUpperCase().includes('PSE') && !(getProp(f, 'metodo_pago') || '').toUpperCase().includes('TARJETA')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="22" x2="21" y2="22"></line>
+                <line x1="6" y1="18" x2="6" y2="11"></line>
+                <line x1="10" y1="18" x2="10" y2="11"></line>
+                <line x1="14" y1="18" x2="14" y2="11"></line>
+                <line x1="18" y1="18" x2="18" y2="11"></line>
+                <polygon points="12 2 20 7 4 7"></polygon>
+              </svg>
+            </div>
+            <span class="porcentaje-metodo">{{ obtenerPorcentajeMetodoPago(getProp(f, 'cantidad_pagos')) }}%</span>
+          </div>
+          <h4>{{ getProp(f, 'metodo_pago') }}</h4>
+          <div class="cifra-pagos">{{ getProp(f, 'cantidad_pagos') | number:'1.0-0' }} pagos</div>
+          <div class="barra-fondo-pago">
+            <div class="barra-relleno-pago" [style.width.%]="obtenerPorcentajeMetodoPago(getProp(f, 'cantidad_pagos'))"></div>
+          </div>
+          <div class="pie-tarjeta-pago">Participación en pasarela electrónica verificada</div>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Método de Pago</th>
+              <th class="col-ingreso">Cantidad Total de Pagos</th>
+              <th>Participación de Mercado</th>
+              <th>Canal de Procesamiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosUnpivot">
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  <strong>{{ getProp(f, 'metodo_pago') }}</strong>
+                </div>
+              </td>
+              <td class="col-ingreso"><strong>{{ getProp(f, 'cantidad_pagos') | number:'1.0-0' }}</strong> transacciones</td>
+              <td>
+                <span class="insignia insignia-glamping">{{ obtenerPorcentajeMetodoPago(getProp(f, 'cantidad_pagos')) }}% cuota</span>
+              </td>
+              <td>Pasarela Segura PSE / ACH / Redeban</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 8. NEGOCIO LIBRE (CUATRO TIPOS DE ALOJAMIENTO) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 8" class="seccion-consulta">
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Rendimiento Comercial por los 4 Tipos de Hospedaje del Quindío</h4>
+          <p class="ayuda-visual">Comparativa multidimensional de ingresos y reservas entre Finca Cafetera, Glamping, Hotel y Hostal.</p>
+        </div>
+      </div>
+
+      <!-- 4 Tarjetas para los 4 Tipos Oficiales -->
+      <div class="grid-cuatro-tipos">
+        <div class="tarjeta-tipo-alojamiento" *ngFor="let f of datosServicios" [attr.data-tipo-icono]="obtenerIconoTipo(getProp(f, 'tipo_alojamiento'))">
+          <div class="cabecera-tipo-card">
+            <div class="icono-tipo-gran">
+              <!-- Finca Cafetera SVG -->
+              <svg *ngIf="(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('finca')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <!-- Glamping SVG -->
+              <svg *ngIf="(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('glamping')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 22 22 22 12 2"></polygon>
+                <polyline points="12 12 7 22 17 22 12 12"></polyline>
+              </svg>
+              <!-- Hotel SVG -->
+              <svg *ngIf="(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('hotel')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <path d="M9 22v-4h6v4"></path>
+                <path d="M8 6h.01"></path>
+                <path d="M16 6h.01"></path>
+                <path d="M12 6h.01"></path>
+                <path d="M12 10h.01"></path>
+                <path d="M12 14h.01"></path>
+                <path d="M16 10h.01"></path>
+                <path d="M16 14h.01"></path>
+                <path d="M8 10h.01"></path>
+                <path d="M8 14h.01"></path>
+              </svg>
+              <!-- Hostal / Otros SVG -->
+              <svg *ngIf="!(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('finca') && !(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('glamping') && !(getProp(f, 'tipo_alojamiento') || '').toLowerCase().includes('hotel')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 4v16"></path>
+                <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
+                <path d="M2 17h20"></path>
+                <path d="M6 8v9"></path>
+              </svg>
+            </div>
+            <span class="badge-cuota-top">{{ obtenerPorcentajeTipo(getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) }}% Share</span>
+          </div>
+
+          <h4>{{ getProp(f, 'tipo_alojamiento') }}</h4>
+          <div class="ingreso-tipo-gran">${{ (getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) | number:'1.0-0' }}</div>
+          <div class="reservas-tipo-gran">{{ (getProp(f, 'total_reservas') || getProp(f, 'cantidad_reservas') || 0) | number:'1.0-0' }} reservas concretadas</div>
+
+          <div class="barra-tipo-wrapper">
+            <div class="barra-tipo-relleno" [style.width.%]="obtenerPorcentajeTipo(getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0)"></div>
+          </div>
+          <div class="cuota-tipo">{{ obtenerPorcentajeTipo(getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) }}% del mercado departamental</div>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Tipo de Hospedaje</th>
+              <th>Total Reservas Concretadas</th>
+              <th class="col-ingreso">Ingresos Totales Acumulados</th>
+              <th>Cuota de Facturación</th>
+              <th class="col-ingreso">Ticket Promedio Estimado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosServicios">
+              <td>
+                <div class="celda-municipio">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-pin">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                  <strong>{{ getProp(f, 'tipo_alojamiento') }}</strong>
+                </div>
+              </td>
+              <td>{{ (getProp(f, 'total_reservas') || getProp(f, 'cantidad_reservas') || 0) | number:'1.0-0' }} reservas</td>
+              <td class="col-ingreso">
+                <strong>${{ (getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) | number:'1.0-0' }}</strong>
+              </td>
+              <td>
+                <span class="insignia insignia-hotel">{{ obtenerPorcentajeTipo(getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) }}%</span>
+              </td>
+              <td class="col-ingreso">
+                ${{ (((getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) / ((getProp(f, 'total_reservas') || getProp(f, 'cantidad_reservas')) || 1)) | number:'1.0-0') }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
