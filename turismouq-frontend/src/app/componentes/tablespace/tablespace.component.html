@@ -1,457 +1,458 @@
-<div class="modulo-tablespace">
-  <!-- Cabecera de Módulo -->
-  <header class="cabecera-modulo">
-    <div class="contenedor-cabecera">
-      <div class="insignia-modulo">
-        <span class="punto-pulso"></span>
-        <span>Oracle Database 21c XE · Storage Engine</span>
-      </div>
-      <h1 class="titulo-modulo">Tablespace Dedicado · Histórico de Reservas</h1>
-      <p class="subtitulo-modulo">
-        Monitoreo en tiempo real de <code>TBS_HISTORICO_RESERVAS</code>: Aislamiento físico de I/O, compresión ILM,
-        políticas de backup diferenciadas con RMAN y segregación de datos transaccionales masivos.
-      </p>
-    </div>
-
-    <div class="acciones-cabecera">
-      <button class="boton-refrescar" (click)="cargarDatos()" [disabled]="cargando">
-        <svg class="icono-btn" [class.girando]="cargando" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"></polyline>
-          <polyline points="1 20 1 14 7 14"></polyline>
-          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-        </svg>
-        <span>{{ cargando ? 'Consultando Oracle...' : 'Actualizar Métricas' }}</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Estado de carga y error -->
-  <div *ngIf="cargando && !datos" class="tarjeta-cargando">
-    <div class="spinner-coral"></div>
-    <p>Inspeccionando catálogos de almacenamiento <code>USER_TABLESPACES</code>, <code>USER_SEGMENTS</code> y <code>USER_TS_QUOTAS</code>...</p>
-  </div>
-
-  <div *ngIf="errorMensaje" class="alerta-error">
-    <svg class="icono-alerta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-    </svg>
-    <span>{{ errorMensaje }}</span>
-  </div>
-
-  <div *ngIf="datos" class="contenido-modulo">
-    <!-- 4 Tarjetas Bento KPI -->
-    <div class="cuadricula-bento-kpi">
-      <div class="tarjeta-kpi">
-        <div class="kpi-encabezado">
-          <span class="kpi-etiqueta">Estado Operativo</span>
-          <span class="kpi-icono">⚡</span>
-        </div>
-        <div class="kpi-valor-grande estado-online">
-          {{ obtenerTablespaceHistorico()?.STATUS || 'ONLINE' }}
-        </div>
-        <div class="kpi-detalle">
-          Extensión: <strong>LOCAL</strong> · ASSM: <strong>AUTO</strong>
-        </div>
-      </div>
-
-      <div class="tarjeta-kpi">
-        <div class="kpi-encabezado">
-          <span class="kpi-etiqueta">Espacio Consumido</span>
-          <span class="kpi-icono">💾</span>
-        </div>
-        <div class="kpi-valor-grande">
-          {{ obtenerMbConsumidosHistorico() }} <span class="kpi-unidad">MB</span>
-        </div>
-        <div class="kpi-detalle">
-          De <strong>50 MB</strong> iniciales ({{ obtenerPorcentajeUsoInicial() }}% ocupado) · Max: 2 GB
-        </div>
-      </div>
-
-      <div class="tarjeta-kpi">
-        <div class="kpi-encabezado">
-          <span class="kpi-etiqueta">Filas Aisladas en TBS</span>
-          <span class="kpi-icono">📊</span>
-        </div>
-        <div class="kpi-valor-grande">
-          {{ obtenerTotalFilasHistorico() | number }}
-        </div>
-        <div class="kpi-detalle">
-          Transacciones y detalles históricos segregados de <code>USERS</code>
-        </div>
-      </div>
-
-      <div class="tarjeta-kpi">
-        <div class="kpi-encabezado">
-          <span class="kpi-etiqueta">Segmentos Físicos</span>
-          <span class="kpi-icono">🗂️</span>
-        </div>
-        <div class="kpi-valor-grande">
-          {{ datos.segmentosHistorico.length }} <span class="kpi-unidad">Segmentos</span>
-        </div>
-        <div class="kpi-detalle">
-          5 Tablas masivas + 6 Índices primarios / únicos
-        </div>
-      </div>
-    </div>
-
-    <!-- Barra de Almacenamiento Físico -->
-    <section class="seccion-medidor-almacenamiento">
-      <div class="encabezado-medidor">
-        <div class="medidor-titulos">
-          <h3 class="medidor-titulo">Ocupación del Datafile Primario</h3>
-          <p class="medidor-ruta"><code>{{ datos.datafileInfo.datafile }}</code></p>
-        </div>
-        <div class="medidor-porcentajes">
-          <span class="chip-medidor-porcentaje">{{ obtenerPorcentajeUsoInicial() }}% del Base (50 MB)</span>
-          <span class="chip-medidor-max">{{ obtenerPorcentajeUsoMaximo() }}% del Límite (2.048 MB)</span>
-        </div>
-      </div>
-
-      <div class="barra-progreso-contenedor">
-        <div class="barra-progreso-llenado" [style.width.%]="obtenerPorcentajeUsoInicial()"></div>
-      </div>
-
-      <div class="detalles-datafile-grid">
-        <div class="item-datafile">
-          <span class="subetiqueta-df">Tamaño Inicial:</span>
-          <strong>{{ datos.datafileInfo.tamanoInicialMb }} MB</strong>
-        </div>
-        <div class="item-datafile">
-          <span class="subetiqueta-df">Autoextend:</span>
-          <strong>ON NEXT {{ datos.datafileInfo.incrementoMb }}M</strong>
-        </div>
-        <div class="item-datafile">
-          <span class="subetiqueta-df">Límite Máximo:</span>
-          <strong>{{ datos.datafileInfo.tamanoMaximoMb }} MB (2 GB)</strong>
-        </div>
-        <div class="item-datafile">
-          <span class="subetiqueta-df">Cuota Usuario:</span>
-          <span class="badge-ilimitada">UNLIMITED</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Barra de Pestañas / Segmented Tabs -->
-    <nav class="barra-pestanas">
-      <button class="pestana-boton" [class.activa]="pestanaActiva === 'resumen'" (click)="seleccionarPestana('resumen')">
-        🏛️ Resumen Arquitectónico
-      </button>
-      <button class="pestana-boton" [class.activa]="pestanaActiva === 'segmentos'" (click)="seleccionarPestana('segmentos')">
-        🗄️ Segmentos Físicos ({{ datos.segmentosHistorico.length }})
-      </button>
-      <button class="pestana-boton" [class.activa]="pestanaActiva === 'tablas'" (click)="seleccionarPestana('tablas')">
-        📋 Distribución de Tablas ({{ datos.tablasPorTablespace.length }})
-      </button>
-      <button class="pestana-boton" [class.activa]="pestanaActiva === 'pilares'" (click)="seleccionarPestana('pilares')">
-        🎯 3 Pilares de Arquitectura
-      </button>
-      <button class="pestana-boton" [class.activa]="pestanaActiva === 'ddl'" (click)="seleccionarPestana('ddl')">
-        💻 DDL & Consultas DBA
-      </button>
-    </nav>
-
-    <!-- CONTENIDO PESTAÑA 1: RESUMEN ARQUITECTÓNICO -->
-    <div *ngIf="pestanaActiva === 'resumen'" class="panel-pestana">
-      <div class="comparativa-tablespaces-grid">
-        <!-- Tarjeta TBS_HISTORICO_RESERVAS -->
-        <div class="tarjeta-comparativa historico-destacada">
-          <div class="tarjeta-comp-cabecera">
-            <div class="icono-comp">📦</div>
-            <div>
-              <span class="tag-tipo-ts">Tablespace Dedicado (Entrega 1)</span>
-              <h3 class="titulo-comp">TBS_HISTORICO_RESERVAS</h3>
-            </div>
-          </div>
-          <p class="desc-comp">
-            Aislador físico de alta concurrencia. Alberga todas las transacciones históricas, reservas, pagos y liquidaciones para no degradar el catálogo maestro.
-          </p>
-          <div class="metricas-comp-lista">
-            <div class="fila-metrica-comp">
-              <span>Espacio Total Utilizado:</span>
-              <strong>{{ obtenerMbConsumidosHistorico() }} MB</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Cantidad de Segmentos:</span>
-              <strong>{{ datos.segmentosHistorico.length }} objetos (5 Tablas, 6 Índices)</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Registros Almacenados:</span>
-              <strong>{{ obtenerTotalFilasHistorico() | number }} filas masivas</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Modo Recomendado:</span>
-              <span class="badge-ro">Apto para READ ONLY en vigencias cerradas</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tarjeta USERS -->
-        <div class="tarjeta-comparativa users-estandar">
-          <div class="tarjeta-comp-cabecera">
-            <div class="icono-comp">🏬</div>
-            <div>
-              <span class="tag-tipo-ts">Tablespace del Sistema / Transaccional</span>
-              <h3 class="titulo-comp">USERS</h3>
-            </div>
-          </div>
-          <p class="desc-comp">
-            Almacena los catálogos maestros, configuraciones de negocio, tarifas, temporadas y auditorías de modificación del sistema TurismoUQ.
-          </p>
-          <div class="metricas-comp-lista">
-            <div class="fila-metrica-comp">
-              <span>Espacio Total Utilizado:</span>
-              <strong>5.75 MB</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Cantidad de Segmentos:</span>
-              <strong>45 objetos físicos</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Registros Almacenados:</span>
-              <strong>{{ obtenerTotalFilasUsers() | number }} filas maestras</strong>
-            </div>
-            <div class="fila-metrica-comp">
-              <span>Operatividad:</span>
-              <span class="badge-rw">READ WRITE continuo (DML diario)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Diagrama de Arquitectura de Almacenamiento -->
-      <div class="caja-diagrama-arquitectura">
-        <h4 class="titulo-diagrama">Esquema de Segregación Física en Oracle XE 21c (PDB: XEPDB1)</h4>
-        <div class="flujo-arquitectura-visual">
-          <div class="nodo-flujo cliente-app">
-            <span class="nodo-icono">💻</span>
-            <strong>TurismoUQ App</strong>
-            <span class="nodo-sub">Carga Mixta OLTP + OLAP</span>
-          </div>
-          <div class="flecha-flujo">➔</div>
-          <div class="nodo-flujo bifurcacion">
-            <div class="rama rama-users">
-              <span class="nodo-badge-rama">Catálogo Maestro</span>
-              <strong>Tablespace USERS</strong>
-              <small>ALOJAMIENTO, CLIENTE, HABITACION, TARIFA</small>
-            </div>
-            <div class="rama rama-historico">
-              <span class="nodo-badge-rama">Alto Rendimiento & Histórico</span>
-              <strong>TBS_HISTORICO_RESERVAS</strong>
-              <small>RESERVA, RESERVA_HAB, RESERVA_SRV, PAGO</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTENIDO PESTAÑA 2: SEGMENTOS FÍSICOS -->
-    <div *ngIf="pestanaActiva === 'segmentos'" class="panel-pestana">
-      <div class="barra-filtros-interna">
-        <span class="filtro-rotulo">Filtrar por tipo de segmento:</span>
-        <div class="grupo-botones-filtro">
-          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'TODOS'" (click)="filtroTipoSegmento = 'TODOS'">
-            Todos ({{ datos.segmentosHistorico.length }})
-          </button>
-          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'TABLE'" (click)="filtroTipoSegmento = 'TABLE'">
-            Tablas Físicas (5)
-          </button>
-          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'INDEX'" (click)="filtroTipoSegmento = 'INDEX'">
-            Índices B-Tree (6)
-          </button>
-        </div>
-      </div>
-
-      <div class="tabla-contenedor">
-        <table class="tabla-estilizada">
-          <thead>
-            <tr>
-              <th>Segmento Físico</th>
-              <th>Tipo de Objeto</th>
-              <th>Bytes Asignados</th>
-              <th>Megabytes (MB)</th>
-              <th>Extensiones (Extents)</th>
-              <th>Objetivo de Almacenamiento</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let s of obtenerSegmentosFiltrados()">
-              <td>
-                <div class="nombre-segmento-celda">
-                  <span class="icono-seg">{{ obtenerIconoSegmento(s.SEGMENT_TYPE) }}</span>
-                  <code class="codigo-nombre-seg">{{ s.SEGMENT_NAME }}</code>
-                </div>
-              </td>
-              <td>
-                <span class="badge-tipo-seg" [class.tipo-tabla]="s.SEGMENT_TYPE === 'TABLE'" [class.tipo-indice]="s.SEGMENT_TYPE === 'INDEX'">
-                  {{ s.SEGMENT_TYPE }}
-                </span>
-              </td>
-              <td class="fuente-mono">{{ s.BYTES | number }} B</td>
-              <td class="fuente-mono font-bold">{{ s.MEGABYTES }} MB</td>
-              <td class="fuente-mono">{{ s.EXTENTS }}</td>
-              <td class="texto-secundario">
-                {{ s.SEGMENT_NAME.includes('RESERVA_SERVICIO') ? 'Detalle de consumos y servicios extras' :
-                   s.SEGMENT_NAME.includes('RESERVA_HABITACION') ? 'Relación de noches y habitaciones' :
-                   s.SEGMENT_NAME.includes('PAGO') ? 'Transacciones y pasarelas de pago' :
-                   s.SEGMENT_NAME.includes('RESERVA') ? 'Encabezados de contratos de hospedaje' :
-                   'Cierres mensuales consolidados de anfitriones' }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- CONTENIDO PESTAÑA 3: DISTRIBUCIÓN DE TABLAS -->
-    <div *ngIf="pestanaActiva === 'tablas'" class="panel-pestana">
-      <div class="barra-filtros-interna">
-        <span class="filtro-rotulo">Filtrar por Tablespace:</span>
-        <div class="grupo-botones-filtro">
-          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'TODOS'" (click)="filtroTablespaceTabla = 'TODOS'">
-            Todas las Tablas ({{ datos.tablasPorTablespace.length }})
-          </button>
-          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'TBS_HISTORICO_RESERVAS'" (click)="filtroTablespaceTabla = 'TBS_HISTORICO_RESERVAS'">
-            TBS_HISTORICO_RESERVAS (5)
-          </button>
-          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'USERS'" (click)="filtroTablespaceTabla = 'USERS'">
-            USERS (15)
-          </button>
-        </div>
-      </div>
-
-      <div class="tabla-contenedor">
-        <table class="tabla-estilizada">
-          <thead>
-            <tr>
-              <th>Nombre de Tabla</th>
-              <th>Tablespace Asignado</th>
-              <th>Registros Estimados</th>
-              <th>Nivel Arquitectónico</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let t of obtenerTablasFiltradas()">
-              <td>
-                <code class="codigo-tabla">{{ t.TABLE_NAME }}</code>
-              </td>
-              <td>
-                <span class="chip-ts" [ngClass]="obtenerColorBadge(t.TABLESPACE_NAME)">
-                  {{ t.TABLESPACE_NAME }}
-                </span>
-              </td>
-              <td class="fuente-mono font-bold">
-                {{ (t.NUM_ROWS || 0) | number }}
-              </td>
-              <td>
-                <span *ngIf="t.TABLESPACE_NAME === 'TBS_HISTORICO_RESERVAS'" class="tier-badge tier-olap">
-                  🗄️ Histórico / Transaccional Masivo
-                </span>
-                <span *ngIf="t.TABLESPACE_NAME === 'USERS'" class="tier-badge tier-oltp">
-                  🏬 Catálogo Maestro / Configuración
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- CONTENIDO PESTAÑA 4: 3 PILARES DE ARQUITECTURA -->
-    <div *ngIf="pestanaActiva === 'pilares'" class="panel-pestana">
-      <div class="pilares-grid">
-        <!-- Pilar 1 -->
-        <article class="tarjeta-pilar">
-          <div class="pilar-icono-circulo">🚀</div>
-          <span class="pilar-numero">Pilar 01</span>
-          <h3 class="pilar-titulo">Aislamiento Físico de I/O y Rendimiento OLTP</h3>
-          <p class="pilar-desc">
-            Las operaciones de reserva continua realizan operaciones DML de alta frecuencia (<code>INSERT</code>, <code>UPDATE</code>, <code>SELECT FOR UPDATE</code>).
-            Al segregar las 25,000 reservas, consumos de servicios y pagos en un tablespace físico independiente, las consultas analíticas pesadas (como <code>PIVOT</code>, <code>ROLLUP</code> y <code>RANK</code>)
-            no saturan el buffer cache ni compiten por los mismos bloques de disco que las transacciones de los usuarios en tiempo real.
-          </p>
-          <div class="pilar-beneficios">
-            <span class="chip-beneficio">Cero contención de buffer cache</span>
-            <span class="chip-beneficio">Canales de I/O independientes</span>
-          </div>
-        </article>
-
-        <!-- Pilar 2 -->
-        <article class="tarjeta-pilar">
-          <div class="pilar-icono-circulo">🛡️</div>
-          <span class="pilar-numero">Pilar 02</span>
-          <h3 class="pilar-titulo">Políticas Diferenciadas de Backup & Modo READ ONLY</h3>
-          <p class="pilar-desc">
-            El tablespace primario <code>USERS</code> requiere copias de seguridad incrementales diarias mediante Oracle RMAN debido a su constante mutabilidad.
-            En contraste, <code>TBS_HISTORICO_RESERVAS</code> almacena períodos cerrados que pueden sellarse con:
-            <code>ALTER TABLESPACE TBS_HISTORICO_RESERVAS READ ONLY;</code>
-            Esto reduce drásticamente el tamaño y la ventana horaria requerida para los backups de la base de datos institucional.
-          </p>
-          <div class="pilar-beneficios">
-            <span class="chip-beneficio">Ventanas de backup 80% más rápidas</span>
-            <span class="chip-beneficio">Inmunidad ante escrituras no autorizadas</span>
-          </div>
-        </article>
-
-        <!-- Pilar 3 -->
-        <article class="tarjeta-pilar">
-          <div class="pilar-icono-circulo">🗜️</div>
-          <span class="pilar-numero">Pilar 03</span>
-          <h3 class="pilar-titulo">Gestión del Ciclo de Vida (ILM) & Compresión Avanzada</h3>
-          <p class="pilar-desc">
-            Permite habilitar compresión avanzada de datos relacionales en Oracle (<code>COMPRESS FOR OLTP</code> o <code>QUERY HIGH</code>)
-            específicamente sobre el datafile de reservas históricas, logrando reducciones de espacio de hasta un <strong>70%</strong> en disco.
-            Asimismo, permite reubicar físicamente el archivo <code>.DBF</code> hacia unidades de almacenamiento secundario de bajo costo sin afectar las tablas maestras.
-          </p>
-          <div class="pilar-beneficios">
-            <span class="chip-beneficio">Ahorro de disco de hasta 70%</span>
-            <span class="chip-beneficio">Tiering en almacenamiento secundario</span>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <!-- CONTENIDO PESTAÑA 5: DDL & SENTENCIAS DBA -->
-    <div *ngIf="pestanaActiva === 'ddl'" class="panel-pestana">
-      <div class="tarjeta-codigo-sql">
-        <div class="barra-codigo-cabecera">
-          <div class="codigo-titulo-wrapper">
-            <span class="circulo-mac r"></span>
-            <span class="circulo-mac a"></span>
-            <span class="circulo-mac v"></span>
-            <span class="codigo-archivo">01_tablespace_historico.sql · DDL Oficial Oracle 21c</span>
-          </div>
-          <button class="boton-copiar" (click)="copiarDdl()">
-            {{ copiadoExito ? '✓ ¡Copiado!' : '📋 Copiar DDL' }}
-          </button>
-        </div>
-        <pre class="bloque-codigo"><code>{{ datos.scriptDdl }}</code></pre>
-      </div>
-
-      <!-- Consultas de Auditoría DBA Utilizadas -->
-      <div class="tarjeta-codigo-sql">
-        <div class="barra-codigo-cabecera">
-          <div class="codigo-titulo-wrapper">
-            <span class="codigo-archivo">Consultas DBA de Inspección en Tiempo Real</span>
-          </div>
-        </div>
-        <pre class="bloque-codigo"><code>-- 1. Verificación de cuotas y estado del Tablespace
-SELECT tablespace_name, status, extent_management, allocation_type, segment_space_management
-FROM user_tablespaces
-WHERE tablespace_name = 'TBS_HISTORICO_RESERVAS';
-
--- 2. Consumo de bytes y extensiones por segmento físico
-SELECT segment_name, segment_type, bytes, ROUND(bytes/1048576, 2) AS MB, extents
-FROM user_segments
-WHERE tablespace_name = 'TBS_HISTORICO_RESERVAS'
-ORDER BY bytes DESC;
-
--- 3. Distribución de tablas y volumen de registros por tablespace
-SELECT table_name, tablespace_name, num_rows
-FROM user_tables
-ORDER BY tablespace_name DESC, table_name ASC;</code></pre>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="modulo-tablespace">
+  <!-- Cabecera de Módulo -->
+  <header class="cabecera-modulo">
+    <div class="contenedor-cabecera">
+      <div class="insignia-modulo">
+        <span class="punto-pulso"></span>
+        <span>Oracle Database 21c XE · Storage Engine</span>
+      </div>
+      <h1 class="titulo-modulo">Tablespace Dedicado · Histórico de Reservas</h1>
+      <p class="subtitulo-modulo">
+        Monitoreo en tiempo real de <code>TBS_HISTORICO_RESERVAS</code>: Aislamiento físico de I/O, compresión ILM,
+        políticas de backup diferenciadas con RMAN y segregación de datos transaccionales masivos.
+      </p>
+    </div>
+
+    <div class="acciones-cabecera">
+      <button class="boton-refrescar" (click)="cargarDatos()" [disabled]="cargando">
+        <svg class="icono-btn" [class.girando]="cargando" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span>{{ cargando ? 'Consultando Oracle...' : 'Actualizar Métricas' }}</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Estado de carga y error -->
+  <div *ngIf="cargando && !datos" class="tarjeta-cargando">
+    <div class="spinner-coral"></div>
+    <p>Inspeccionando catálogos de almacenamiento <code>USER_TABLESPACES</code>, <code>USER_SEGMENTS</code> y <code>USER_TS_QUOTAS</code>...</p>
+  </div>
+
+  <div *ngIf="errorMensaje" class="alerta-error">
+    <svg class="icono-alerta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span>{{ errorMensaje }}</span>
+  </div>
+
+  <div *ngIf="datos" class="contenido-modulo">
+    <!-- 4 Tarjetas Bento KPI -->
+    <div class="cuadricula-bento-kpi">
+      <div class="tarjeta-kpi">
+        <div class="kpi-encabezado">
+          <span class="kpi-etiqueta">Estado Operativo</span>
+          <span class="kpi-icono">⚡</span>
+        </div>
+        <div class="kpi-valor-grande estado-online">
+          {{ getProp(obtenerTablespaceHistorico(), 'status') || 'ONLINE' }}
+        </div>
+        <div class="kpi-detalle">
+          Extensión: <strong>LOCAL</strong> · ASSM: <strong>AUTO</strong>
+        </div>
+      </div>
+
+      <div class="tarjeta-kpi">
+        <div class="kpi-encabezado">
+          <span class="kpi-etiqueta">Espacio Consumido</span>
+          <span class="kpi-icono">💾</span>
+        </div>
+        <div class="kpi-valor-grande">
+          {{ obtenerMbConsumidosHistorico() }} <span class="kpi-unidad">MB</span>
+        </div>
+        <div class="kpi-detalle">
+          De <strong>50 MB</strong> iniciales ({{ obtenerPorcentajeUsoInicial() }}% ocupado) · Max: 2 GB
+        </div>
+      </div>
+
+      <div class="tarjeta-kpi">
+        <div class="kpi-encabezado">
+          <span class="kpi-etiqueta">Filas Aisladas en TBS</span>
+          <span class="kpi-icono">📊</span>
+        </div>
+        <div class="kpi-valor-grande">
+          {{ obtenerTotalFilasHistorico() | number }}
+        </div>
+        <div class="kpi-detalle">
+          Transacciones y detalles históricos segregados de <code>USERS</code>
+        </div>
+      </div>
+
+      <div class="tarjeta-kpi">
+        <div class="kpi-encabezado">
+          <span class="kpi-etiqueta">Segmentos Físicos</span>
+          <span class="kpi-icono">🗂️</span>
+        </div>
+        <div class="kpi-valor-grande">
+          {{ datos.segmentosHistorico.length }} <span class="kpi-unidad">Segmentos</span>
+        </div>
+        <div class="kpi-detalle">
+          {{ contarSegmentos('TABLE') }} Tablas masivas + {{ contarSegmentos('INDEX') }} Índices B-Tree
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Almacenamiento Físico -->
+    <section class="seccion-medidor-almacenamiento">
+      <div class="encabezado-medidor">
+        <div class="medidor-titulos">
+          <h3 class="medidor-titulo">Ocupación del Datafile Primario</h3>
+          <p class="medidor-ruta"><code>{{ datos.datafileInfo.datafile }}</code></p>
+        </div>
+        <div class="medidor-porcentajes">
+          <span class="chip-medidor-porcentaje">{{ obtenerPorcentajeUsoInicial() }}% del Base (50 MB)</span>
+          <span class="chip-medidor-max">{{ obtenerPorcentajeUsoMaximo() }}% del Límite (2.048 MB)</span>
+        </div>
+      </div>
+
+      <div class="barra-progreso-contenedor">
+        <div class="barra-progreso-llenado" [style.width.%]="obtenerPorcentajeUsoInicial()"></div>
+      </div>
+
+      <div class="detalles-datafile-grid">
+        <div class="item-datafile">
+          <span class="subetiqueta-df">Tamaño Inicial:</span>
+          <strong>{{ datos.datafileInfo.tamanoInicialMb }} MB</strong>
+        </div>
+        <div class="item-datafile">
+          <span class="subetiqueta-df">Autoextend:</span>
+          <strong>ON NEXT {{ datos.datafileInfo.incrementoMb }}M</strong>
+        </div>
+        <div class="item-datafile">
+          <span class="subetiqueta-df">Límite Máximo:</span>
+          <strong>{{ datos.datafileInfo.tamanoMaximoMb }} MB (2 GB)</strong>
+        </div>
+        <div class="item-datafile">
+          <span class="subetiqueta-df">Cuota Usuario:</span>
+          <span class="badge-ilimitada">UNLIMITED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de Pestañas / Segmented Tabs -->
+    <nav class="barra-pestanas">
+      <button class="pestana-boton" [class.activa]="pestanaActiva === 'resumen'" (click)="seleccionarPestana('resumen')">
+        🏛️ Resumen Arquitectónico
+      </button>
+      <button class="pestana-boton" [class.activa]="pestanaActiva === 'segmentos'" (click)="seleccionarPestana('segmentos')">
+        🗄️ Segmentos Físicos ({{ datos.segmentosHistorico.length }})
+      </button>
+      <button class="pestana-boton" [class.activa]="pestanaActiva === 'tablas'" (click)="seleccionarPestana('tablas')">
+        📋 Distribución de Tablas ({{ datos.tablasPorTablespace.length }})
+      </button>
+      <button class="pestana-boton" [class.activa]="pestanaActiva === 'pilares'" (click)="seleccionarPestana('pilares')">
+        🎯 3 Pilares de Arquitectura
+      </button>
+      <button class="pestana-boton" [class.activa]="pestanaActiva === 'ddl'" (click)="seleccionarPestana('ddl')">
+        💻 DDL & Consultas DBA
+      </button>
+    </nav>
+
+    <!-- CONTENIDO PESTAÑA 1: RESUMEN ARQUITECTÓNICO -->
+    <div *ngIf="pestanaActiva === 'resumen'" class="panel-pestana">
+      <div class="comparativa-tablespaces-grid">
+        <!-- Tarjeta TBS_HISTORICO_RESERVAS -->
+        <div class="tarjeta-comparativa historico-destacada">
+          <div class="tarjeta-comp-cabecera">
+            <div class="icono-comp">📦</div>
+            <div>
+              <span class="tag-tipo-ts">Tablespace Dedicado (Entrega 1)</span>
+              <h3 class="titulo-comp">TBS_HISTORICO_RESERVAS</h3>
+            </div>
+          </div>
+          <p class="desc-comp">
+            Aislador físico de alta concurrencia. Alberga todas las transacciones históricas, reservas, pagos y liquidaciones para no degradar el catálogo maestro.
+          </p>
+          <div class="metricas-comp-lista">
+            <div class="fila-metrica-comp">
+              <span>Espacio Total Utilizado:</span>
+              <strong>{{ obtenerMbConsumidosHistorico() }} MB</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Cantidad de Segmentos:</span>
+              <strong>{{ datos.segmentosHistorico.length }} objetos ({{ contarSegmentos('TABLE') }} Tablas, {{ contarSegmentos('INDEX') }} Índices)</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Registros Almacenados:</span>
+              <strong>{{ obtenerTotalFilasHistorico() | number }} filas masivas</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Modo Recomendado:</span>
+              <span class="badge-ro">Apto para READ ONLY en vigencias cerradas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta USERS -->
+        <div class="tarjeta-comparativa users-estandar">
+          <div class="tarjeta-comp-cabecera">
+            <div class="icono-comp">🏬</div>
+            <div>
+              <span class="tag-tipo-ts">Tablespace del Sistema / Transaccional</span>
+              <h3 class="titulo-comp">USERS</h3>
+            </div>
+          </div>
+          <p class="desc-comp">
+            Almacena los catálogos maestros, configuraciones de negocio, tarifas, temporadas y auditorías de modificación del sistema TurismoUQ.
+          </p>
+          <div class="metricas-comp-lista">
+            <div class="fila-metrica-comp">
+              <span>Espacio Total Utilizado:</span>
+              <strong>5.75 MB</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Cantidad de Segmentos:</span>
+              <strong>45 objetos físicos</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Registros Almacenados:</span>
+              <strong>{{ obtenerTotalFilasUsers() | number }} filas maestras</strong>
+            </div>
+            <div class="fila-metrica-comp">
+              <span>Operatividad:</span>
+              <span class="badge-rw">READ WRITE continuo (DML diario)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagrama de Arquitectura de Almacenamiento -->
+      <div class="caja-diagrama-arquitectura">
+        <h4 class="titulo-diagrama">Esquema de Segregación Física en Oracle XE 21c (PDB: XEPDB1)</h4>
+        <div class="flujo-arquitectura-visual">
+          <div class="nodo-flujo cliente-app">
+            <span class="nodo-icono">💻</span>
+            <strong>TurismoUQ App</strong>
+            <span class="nodo-sub">Carga Mixta OLTP + OLAP</span>
+          </div>
+          <div class="flecha-flujo">➔</div>
+          <div class="nodo-flujo bifurcacion">
+            <div class="rama rama-users">
+              <span class="nodo-badge-rama">Catálogo Maestro</span>
+              <strong>Tablespace USERS</strong>
+              <small>ALOJAMIENTO, CLIENTE, HABITACION, TARIFA</small>
+            </div>
+            <div class="rama rama-historico">
+              <span class="nodo-badge-rama">Alto Rendimiento & Histórico</span>
+              <strong>TBS_HISTORICO_RESERVAS</strong>
+              <small>RESERVA, RESERVA_HAB, RESERVA_SRV, PAGO</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PESTAÑA 2: SEGMENTOS FÍSICOS -->
+    <div *ngIf="pestanaActiva === 'segmentos'" class="panel-pestana">
+      <div class="barra-filtros-interna">
+        <span class="filtro-rotulo">Filtrar por tipo de segmento:</span>
+        <div class="grupo-botones-filtro">
+          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'TODOS'" (click)="filtroTipoSegmento = 'TODOS'">
+            Todos ({{ datos.segmentosHistorico.length }})
+          </button>
+          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'TABLE'" (click)="filtroTipoSegmento = 'TABLE'">
+            Tablas Físicas ({{ contarSegmentos('TABLE') }})
+          </button>
+          <button class="btn-filtro" [class.activo]="filtroTipoSegmento === 'INDEX'" (click)="filtroTipoSegmento = 'INDEX'">
+            Índices B-Tree ({{ contarSegmentos('INDEX') }})
+          </button>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-estilizada">
+          <thead>
+            <tr>
+              <th>Segmento Físico</th>
+              <th>Tipo de Objeto</th>
+              <th>Bytes Asignados</th>
+              <th>Megabytes (MB)</th>
+              <th>Extensiones (Extents)</th>
+              <th>Objetivo de Almacenamiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of obtenerSegmentosFiltrados()">
+              <td>
+                <div class="nombre-segmento-celda">
+                  <span class="icono-seg">{{ obtenerIconoSegmento(getProp(s, 'segment_type')) }}</span>
+                  <code class="codigo-nombre-seg">{{ getProp(s, 'segment_name') }}</code>
+                </div>
+              </td>
+              <td>
+                <span class="badge-tipo-seg" [class.tipo-tabla]="getProp(s, 'segment_type') === 'TABLE'" [class.tipo-indice]="getProp(s, 'segment_type') === 'INDEX'">
+                  {{ getProp(s, 'segment_type') }}
+                </span>
+              </td>
+              <td class="fuente-mono">{{ (getProp(s, 'bytes') || 0) | number }} B</td>
+              <td class="fuente-mono font-bold">{{ getProp(s, 'megabytes') }} MB</td>
+              <td class="fuente-mono">{{ getProp(s, 'extents') }}</td>
+              <td class="texto-secundario">
+                {{ (getProp(s, 'segment_name') || '').includes('RESERVA_SERVICIO') ? 'Detalle de consumos y servicios extras' :
+                   (getProp(s, 'segment_name') || '').includes('RESERVA_HABITACION') ? 'Relación de noches y habitaciones' :
+                   (getProp(s, 'segment_name') || '').includes('PAGO') ? 'Transacciones y pasarelas de pago' :
+                   (getProp(s, 'segment_name') || '').includes('RESERVA') ? 'Encabezados de contratos de hospedaje' :
+                   (getProp(s, 'segment_name') || '').includes('LIQUIDACION') ? 'Cierres mensuales consolidados de anfitriones' :
+                   'Segmento de alta velocidad' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PESTAÑA 3: DISTRIBUCIÓN DE TABLAS -->
+    <div *ngIf="pestanaActiva === 'tablas'" class="panel-pestana">
+      <div class="barra-filtros-interna">
+        <span class="filtro-rotulo">Filtrar por Tablespace:</span>
+        <div class="grupo-botones-filtro">
+          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'TODOS'" (click)="filtroTablespaceTabla = 'TODOS'">
+            Todas las Tablas ({{ datos.tablasPorTablespace.length }})
+          </button>
+          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'TBS_HISTORICO_RESERVAS'" (click)="filtroTablespaceTabla = 'TBS_HISTORICO_RESERVAS'">
+            TBS_HISTORICO_RESERVAS ({{ contarTablasPorTablespace('TBS_HISTORICO_RESERVAS') }})
+          </button>
+          <button class="btn-filtro" [class.activo]="filtroTablespaceTabla === 'USERS'" (click)="filtroTablespaceTabla = 'USERS'">
+            USERS ({{ contarTablasPorTablespace('USERS') }})
+          </button>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-estilizada">
+          <thead>
+            <tr>
+              <th>Nombre de Tabla</th>
+              <th>Tablespace Asignado</th>
+              <th>Registros Estimados</th>
+              <th>Nivel Arquitectónico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of obtenerTablasFiltradas()">
+              <td>
+                <code class="codigo-tabla">{{ getProp(t, 'table_name') }}</code>
+              </td>
+              <td>
+                <span class="chip-ts" [ngClass]="obtenerColorBadge(getProp(t, 'tablespace_name'))">
+                  {{ getProp(t, 'tablespace_name') }}
+                </span>
+              </td>
+              <td class="fuente-mono font-bold">
+                {{ (getProp(t, 'num_rows') || 0) | number }}
+              </td>
+              <td>
+                <span *ngIf="getProp(t, 'tablespace_name') === 'TBS_HISTORICO_RESERVAS'" class="tier-badge tier-olap">
+                  🗄️ Histórico / Transaccional Masivo
+                </span>
+                <span *ngIf="getProp(t, 'tablespace_name') === 'USERS'" class="tier-badge tier-oltp">
+                  🏬 Catálogo Maestro / Configuración
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PESTAÑA 4: 3 PILARES DE ARQUITECTURA -->
+    <div *ngIf="pestanaActiva === 'pilares'" class="panel-pestana">
+      <div class="pilares-grid">
+        <!-- Pilar 1 -->
+        <article class="tarjeta-pilar">
+          <div class="pilar-icono-circulo">🚀</div>
+          <span class="pilar-numero">Pilar 01</span>
+          <h3 class="pilar-titulo">Aislamiento Físico de I/O y Rendimiento OLTP</h3>
+          <p class="pilar-desc">
+            Las operaciones de reserva continua realizan operaciones DML de alta frecuencia (<code>INSERT</code>, <code>UPDATE</code>, <code>SELECT FOR UPDATE</code>).
+            Al segregar las 25,000 reservas, consumos de servicios y pagos en un tablespace físico independiente, las consultas analíticas pesadas (como <code>PIVOT</code>, <code>ROLLUP</code> y <code>RANK</code>)
+            no saturan el buffer cache ni compiten por los mismos bloques de disco que las transacciones de los usuarios en tiempo real.
+          </p>
+          <div class="pilar-beneficios">
+            <span class="chip-beneficio">Cero contención de buffer cache</span>
+            <span class="chip-beneficio">Canales de I/O independientes</span>
+          </div>
+        </article>
+
+        <!-- Pilar 2 -->
+        <article class="tarjeta-pilar">
+          <div class="pilar-icono-circulo">🛡️</div>
+          <span class="pilar-numero">Pilar 02</span>
+          <h3 class="pilar-titulo">Políticas Diferenciadas de Backup & Modo READ ONLY</h3>
+          <p class="pilar-desc">
+            El tablespace primario <code>USERS</code> requiere copias de seguridad incrementales diarias mediante Oracle RMAN debido a su constante mutabilidad.
+            En contraste, <code>TBS_HISTORICO_RESERVAS</code> almacena períodos cerrados que pueden sellarse con:
+            <code>ALTER TABLESPACE TBS_HISTORICO_RESERVAS READ ONLY;</code>
+            Esto reduce drásticamente el tamaño y la ventana horaria requerida para los backups de la base de datos institucional.
+          </p>
+          <div class="pilar-beneficios">
+            <span class="chip-beneficio">Ventanas de backup 80% más rápidas</span>
+            <span class="chip-beneficio">Inmunidad ante escrituras no autorizadas</span>
+          </div>
+        </article>
+
+        <!-- Pilar 3 -->
+        <article class="tarjeta-pilar">
+          <div class="pilar-icono-circulo">🗜️</div>
+          <span class="pilar-numero">Pilar 03</span>
+          <h3 class="pilar-titulo">Gestión del Ciclo de Vida (ILM) & Compresión Avanzada</h3>
+          <p class="pilar-desc">
+            Permite habilitar compresión avanzada de datos relacionales en Oracle (<code>COMPRESS FOR OLTP</code> o <code>QUERY HIGH</code>)
+            específicamente sobre el datafile de reservas históricas, logrando reducciones de espacio de hasta un <strong>70%</strong> en disco.
+            Asimismo, permite reubicar físicamente el archivo <code>.DBF</code> hacia unidades de almacenamiento secundario de bajo costo sin afectar las tablas maestras.
+          </p>
+          <div class="pilar-beneficios">
+            <span class="chip-beneficio">Ahorro de disco de hasta 70%</span>
+            <span class="chip-beneficio">Tiering en almacenamiento secundario</span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PESTAÑA 5: DDL & SENTENCIAS DBA -->
+    <div *ngIf="pestanaActiva === 'ddl'" class="panel-pestana">
+      <div class="tarjeta-codigo-sql">
+        <div class="barra-codigo-cabecera">
+          <div class="codigo-titulo-wrapper">
+            <span class="circulo-mac r"></span>
+            <span class="circulo-mac a"></span>
+            <span class="circulo-mac v"></span>
+            <span class="codigo-archivo">01_tablespace_historico.sql · DDL Oficial Oracle 21c</span>
+          </div>
+          <button class="boton-copiar" (click)="copiarDdl()">
+            {{ copiadoExito ? '✓ ¡Copiado!' : '📋 Copiar DDL' }}
+          </button>
+        </div>
+        <pre class="bloque-codigo"><code>{{ datos.scriptDdl }}</code></pre>
+      </div>
+
+      <!-- Consultas de Auditoría DBA Utilizadas -->
+      <div class="tarjeta-codigo-sql">
+        <div class="barra-codigo-cabecera">
+          <div class="codigo-titulo-wrapper">
+            <span class="codigo-archivo">Consultas DBA de Inspección en Tiempo Real</span>
+          </div>
+        </div>
+        <pre class="bloque-codigo"><code>-- 1. Verificación de cuotas y estado del Tablespace
+SELECT tablespace_name, status, extent_management, allocation_type, segment_space_management
+FROM user_tablespaces
+WHERE tablespace_name = 'TBS_HISTORICO_RESERVAS';
+
+-- 2. Consumo de bytes y extensiones por segmento físico
+SELECT segment_name, segment_type, bytes, ROUND(bytes/1048576, 2) AS MB, extents
+FROM user_segments
+WHERE tablespace_name = 'TBS_HISTORICO_RESERVAS'
+ORDER BY bytes DESC;
+
+-- 3. Distribución de tablas y volumen de registros por tablespace
+SELECT table_name, tablespace_name, num_rows
+FROM user_tables
+ORDER BY tablespace_name DESC, table_name ASC;</code></pre>
+      </div>
+    </div>
+  </div>
+</div>

@@ -164,6 +164,6 @@ public class ReservaServicioImpl implements ReservaServicio {
 
     @Override
     public List<Reserva> listarReservasRecientes() {
-        return reservaRepositorio.findTop30ByOrderByIdReservaDesc();
+        return reservaRepositorio.findTop5ByOrderByIdReservaDesc();
     }
 }

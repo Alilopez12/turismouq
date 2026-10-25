@@ -106,3 +106,21 @@ EXCEPTION
         END IF;
 END;
 /
+
+-- 4. Segregación física de tablas transaccionales masivas en TBS_HISTORICO_RESERVAS
+BEGIN
+    FOR t IN (SELECT table_name FROM user_tables WHERE table_name IN ('RESERVA', 'RESERVA_HABITACION', 'RESERVA_SERVICIO', 'PAGO', 'LIQUIDACION_MENSUAL') AND tablespace_name != 'TBS_HISTORICO_RESERVAS') LOOP
+        EXECUTE IMMEDIATE 'ALTER TABLE ' || t.table_name || ' MOVE TABLESPACE TBS_HISTORICO_RESERVAS';
+        DBMS_OUTPUT.PUT_LINE('Tabla ' || t.table_name || ' reubicada en TBS_HISTORICO_RESERVAS.');
+    END LOOP;
+END;
+/
+
+-- Reconstrucción de índices asociados en el tablespace dedicado
+BEGIN
+    FOR i IN (SELECT index_name FROM user_indexes WHERE table_name IN ('RESERVA', 'RESERVA_HABITACION', 'RESERVA_SERVICIO', 'PAGO', 'LIQUIDACION_MENSUAL') AND (tablespace_name != 'TBS_HISTORICO_RESERVAS' OR status = 'UNUSABLE')) LOOP
+        EXECUTE IMMEDIATE 'ALTER INDEX ' || i.index_name || ' REBUILD TABLESPACE TBS_HISTORICO_RESERVAS';
+        DBMS_OUTPUT.PUT_LINE('Índice ' || i.index_name || ' reconstruido en TBS_HISTORICO_RESERVAS.');
+    END LOOP;
+END;
+/

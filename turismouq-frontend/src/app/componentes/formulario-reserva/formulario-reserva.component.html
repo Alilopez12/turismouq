@@ -137,7 +137,7 @@
                     <path d="M2 17h20"></path>
                     <path d="M6 8v9"></path>
                   </svg>
-                  <input type="number" class="control-input con-icono" [(ngModel)]="idHabitacion" name="idHabitacion" required min="1" max="400" />
+                  <input type="number" class="control-input con-icono" [(ngModel)]="idHabitacion" name="idHabitacion" required min="1" max="400" (keydown)="bloquearNegativos($event)" (input)="validarNumerosPositivos()" />
                 </div>
               </div>
 
@@ -148,7 +148,7 @@
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                   </svg>
-                  <input type="number" class="control-input con-icono" [(ngModel)]="numeroHuespedes" name="numeroHuespedes" required min="1" max="20" />
+                  <input type="number" class="control-input con-icono" [(ngModel)]="numeroHuespedes" name="numeroHuespedes" required min="1" max="20" (keydown)="bloquearNegativos($event)" (input)="validarNumerosPositivos()" />
                 </div>
               </div>
             </div>
@@ -273,7 +273,7 @@
       <div class="tarjeta tarjeta-feed">
         <div class="cabecera-feed">
           <div>
-            <h3>Últimas Reservas Registradas</h3>
+            <h3>Últimas 5 Reservas Registradas</h3>
             <p class="texto-ayuda"> Flujo transaccional en vivo desde la tabla <code>RESERVA</code></p>
           </div>
           <span class="pildora-contador-feed">{{ reservasRecientes.length }} registros</span>

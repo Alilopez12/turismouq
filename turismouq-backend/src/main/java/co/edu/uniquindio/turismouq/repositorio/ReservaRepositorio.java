@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ReservaRepositorio extends JpaRepository<Reserva, Long> {
+    List<Reserva> findTop5ByOrderByIdReservaDesc();
     List<Reserva> findTop30ByOrderByIdReservaDesc();
     List<Reserva> findTop30ByOrderByFechaCreacionDesc();
     List<Reserva> findByClienteIdClienteOrderByFechaCreacionDesc(Long idCliente);

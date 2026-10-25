@@ -63,14 +63,32 @@ export class LiquidacionesComponent implements OnInit {
     });
   }
 
+  bloquearNegativos(event: KeyboardEvent): void {
+    if (['-', '+', 'e', 'E', '.'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validarIdAlojamiento(): void {
+    if (this.idAlojamientoFiltro !== null && this.idAlojamientoFiltro !== undefined) {
+      if (this.idAlojamientoFiltro <= 0) {
+        this.idAlojamientoFiltro = null;
+      } else {
+        this.idAlojamientoFiltro = Math.floor(Math.abs(this.idAlojamientoFiltro));
+      }
+    }
+  }
+
   ejecutarLiquidacionMasiva(): void {
     this.procesandoLiquidacion = true;
     this.mensajeAlerta = '';
 
+    const idAloj = (this.idAlojamientoFiltro && this.idAlojamientoFiltro > 0) ? this.idAlojamientoFiltro : undefined;
+
     this.turismoService.ejecutarLiquidacion(
       this.mesSeleccionado,
       this.anioSeleccionado,
-      this.idAlojamientoFiltro || undefined
+      idAloj
     ).subscribe({
       next: (procesados) => {
         this.procesandoLiquidacion = false;
@@ -88,15 +106,22 @@ export class LiquidacionesComponent implements OnInit {
     });
   }
 
+  get liquidacionesFiltradas(): LiquidacionItem[] {
+    if (!this.idAlojamientoFiltro || this.idAlojamientoFiltro <= 0) {
+      return this.liquidaciones;
+    }
+    return this.liquidaciones.filter(l => l.idAlojamiento === Number(this.idAlojamientoFiltro));
+  }
+
   calcularTotalBruto(): number {
-    return this.liquidaciones.reduce((acc, curr) => acc + curr.totalBruto, 0);
+    return this.liquidacionesFiltradas.reduce((acc, curr) => acc + curr.totalBruto, 0);
   }
 
   calcularTotalComision(): number {
-    return this.liquidaciones.reduce((acc, curr) => acc + curr.comisionPlataforma, 0);
+    return this.liquidacionesFiltradas.reduce((acc, curr) => acc + curr.comisionPlataforma, 0);
   }
 
   calcularTotalNeto(): number {
-    return this.liquidaciones.reduce((acc, curr) => acc + curr.pagoNetoPropietario, 0);
+    return this.liquidacionesFiltradas.reduce((acc, curr) => acc + curr.pagoNetoPropietario, 0);
   }
 }

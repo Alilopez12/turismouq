@@ -37,19 +37,19 @@
         <label class="etiqueta">ID Alojamiento (Opcional)</label>
         <input
           type="number"
+          min="1"
+          step="1"
           class="control-input"
           placeholder="Todos los 60 alojamientos"
           [(ngModel)]="idAlojamientoFiltro"
+          (keydown)="bloquearNegativos($event)"
+          (input)="validarIdAlojamiento()"
         />
       </div>
 
       <div class="acciones-liquidacion">
-        <button class="btn btn-esquema" (click)="consultar()" [disabled]="cargando">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <span>Consultar Periodo</span>
+        <button *ngIf="idAlojamientoFiltro" type="button" class="btn btn-esquema" (click)="idAlojamientoFiltro = null">
+          <span>Limpiar Filtro ID</span>
         </button>
 
         <button class="btn btn-primario" (click)="ejecutarLiquidacionMasiva()" [disabled]="procesandoLiquidacion">
@@ -72,7 +72,7 @@
   </div>
 
   <!-- 4 Bento Financial KPI Cards -->
-  <div class="metricas-resumen" *ngIf="liquidaciones.length > 0">
+  <div class="metricas-resumen" *ngIf="liquidacionesFiltradas.length > 0">
     <div class="tarjeta-bento kpi-indigo">
       <div class="kpi-cabecera">
         <span class="kpi-titulo">Alojamientos Liquidados</span>
@@ -83,7 +83,7 @@
           </svg>
         </div>
       </div>
-      <p class="valor-metrica">{{ liquidaciones.length }}</p>
+      <p class="valor-metrica">{{ liquidacionesFiltradas.length }}</p>
       <span class="kpi-sub">Propiedades procesadas en lote</span>
     </div>
 
@@ -147,7 +147,7 @@
       <p>Consultando libro mayor de liquidaciones en Oracle 21c...</p>
     </div>
 
-    <div class="tabla-contenedor" *ngIf="!cargando && liquidaciones.length > 0">
+    <div class="tabla-contenedor" *ngIf="!cargando && liquidacionesFiltradas.length > 0">
       <table class="tabla-datos">
         <thead>
           <tr>
@@ -164,7 +164,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let l of liquidaciones">
+          <tr *ngFor="let l of liquidacionesFiltradas">
             <td>
               <span class="id-aloj-mono">#{{ l.idAlojamiento }}</span>
             </td>
@@ -208,6 +208,17 @@
       </svg>
       <span>
         No se encontraron liquidaciones para el periodo <strong>{{ mesSeleccionado }}/{{ anioSeleccionado }}</strong>. Haz clic en <strong>"Ejecutar Cursor Explícito PL/SQL"</strong> para procesar el lote mensual en Oracle XE.
+      </span>
+    </div>
+
+    <div *ngIf="!cargando && liquidaciones.length > 0 && liquidacionesFiltradas.length === 0" class="alerta alerta-info">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>
+        No se encontró ninguna liquidación para el alojamiento con ID <strong>#{{ idAlojamientoFiltro }}</strong> en este periodo.
       </span>
     </div>
   </div>
