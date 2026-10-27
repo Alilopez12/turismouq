@@ -143,6 +143,14 @@ export class TurismoService {
       .pipe(map(r => r.datos));
   }
 
+  actualizarTarifa(idHabitacion: number, idTemporada: number, nuevoPrecio: number): Observable<any> {
+    return this.http.post<RespuestaApi<any>>(`${this.urlBase}/analitica/actualizar-tarifa`, {
+      idHabitacion,
+      idTemporada,
+      nuevoPrecio
+    }).pipe(map(r => r.datos));
+  }
+
   obtenerMonitoreoTablespace(): Observable<MonitoreoTablespace> {
     return this.http.get<RespuestaApi<MonitoreoTablespace>>(`${this.urlBase}/analitica/tablespace`)
       .pipe(map(r => r.datos));

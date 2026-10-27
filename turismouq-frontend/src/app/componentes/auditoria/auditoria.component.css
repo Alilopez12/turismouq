@@ -54,7 +54,556 @@
   font-weight: 600;
 }
 
-/* Tarjeta Bitácora */
+/* ==========================================================================
+   PANEL INTERACTIVO: MODIFICADOR DE TARIFAS (DEMO TRIGGER)
+   ========================================================================== */
+.panel-modificador-tarifa {
+  padding: 1.65rem 1.75rem;
+  margin-bottom: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDFBFA 100%);
+  border: 1px solid rgba(182, 93, 56, 0.22);
+  box-shadow: 0 4px 18px rgba(44, 82, 63, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-modificador-tarifa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primario) 0%, #D48B69 50%, var(--color-secundario) 100%);
+}
+
+.modificador-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed rgba(234, 219, 206, 0.9);
+}
+
+.modificador-titulo-grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.icono-rayo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #FDF3EE;
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(182, 93, 56, 0.2);
+}
+
+.modificador-cabecera h3 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.22rem;
+  color: var(--color-secundario);
+}
+
+.sub-modificador {
+  font-size: 0.85rem;
+  color: var(--color-texto-apagado);
+  margin: 0;
+}
+
+.sub-modificador code {
+  font-size: 0.78rem;
+  background: #F4EBE3;
+  color: var(--color-primario);
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.badge-en-vivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #24583E;
+  background: #EDF5F0;
+  border: 1px solid rgba(44, 82, 63, 0.25);
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.punto-verde-pulso {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2E7D32;
+  box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7);
+  animation: pulsoVerde 1.8s infinite;
+}
+
+@keyframes pulsoVerde {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(46, 125, 50, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+  }
+}
+
+/* Grid del Formulario */
+.formulario-tarifa {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formulario-tarifa-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr 1.6fr;
+  gap: 1.35rem;
+}
+
+@media (max-width: 900px) {
+  .formulario-tarifa-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.campo-etiqueta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.etiqueta-ayuda {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-texto-apagado);
+  font-family: var(--fuente-mono);
+}
+
+.input-control {
+  width: 100%;
+  height: 44px;
+  padding: 0 0.85rem;
+  border: 1.5px solid var(--color-borde);
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+  font-family: var(--fuente-base);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-control:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(182, 93, 56, 0.15);
+}
+
+/* Selector Rápido de Habitaciones */
+.chips-habitacion-sugeridas {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+
+.chip-sugerencia-label {
+  font-size: 0.72rem;
+  color: var(--color-texto-apagado);
+  font-weight: 600;
+}
+
+.btn-chip-hab {
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-chip-hab:hover {
+  background: #F4EBE3;
+  color: var(--color-primario);
+  border-color: var(--color-primario-claro);
+}
+
+.btn-chip-hab.activo {
+  background: var(--color-primario);
+  color: #FFFFFF;
+  border-color: var(--color-primario);
+}
+
+/* Selector de Temporadas */
+.selector-temporada-grupo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  height: 44px;
+}
+
+.opcion-temporada {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+  border: 1.5px solid var(--color-borde);
+  border-radius: 10px;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.opcion-temporada:hover {
+  border-color: var(--color-secundario);
+}
+
+.opcion-temporada.seleccionada {
+  border-color: var(--color-secundario);
+  background: #EDF4F0;
+  box-shadow: 0 0 0 2px rgba(44, 82, 63, 0.15);
+}
+
+.opcion-temporada input[type="radio"] {
+  accent-color: var(--color-secundario);
+  cursor: pointer;
+}
+
+.info-temporada {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.nombre-temp {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.id-temp-code {
+  font-size: 0.68rem;
+  font-family: var(--fuente-mono);
+  color: var(--color-texto-apagado);
+}
+
+/* Input Precio */
+.input-precio-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.prefijo-moneda {
+  position: absolute;
+  left: 0.9rem;
+  font-family: var(--fuente-mono);
+  font-weight: 700;
+  color: var(--color-texto-apagado);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.sufijo-moneda {
+  position: absolute;
+  right: 0.9rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-texto-apagado);
+  pointer-events: none;
+}
+
+.input-precio {
+  padding-left: 1.85rem;
+  padding-right: 2.85rem;
+  font-family: var(--fuente-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+/* Fila de incrementos y montos rápidos */
+.fila-incrementos-rapidos {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+
+.btn-chip-precio {
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--color-secundario);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-chip-precio:hover {
+  background: #EDF4F0;
+  border-color: var(--color-secundario);
+}
+
+.btn-chip-preset {
+  background: #FDF3EE;
+  border: 1px solid rgba(182, 93, 56, 0.25);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-chip-preset:hover {
+  background: var(--color-primario);
+  color: #FFFFFF;
+}
+
+/* Acciones y Vista previa DML */
+.acciones-modificador {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-borde);
+}
+
+.explicacion-dml {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 280px;
+}
+
+.etiqueta-sql {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-texto-apagado);
+}
+
+.explicacion-dml code {
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  color: var(--color-secundario);
+  word-break: break-all;
+}
+
+.btn-ejecutar-trigger {
+  padding: 0.75rem 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(182, 93, 56, 0.25);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-ejecutar-trigger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(182, 93, 56, 0.35);
+}
+
+.btn-ejecutar-trigger:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.spinner-boton {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: giroSpinner 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* Alerta de Resultado */
+.alerta-resultado-tarifa {
+  margin-top: 1.1rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alerta-resultado-tarifa.alerta-exito {
+  background: #EDF5F0;
+  border: 1.5px solid rgba(44, 82, 63, 0.3);
+  color: #1F4532;
+}
+
+.alerta-resultado-tarifa.alerta-error {
+  background: #FDF0ED;
+  border: 1.5px solid rgba(182, 93, 56, 0.4);
+  color: #7A2814;
+}
+
+.alerta-icono {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.alerta-exito .alerta-icono {
+  color: #24583E;
+}
+
+.alerta-error .alerta-icono {
+  color: var(--color-primario);
+}
+
+.alerta-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.alerta-titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.alerta-titulo-fila strong {
+  font-size: 0.95rem;
+}
+
+.alerta-trigger-tag {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #FFFFFF;
+  color: #24583E;
+  border: 1px solid rgba(44, 82, 63, 0.25);
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+}
+
+.alerta-texto {
+  font-size: 0.86rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.alerta-comparativa {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.85rem;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid rgba(44, 82, 63, 0.15);
+  font-size: 0.82rem;
+}
+
+.cambio-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cambio-label {
+  font-weight: 600;
+  color: var(--color-texto-apagado);
+}
+
+.cambio-val {
+  font-family: var(--fuente-mono);
+  font-weight: 700;
+}
+
+.cambio-val.antiguo {
+  color: #A09488;
+  text-decoration: line-through;
+}
+
+.cambio-val.nuevo {
+  color: #24583E;
+  background: #EDF5F0;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.badge-filas {
+  font-family: var(--fuente-mono);
+  font-weight: 700;
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   TARJETA BITÁCORA
+   ========================================================================== */
 .tarjeta-bitacora {
   padding: 1.75rem;
   border-radius: 20px;

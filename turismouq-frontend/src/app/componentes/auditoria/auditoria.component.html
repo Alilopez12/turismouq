@@ -8,7 +8,7 @@
       </div>
       <h2>Auditoría de Sentencias sobre Tarifas</h2>
       <p class="subtexto">
-        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en la base de datos.
+        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en la base de datos Oracle XE.
       </p>
     </div>
 
@@ -21,6 +21,195 @@
       <span>Refrescar Bitácora</span>
     </button>
   </header>
+
+  <!-- PANEL INTERACTIVO: MODIFICAR TARIFA EN VIVO (DEMOSTRACIÓN SUSTENTACIÓN) -->
+  <section class="tarjeta panel-modificador-tarifa">
+    <div class="modificador-cabecera">
+      <div class="modificador-titulo-grupo">
+        <div class="icono-rayo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div>
+          <h3>Demostración en Vivo: Modificador de Tarifas</h3>
+          <p class="sub-modificador">
+            Ejecuta un <code>UPDATE TARIFA</code> directamente en Oracle XE para disparar el compound trigger <code>TRG_AUDITORIA_TARIFA_STMT</code> y verificar la bitácora al instante.
+          </p>
+        </div>
+      </div>
+      <span class="badge-en-vivo">
+        <span class="punto-verde-pulso"></span>
+        Conexión en Vivo a Oracle XE
+      </span>
+    </div>
+
+    <form class="formulario-tarifa" (ngSubmit)="modificarTarifa()">
+      <div class="formulario-tarifa-grid">
+        <!-- Campo: Habitación -->
+        <div class="campo-grupo">
+          <label for="habitacionId" class="campo-etiqueta">
+            <span>ID Habitación (1 - 400)</span>
+            <span class="etiqueta-ayuda">Habitación registrada</span>
+          </label>
+          <div class="input-habitacion-wrapper">
+            <input
+              id="habitacionId"
+              type="number"
+              min="1"
+              max="400"
+              class="input-control"
+              [(ngModel)]="idHabitacionModificar"
+              name="habitacionId"
+              placeholder="Ej: 1"
+              required
+            />
+          </div>
+          <div class="chips-habitacion-sugeridas">
+            <span class="chip-sugerencia-label">Rápidos:</span>
+            <button type="button" class="btn-chip-hab" [class.activo]="idHabitacionModificar === 1" (click)="idHabitacionModificar = 1">Hab #1</button>
+            <button type="button" class="btn-chip-hab" [class.activo]="idHabitacionModificar === 2" (click)="idHabitacionModificar = 2">Hab #2</button>
+            <button type="button" class="btn-chip-hab" [class.activo]="idHabitacionModificar === 5" (click)="idHabitacionModificar = 5">Hab #5</button>
+            <button type="button" class="btn-chip-hab" [class.activo]="idHabitacionModificar === 10" (click)="idHabitacionModificar = 10">Hab #10</button>
+          </div>
+        </div>
+
+        <!-- Campo: Temporada -->
+        <div class="campo-grupo">
+          <label class="campo-etiqueta">
+            <span>Temporada</span>
+            <span class="etiqueta-ayuda">ID_TEMPORADA</span>
+          </label>
+          <div class="selector-temporada-grupo">
+            <label class="opcion-temporada" [class.seleccionada]="idTemporadaModificar === 1">
+              <input
+                type="radio"
+                name="temporada"
+                [value]="1"
+                [(ngModel)]="idTemporadaModificar"
+              />
+              <div class="info-temporada">
+                <span class="nombre-temp">Temporada Baja</span>
+                <span class="id-temp-code">ID: 1</span>
+              </div>
+            </label>
+            <label class="opcion-temporada" [class.seleccionada]="idTemporadaModificar === 2">
+              <input
+                type="radio"
+                name="temporada"
+                [value]="2"
+                [(ngModel)]="idTemporadaModificar"
+              />
+              <div class="info-temporada">
+                <span class="nombre-temp">Temporada Alta</span>
+                <span class="id-temp-code">ID: 2</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Campo: Nuevo Precio por Noche -->
+        <div class="campo-grupo">
+          <label for="precioNoche" class="campo-etiqueta">
+            <span>Nuevo Precio por Noche (COP)</span>
+            <span class="etiqueta-ayuda">PRECIO_NOCHE</span>
+          </label>
+          <div class="input-precio-wrapper">
+            <span class="prefijo-moneda">$</span>
+            <input
+              id="precioNoche"
+              type="number"
+              step="5000"
+              min="10000"
+              class="input-control input-precio"
+              [(ngModel)]="nuevoPrecioModificar"
+              name="precioNoche"
+              placeholder="Ej: 195000"
+              required
+            />
+            <span class="sufijo-moneda">COP</span>
+          </div>
+          <!-- Botones de incremento y montos típicos -->
+          <div class="fila-incrementos-rapidos">
+            <button type="button" class="btn-chip-precio" (click)="ajustarPrecio(-20000)">- $20k</button>
+            <button type="button" class="btn-chip-precio" (click)="ajustarPrecio(-10000)">- $10k</button>
+            <button type="button" class="btn-chip-precio" (click)="ajustarPrecio(10000)">+ $10k</button>
+            <button type="button" class="btn-chip-precio" (click)="ajustarPrecio(25000)">+ $25k</button>
+            <button type="button" class="btn-chip-precio" (click)="ajustarPrecio(50000)">+ $50k</button>
+            <button type="button" class="btn-chip-preset" (click)="fijarPrecio(180000)">$180k</button>
+            <button type="button" class="btn-chip-preset" (click)="fijarPrecio(250000)">$250k</button>
+            <button type="button" class="btn-chip-preset" (click)="fijarPrecio(350000)">$350k</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Acciones del Formulario -->
+      <div class="acciones-modificador">
+        <div class="explicacion-dml">
+          <span class="etiqueta-sql">SQL a Ejecutar:</span>
+          <code>
+            UPDATE TARIFA SET precio_noche = {{ nuevoPrecioModificar | number:'1.0-0' }}
+            WHERE id_habitacion = {{ idHabitacionModificar }} AND id_temporada = {{ idTemporadaModificar }};
+          </code>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primario btn-ejecutar-trigger"
+          [disabled]="guardandoTarifa"
+        >
+          <svg *ngIf="!guardandoTarifa" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span *ngIf="guardandoTarifa" class="spinner-boton"></span>
+          <span>{{ guardandoTarifa ? 'Ejecutando en Oracle...' : 'Actualizar Tarifa y Disparar Trigger' }}</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Alerta Informativa de Ejecución Exitosa o Error -->
+    <div *ngIf="mensajeTarifa" class="alerta-resultado-tarifa" [class.alerta-exito]="tipoMensajeTarifa === 'exito'" [class.alerta-error]="tipoMensajeTarifa === 'error'">
+      <div class="alerta-icono">
+        <svg *ngIf="tipoMensajeTarifa === 'exito'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <svg *ngIf="tipoMensajeTarifa === 'error'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="alerta-cuerpo">
+        <div class="alerta-titulo-fila">
+          <strong>{{ tipoMensajeTarifa === 'exito' ? '¡Sentencia DML Ejecutada y Trigger Disparado!' : 'Error de Ejecución DML' }}</strong>
+          <span class="alerta-trigger-tag" *ngIf="tipoMensajeTarifa === 'exito'">TRG_AUDITORIA_TARIFA_STMT ejecutado</span>
+        </div>
+        <p class="alerta-texto">{{ mensajeTarifa }}</p>
+        <div class="alerta-comparativa" *ngIf="ultimoCambio && tipoMensajeTarifa === 'exito'">
+          <div class="cambio-item">
+            <span class="cambio-label">Habitación:</span>
+            <span class="cambio-val">Hab #{{ ultimoCambio.idHabitacion }} ({{ ultimoCambio.idTemporada === 1 ? 'Temporada Baja' : 'Temporada Alta' }})</span>
+          </div>
+          <div class="cambio-item">
+            <span class="cambio-label">Tarifa Anterior:</span>
+            <span class="cambio-val antiguo">${{ ultimoCambio.precioAnterior | number:'1.0-0' }}</span>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+          <div class="cambio-item">
+            <span class="cambio-label">Nueva Tarifa:</span>
+            <span class="cambio-val nuevo">${{ ultimoCambio.precioNuevo | number:'1.0-0' }}</span>
+          </div>
+          <div class="cambio-item">
+            <span class="cambio-label">Filas Afectadas:</span>
+            <span class="badge-filas">{{ ultimoCambio.filasAfectadas }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Tarjeta Principal de Bitácora -->
   <div class="tarjeta tarjeta-bitacora">
@@ -114,7 +303,7 @@
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
       <span>
-        Aún no se han registrado eventos en la tabla <code>AUDITORIA_TARIFA</code>. Al modificar una tarifa en el sistema se registrará la traza automáticamente.
+        Aún no se han registrado eventos en la tabla <code>AUDITORIA_TARIFA</code>. Al modificar una tarifa en el panel superior se registrará la traza automáticamente.
       </span>
     </div>
   </div>

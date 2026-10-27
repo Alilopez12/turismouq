@@ -4,7 +4,6 @@ co\edu\uniquindio\turismouq\repositorio\AuditoriaTarifaRepositorio.class
 co\edu\uniquindio\turismouq\dto\ReservaRespuestaDTO.class
 co\edu\uniquindio\turismouq\servicio\AlojamientoServicio.class
 co\edu\uniquindio\turismouq\servicio\LiquidacionServicio.class
-co\edu\uniquindio\turismouq\servicio\AnaliticaServicioImpl.class
 co\edu\uniquindio\turismouq\controlador\LiquidacionControlador.class
 co\edu\uniquindio\turismouq\entidad\Tarifa.class
 co\edu\uniquindio\turismouq\repositorio\TarifaRepositorio.class

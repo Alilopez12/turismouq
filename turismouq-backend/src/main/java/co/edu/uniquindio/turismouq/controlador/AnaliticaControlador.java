@@ -93,6 +93,16 @@ public class AnaliticaControlador {
         ));
     }
 
+    @PostMapping("/actualizar-tarifa")
+    public ResponseEntity<RespuestaApiDTO<Map<String, Object>>> actualizarTarifa(@RequestBody Map<String, Object> payload) {
+        Long idHabitacion = payload.get("idHabitacion") != null ? Long.valueOf(payload.get("idHabitacion").toString()) : null;
+        Long idTemporada = payload.get("idTemporada") != null ? Long.valueOf(payload.get("idTemporada").toString()) : null;
+        Double nuevoPrecio = payload.get("nuevoPrecio") != null ? Double.valueOf(payload.get("nuevoPrecio").toString()) : null;
+
+        Map<String, Object> resultado = analiticaServicio.actualizarTarifa(idHabitacion, idTemporada, nuevoPrecio);
+        return ResponseEntity.ok(RespuestaApiDTO.exito("Tarifa modificada en la base de datos", resultado));
+    }
+
     @GetMapping("/tablespace")
     public ResponseEntity<RespuestaApiDTO<Map<String, Object>>> obtenerMonitoreoTablespace() {
         return ResponseEntity.ok(RespuestaApiDTO.exito(
