@@ -1,36 +1,36 @@
 /* ==========================================================================
-   TURISMOUQ · QUINDÍOSTAYS — SISTEMA DE DISEÑO GLOBAL (AIRBNB 2026 + EXPEDIA + STRIPE)
-   Paleta: Rausch Coral (#FF385C), Midnight Navy (#1E243A), Electric Indigo (#4F46E5)
+   TURISMOUQ — SISTEMA DE DISEÑO VISUAL
+   Inspiración: Paisaje Cultural Cafetero del Quindío (Cálido, Humano, Elegante)
+   Paleta: Terracota Cafetero (#B65D38), Verde Bosque Quindío (#2C523F), Ámbar Miel (#C88A35)
    ========================================================================== */
 
 :root {
-  --color-primario: #FF385C;
-  --color-primario-oscuro: #D70466;
-  --color-primario-claro: #FFF0F3;
-  --color-secundario: #1E243A;
-  --color-secundario-hover: #0F172A;
-  --color-acento-indigo: #4F46E5;
-  --color-acento-indigo-claro: #EEF2FF;
-  --color-acento-oro: #F59E0B;
-  --color-acento-oro-claro: #FEF3C7;
-  --color-fondo: #F7F7F9;
+  --color-primario: #B65D38;
+  --color-primario-oscuro: #984928;
+  --color-primario-claro: #FBF1EB;
+  --color-secundario: #2C523F;
+  --color-secundario-hover: #203F30;
+  --color-secundario-claro: #EDF4F0;
+  --color-acento-oro: #C88A35;
+  --color-acento-oro-claro: #FDF6EC;
+  --color-fondo: #FAF8F5;
   --color-tarjeta: #FFFFFF;
-  --color-texto: #222222;
-  --color-texto-apagado: #6A6A6A;
-  --color-borde: #EBEBEB;
-  --color-borde-fuerte: #DDDDDD;
-  --color-exito: #0284C7;
-  --color-peligro: #E11D48;
-  --color-aviso: #D97706;
+  --color-texto: #28231D;
+  --color-texto-apagado: #6E645B;
+  --color-borde: #EADBCE;
+  --color-borde-fuerte: #D6C7B7;
+  --color-exito: #2D6A4F;
+  --color-peligro: #B23B2B;
+  --color-aviso: #B8731F;
 
-  --gradiente-coral: linear-gradient(135deg, #FF385C 0%, #E61E4D 50%, #D70466 100%);
-  --gradiente-navy: linear-gradient(135deg, #1E243A 0%, #0F172A 100%);
-  --gradiente-indigo: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+  --gradiente-coral: linear-gradient(135deg, #C2673D 0%, #B65D38 50%, #A44F2D 100%);
+  --gradiente-navy: linear-gradient(135deg, #37634D 0%, #2C523F 100%);
+  --gradiente-indigo: linear-gradient(135deg, #4A7A60 0%, #2D5842 100%);
 
-  --sombra-suave: 0 2px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --sombra-media: 0 6px 20px rgba(0, 0, 0, 0.08);
-  --sombra-fuerte: 0 12px 32px rgba(0, 0, 0, 0.12);
-  --sombra-coral: 0 8px 24px rgba(255, 56, 92, 0.28);
+  --sombra-suave: 0 2px 10px rgba(75, 45, 20, 0.04), 0 1px 3px rgba(75, 45, 20, 0.03);
+  --sombra-media: 0 6px 20px rgba(75, 45, 20, 0.06);
+  --sombra-fuerte: 0 14px 34px rgba(75, 45, 20, 0.09);
+  --sombra-coral: 0 8px 24px rgba(182, 93, 56, 0.22);
 
   --radio-borde: 16px;
   --radio-pildora: 9999px;
@@ -133,11 +133,11 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primario {
   background: var(--gradiente-coral);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(255, 56, 92, 0.25);
+  box-shadow: 0 4px 14px rgba(182, 93, 56, 0.22);
 }
 
 .btn-primario:hover:not(:disabled) {
-  background: linear-gradient(135deg, #E61E4D 0%, #D70466 100%);
+  background: linear-gradient(135deg, #A44F2D 0%, #914223 100%);
   transform: translateY(-1px);
   box-shadow: var(--sombra-coral);
 }
@@ -145,13 +145,13 @@ h1, h2, h3, h4, h5, h6 {
 .btn-secundario {
   background: var(--color-secundario);
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(30, 36, 58, 0.18);
+  box-shadow: 0 4px 12px rgba(44, 82, 63, 0.18);
 }
 
 .btn-secundario:hover:not(:disabled) {
   background: var(--color-secundario-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 6px 18px rgba(32, 63, 48, 0.25);
 }
 
 .btn-esquema {
@@ -162,7 +162,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-esquema:hover:not(:disabled) {
   border-color: var(--color-secundario);
-  background: #F9FAFB;
+  background: #FAF6F0;
   color: var(--color-secundario);
 }
 
@@ -206,16 +206,16 @@ select.control-input {
 }
 
 .control-input:hover {
-  border-color: #B0B0B0;
+  border-color: #C0B0A0;
 }
 
 .control-input:focus {
   border-color: var(--color-primario);
   outline: none;
-  box-shadow: 0 0 0 3.5px rgba(255, 56, 92, 0.14);
+  box-shadow: 0 0 0 3.5px rgba(182, 93, 56, 0.14);
 }
 
-/* Tablas Modernas (Stripe / Linear Style) */
+/* Tablas Modernas y Cálidas */
 .tabla-contenedor {
   width: 100%;
   overflow-x: auto;
@@ -232,7 +232,7 @@ select.control-input {
 }
 
 .tabla-datos th {
-  background-color: #F8FAFC;
+  background-color: #F7F3ED;
   color: var(--color-texto-apagado);
   font-family: var(--fuente-cuerpo);
   font-size: 0.76rem;
@@ -246,7 +246,7 @@ select.control-input {
 
 .tabla-datos td {
   padding: 0.9rem 1.1rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #F3ECE2;
   color: var(--color-texto);
   vertical-align: middle;
 }
@@ -256,7 +256,7 @@ select.control-input {
 }
 
 .tabla-datos tbody tr:hover {
-  background-color: #FFF8F9;
+  background-color: #FAF5EE;
 }
 
 .tabla-datos tbody tr:last-child td {
@@ -278,39 +278,39 @@ select.control-input {
 }
 
 .insignia-finca {
-  background-color: #FFF0F3;
-  color: #D70466;
-  border: 1px solid rgba(255, 56, 92, 0.2);
+  background-color: #FBF1EB;
+  color: #984928;
+  border: 1px solid rgba(182, 93, 56, 0.25);
 }
 
 .insignia-glamping {
-  background-color: #FEF3C7;
-  color: #B45309;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background-color: #FDF6EC;
+  color: #94611B;
+  border: 1px solid rgba(200, 138, 53, 0.28);
 }
 
 .insignia-hotel {
-  background-color: #EEF2FF;
-  color: #4338CA;
-  border: 1px solid rgba(79, 70, 229, 0.2);
+  background-color: #EDF4F0;
+  color: #203F30;
+  border: 1px solid rgba(44, 82, 63, 0.25);
 }
 
 .insignia-hostal {
-  background-color: #E0F2FE;
-  color: #0369A1;
-  border: 1px solid rgba(2, 132, 199, 0.2);
+  background-color: #F0F6F5;
+  color: #285558;
+  border: 1px solid rgba(40, 85, 88, 0.22);
 }
 
 .insignia-alta {
-  background-color: #FFF1F2;
-  color: #E11D48;
-  border: 1px solid rgba(225, 29, 72, 0.22);
+  background-color: #FDF2F0;
+  color: #9E3526;
+  border: 1px solid rgba(178, 59, 43, 0.22);
 }
 
 .insignia-baja {
-  background-color: #F0F9FF;
-  color: #0284C7;
-  border: 1px solid rgba(2, 132, 199, 0.22);
+  background-color: #EDF5F0;
+  color: #24583E;
+  border: 1px solid rgba(45, 106, 79, 0.22);
 }
 
 /* Alertas */
@@ -326,22 +326,22 @@ select.control-input {
 }
 
 .alerta-exito {
-  background-color: #F0F9FF;
-  color: #0C4A6E;
-  border: 1px solid #BAE6FD;
-  border-left: 4px solid #0284C7;
+  background-color: #EDF5F0;
+  color: #1A4832;
+  border: 1px solid #C6E2D2;
+  border-left: 4px solid #2D6A4F;
 }
 
 .alerta-error {
-  background-color: #FFF1F2;
-  color: #881337;
-  border: 1px solid #FECDD3;
-  border-left: 4px solid #E11D48;
+  background-color: #FDF2F0;
+  color: #7A2216;
+  border: 1px solid #F6CDC7;
+  border-left: 4px solid #B23B2B;
 }
 
 .alerta-info {
-  background-color: #EEF2FF;
-  color: #1E1B4B;
-  border: 1px solid #C7D2FE;
-  border-left: 4px solid #4F46E5;
+  background-color: #F8F4EE;
+  color: #4D3A27;
+  border: 1px solid #E6D9C8;
+  border-left: 4px solid #C88A35;
 }

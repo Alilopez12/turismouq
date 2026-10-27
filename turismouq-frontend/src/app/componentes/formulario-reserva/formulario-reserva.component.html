@@ -1,14 +1,14 @@
 <div class="contenedor">
-  <!-- Encabezado Editorial de Checkout -->
+  <!-- Encabezado de Confirmación -->
   <header class="encabezado-checkout">
     <div>
       <div class="badges-encabezado">
-        <span class="insignia insignia-finca">CHECKOUT TRANSACCIONAL</span>
-        <span class="badge-plsql-proc">PKG_TURISMO_UQ.sp_crear_reserva</span>
+        <span class="insignia insignia-finca">Confirmación de Reserva</span>
+        <span class="badge-plsql-proc">Transacción Verificada</span>
       </div>
       <h2>Confirmar y Reservar Estadía</h2>
       <p class="subtexto">
-        Registro atómico de huésped y reserva con validación automática de capacidad y disparador anti-solapamiento en Oracle 21c
+        Registro unificado de huésped y reserva con validación de capacidad y verificación de disponibilidad en tiempo real.
       </p>
     </div>
 
@@ -22,16 +22,15 @@
     </button>
   </header>
 
-  <!-- BANCO DE PRUEBAS DOCENTE (TEST BENCH PL/SQL PARA SUSTENTACIÓN EN VIVO) -->
+  <!-- ESCENARIOS DE DEMOSTRACIÓN Y REGLAS DE NEGOCIO -->
   <section class="banner-banco-pruebas">
     <div class="banco-pruebas-header">
       <div class="banco-pruebas-titulo">
         <div class="badges-banco">
-          <span class="insignia-banco">BANCO DE PRUEBAS PL/SQL · EVALUACIÓN EN VIVO</span>
-          <span class="badge-docente">MODO SUSTENTACIÓN 1-CLIC</span>
+          <span class="insignia-banco">Demostración de Reglas de Negocio</span>
         </div>
-        <h3>Simulador de Reglas de Negocio & Excepciones Oracle XE</h3>
-        <p>Carga escenarios preconfigurados para detonar en vivo las excepciones <code>RAISE_APPLICATION_ERROR</code> y el disparador anti-solapamiento.</p>
+        <h3>Escenarios de Validación y Reglas de Negocio</h3>
+        <p>Prueba en tiempo real las reglas de integridad garantizadas por la base de datos: control de fechas, límites de aforo y prevención de solapamientos.</p>
       </div>
       <div class="banco-pruebas-indicador" *ngIf="casoPruebaActivo">
         <span class="badge-caso" [ngClass]="casoPruebaActivo === 'COMMIT' ? 'badge-exito' : 'badge-error'">
@@ -174,7 +173,7 @@
               <span class="numero-paso">2</span>
               <div>
                 <h3 class="titulo-paso">Datos del Huésped Titular</h3>
-                <p class="subtitulo-paso">Información para registro o actualización automática en la tabla <code>CLIENTE</code></p>
+                <p class="subtitulo-paso">Información para registro o actualización en el sistema de clientes</p>
               </div>
             </div>
 
@@ -231,20 +230,20 @@
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               <polyline points="9 12 11 14 15 10"></polyline>
             </svg>
-            <span *ngIf="procesando">Procesando transacción en Oracle XE...</span>
-            <span *ngIf="!procesando">Confirmar & Ejecutar sp_crear_reserva</span>
+            <span *ngIf="procesando">Procesando reservación...</span>
+            <span *ngIf="!procesando">Confirmar Reservación</span>
           </button>
         </form>
       </div>
     </div>
 
-    <!-- Columna Derecha: Voucher Recién Creado + Live Transaction Feed -->
+    <!-- Columna Derecha: Voucher Recién Creado + Live Feed -->
     <div class="columna-recientes">
       <!-- Voucher de Confirmación si acaba de crear una reserva -->
       <div *ngIf="reservaCreada" class="voucher-confirmado">
         <div class="voucher-cabecera">
           <div>
-            <span class="etiqueta-voucher">COMPROBANTE OFICIAL DE RESERVA</span>
+            <span class="etiqueta-voucher">COMPROBANTE DE RESERVA</span>
             <h4>{{ reservaCreada.nombreAlojamiento || 'Estadía Confirmada' }}</h4>
           </div>
           <span class="codigo-voucher">#{{ reservaCreada.idReserva }}</span>
@@ -273,8 +272,8 @@
       <div class="tarjeta tarjeta-feed">
         <div class="cabecera-feed">
           <div>
-            <h3>Últimas 5 Reservas Registradas</h3>
-            <p class="texto-ayuda"> Flujo transaccional en vivo desde la tabla <code>RESERVA</code></p>
+            <h3>Últimas Reservas Registradas</h3>
+            <p class="texto-ayuda">Historial de reservas registradas en el sistema</p>
           </div>
           <span class="pildora-contador-feed">{{ reservasRecientes.length }} registros</span>
         </div>

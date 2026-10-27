@@ -1,18 +1,17 @@
 <div class="contenedor">
-  <!-- Editorial Hero Banner + Airbnb Search Bar -->
+  <!-- Editorial Hero Banner + Search Bar -->
   <section class="hero-catalogo">
     <div class="hero-contenido">
       <div class="hero-insignias">
-        <span class="pildora-hero-coral">COLECCIÓN QUINDÍO 2026</span>
-        <span class="pildora-hero-oscura">60 Alojamientos · 12 Municipios</span>
+        <span class="pildora-hero-quindio">60 Alojamientos · 12 Municipios</span>
       </div>
       <h1 class="hero-titulo">Descubre estadías extraordinarias en el corazón del Quindío</h1>
       <p class="hero-subtitulo">
-        Fincas tradicionales, glampings de montaña, hoteles boutique y hostales verificados con tarifación dinámica en tiempo real sobre Oracle 21c.
+        Fincas tradicionales, glampings de montaña, hoteles boutique y hostales verificados con tarifación dinámica en tiempo real.
       </p>
     </div>
 
-    <!-- Floating Airbnb Search Bar Pill -->
+    <!-- Floating Search Bar Pill -->
     <div class="barra-busqueda-airbnb">
       <div class="campo-busqueda">
         <label class="etiqueta-busqueda">
@@ -83,7 +82,7 @@
     </div>
   </section>
 
-  <!-- Airbnb Category Strip -->
+  <!-- Category Strip -->
   <div class="franja-categorias">
     <div class="lista-categorias">
       <button
@@ -147,10 +146,10 @@
   <!-- Estado de Carga -->
   <div *ngIf="cargando" class="estado-mensaje">
     <div class="spinner-coral"></div>
-    <p>Consultando catálogo de alojamientos en Oracle XE 21c...</p>
+    <p>Cargando alojamientos disponibles...</p>
   </div>
 
-  <!-- Cuadrícula de Alojamientos (Airbnb Guest Favorite Cards) -->
+  <!-- Cuadrícula de Alojamientos -->
   <div *ngIf="!cargando" class="cuadricula-alojamientos">
     <article *ngFor="let a of alojamientosFiltrados" class="tarjeta-propiedad">
       <!-- Portada Visual de la Tarjeta -->
@@ -171,7 +170,7 @@
           </span>
 
           <span class="pildora-rating">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B" stroke="none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#C88A35" stroke="none">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
             </svg>
             {{ obtenerCalificacion(a.idAlojamiento) }}
@@ -230,7 +229,7 @@
 
         <div class="acciones-tarjeta">
           <a [routerLink]="['/alojamientos', a.idAlojamiento]" class="btn btn-primario ancho-completo btn-explorar">
-            <span>Explorar Habitaciones & Cotizar</span>
+            <span>Ver Habitaciones & Tarifas</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>

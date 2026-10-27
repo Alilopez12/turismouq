@@ -1,5 +1,6 @@
 /* ==========================================================================
-   LIQUIDACIONES MASIVAS — STRIPE PAYOUTS & BENTO FINANCIAL DASHBOARD
+   LIQUIDACIONES MASIVAS — TURISMOUQ
+   Estilo: Quindío Cálido, Humano y Elegante
    ========================================================================== */
 
 .encabezado-liquidaciones {
@@ -15,11 +16,12 @@
 }
 
 .badge-cursor-plsql {
-  font-family: var(--fuente-mono);
+  font-family: var(--fuente-cuerpo);
   font-size: 0.73rem;
   font-weight: 600;
-  background: var(--color-secundario);
-  color: #FFFFFF;
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  border: 1px solid rgba(44, 82, 63, 0.2);
   padding: 0.25rem 0.65rem;
   border-radius: 9999px;
 }
@@ -27,6 +29,7 @@
 .encabezado-liquidaciones h2 {
   font-size: 1.85rem;
   margin-bottom: 0.25rem;
+  color: var(--color-secundario);
 }
 
 .subtexto {
@@ -124,11 +127,11 @@
 }
 
 .kpi-indigo::before {
-  background: var(--color-acento-indigo);
+  background: var(--color-secundario);
 }
 
 .kpi-navy::before {
-  background: var(--color-secundario);
+  background: #3D352E;
 }
 
 .kpi-coral::before {
@@ -136,7 +139,7 @@
 }
 
 .kpi-sky::before {
-  background: #0284C7;
+  background: #37634D;
 }
 
 .kpi-cabecera {
@@ -159,7 +162,7 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: #F8FAFC;
+  background: #FAF7F2;
   color: var(--color-secundario);
   display: flex;
   align-items: center;
@@ -167,19 +170,24 @@
   flex-shrink: 0;
 }
 
+.kpi-indigo .kpi-icono {
+  background: #EDF4F0;
+  color: var(--color-secundario);
+}
+
+.kpi-navy .kpi-icono {
+  background: #F4EFE9;
+  color: #3D352E;
+}
+
 .kpi-coral .kpi-icono {
-  background: var(--color-primario-claro);
+  background: #FBF1EB;
   color: var(--color-primario);
 }
 
 .kpi-sky .kpi-icono {
-  background: #E0F2FE;
-  color: #0284C7;
-}
-
-.kpi-indigo .kpi-icono {
-  background: var(--color-acento-indigo-claro);
-  color: var(--color-acento-indigo);
+  background: #EDF5F0;
+  color: #24583E;
 }
 
 .valor-metrica {
@@ -196,7 +204,7 @@
 }
 
 .color-sky {
-  color: #0284C7;
+  color: #24583E;
 }
 
 .kpi-sub {
@@ -221,6 +229,7 @@
 
 .cabecera-ledger h3 {
   margin-bottom: 0.15rem;
+  color: var(--color-secundario);
 }
 
 .subtexto-ledger {
@@ -230,8 +239,8 @@
 
 .subtexto-ledger code {
   font-size: 0.78rem;
-  background: #F1F5F9;
-  color: var(--color-acento-indigo);
+  background: #FAF7F2;
+  color: var(--color-secundario);
   padding: 0.12rem 0.4rem;
   border-radius: 4px;
   font-weight: 600;
@@ -249,69 +258,69 @@
 
 .id-aloj-mono {
   font-family: var(--fuente-mono);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  color: #64748B;
-  background: #F1F5F9;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
+  color: var(--color-secundario);
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
 }
 
 .nombre-propiedad-ledger {
   color: var(--color-secundario);
+  font-weight: 700;
 }
 
 .pildora-municipio-tabla {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.76rem;
   color: var(--color-secundario);
-}
-
-.pildora-municipio-tabla svg {
-  color: var(--color-primario);
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-weight: 600;
 }
 
 .badge-conteo-res {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 28px;
-  height: 24px;
-  border-radius: 9999px;
-  background: var(--color-acento-indigo-claro);
-  color: var(--color-acento-indigo);
-  font-family: var(--fuente-mono);
+  display: inline-block;
   font-size: 0.78rem;
   font-weight: 700;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  color: var(--color-texto);
 }
 
 .celda-moneda {
   font-family: var(--fuente-mono);
-  font-size: 0.84rem;
+  font-size: 0.86rem;
   white-space: nowrap;
 }
 
 .texto-bruto {
   color: var(--color-secundario);
+  font-weight: 700;
 }
 
 .pildora-comision {
-  color: var(--color-primario-oscuro);
-  background: var(--color-primario-claro);
-  padding: 0.22rem 0.55rem;
-  border-radius: 6px;
-  font-weight: 700;
+  color: #8A2E24;
+  font-weight: 600;
+  background: #FDF2F0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
 }
 
 .pildora-neto {
-  color: #0369A1;
-  background: #E0F2FE;
-  padding: 0.25rem 0.65rem;
-  border-radius: 6px;
+  color: #24583E;
   font-weight: 700;
+  background: #EDF5F0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
 }
 
 .estado-tabla {
@@ -330,10 +339,10 @@
   border: 3px solid var(--color-primario-claro);
   border-top-color: var(--color-primario);
   border-radius: 50%;
-  animation: giroLiq 0.8s linear infinite;
+  animation: giroSpinner 0.8s linear infinite;
 }
 
-@keyframes giroLiq {
+@keyframes giroSpinner {
   to {
     transform: rotate(360deg);
   }

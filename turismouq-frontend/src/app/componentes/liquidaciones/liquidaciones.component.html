@@ -1,19 +1,19 @@
 <div class="contenedor">
-  <!-- Encabezado Fintech / Stripe Payouts -->
+  <!-- Encabezado de Liquidaciones -->
   <header class="encabezado-liquidaciones">
     <div>
       <div class="badges-liquidacion">
-        <span class="insignia insignia-hotel">MOTOR DE LIQUIDACIÓN MASIVA</span>
-        <span class="badge-cursor-plsql">CURSOR EXPLÍCITO · PKG_TURISMO_UQ</span>
+        <span class="insignia insignia-hotel">Liquidaciones Mensuales</span>
+        <span class="badge-cursor-plsql">Procesamiento Consolidado</span>
       </div>
       <h2>Liquidación y Dispersión Mensual a Propietarios</h2>
       <p class="subtexto">
-        Procesamiento por lotes mediante <strong>cursor explícito parametrizado</strong> en PL/SQL para consolidar ingresos de hospedaje, consumos adicionales, comisión del 10% y pago neto
+        Procesamiento consolidado para liquidar ingresos de hospedaje, consumos adicionales, comisión del 10% y dispersión neta a propietarios.
       </p>
     </div>
   </header>
 
-  <!-- Barra de Control Horizontal Estilo Stripe -->
+  <!-- Barra de Control Horizontal -->
   <div class="tarjeta panel-control-liquidacion">
     <div class="fila-controles">
       <div class="grupo-control">
@@ -56,8 +56,8 @@
           <svg *ngIf="!procesandoLiquidacion" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
-          <span *ngIf="procesandoLiquidacion">Ejecutando Cursor en Oracle XE...</span>
-          <span *ngIf="!procesandoLiquidacion">Ejecutar Cursor Explícito PL/SQL</span>
+          <span *ngIf="procesandoLiquidacion">Procesando liquidaciones...</span>
+          <span *ngIf="!procesandoLiquidacion">Ejecutar Liquidación Mensual</span>
         </button>
       </div>
     </div>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <p class="valor-metrica">{{ liquidacionesFiltradas.length }}</p>
-      <span class="kpi-sub">Propiedades procesadas en lote</span>
+      <span class="kpi-sub">Propiedades procesadas en el lote</span>
     </div>
 
     <div class="tarjeta-bento kpi-navy">
@@ -114,7 +114,7 @@
         </div>
       </div>
       <p class="valor-metrica color-coral">${{ calcularTotalComision() | number:'1.0-0' }}</p>
-      <span class="kpi-sub">Retención operativa QuindíoStays</span>
+      <span class="kpi-sub">Retención operativa de plataforma</span>
     </div>
 
     <div class="tarjeta-bento kpi-sky">
@@ -144,7 +144,7 @@
 
     <div *ngIf="cargando" class="estado-tabla">
       <div class="spinner-coral"></div>
-      <p>Consultando libro mayor de liquidaciones en Oracle 21c...</p>
+      <p>Consultando libro mayor de liquidaciones...</p>
     </div>
 
     <div class="tabla-contenedor" *ngIf="!cargando && liquidacionesFiltradas.length > 0">
@@ -207,7 +207,7 @@
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
       <span>
-        No se encontraron liquidaciones para el periodo <strong>{{ mesSeleccionado }}/{{ anioSeleccionado }}</strong>. Haz clic en <strong>"Ejecutar Cursor Explícito PL/SQL"</strong> para procesar el lote mensual en Oracle XE.
+        No se encontraron liquidaciones para el periodo <strong>{{ mesSeleccionado }}/{{ anioSeleccionado }}</strong>. Haz clic en <strong>"Ejecutar Liquidación Mensual"</strong> para procesar el lote del periodo.
       </span>
     </div>
 

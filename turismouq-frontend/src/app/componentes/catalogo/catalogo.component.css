@@ -1,17 +1,17 @@
 /* ==========================================================================
-   CATÁLOGO DE ALOJAMIENTOS — AIRBNB 2026 GUEST FAVORITES & SEARCH BAR
+   CATÁLOGO DE ALOJAMIENTOS — TURISMOUQ
+   Estilo: Quindío Cálido, Humano y Luminoso
    ========================================================================== */
 
-/* Hero Editorial */
+/* Hero Editorial Luminoso */
 .hero-catalogo {
-  background: radial-gradient(circle at 85% 20%, rgba(255, 56, 92, 0.28) 0%, transparent 45%),
-              radial-gradient(circle at 15% 80%, rgba(79, 70, 229, 0.25) 0%, transparent 50%),
-              linear-gradient(135deg, #1E243A 0%, #0F172A 100%);
+  background: linear-gradient(135deg, #F6EFE8 0%, #EDE4D8 45%, #E4ECE5 100%);
+  border: 1px solid var(--color-borde);
   border-radius: 24px;
   padding: 2.75rem 2.5rem 2.25rem;
-  color: #FFFFFF;
-  margin-bottom: 1.75rem;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+  color: var(--color-texto);
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(80, 50, 25, 0.05);
   position: relative;
   overflow: hidden;
 }
@@ -29,54 +29,44 @@
   margin-bottom: 1rem;
 }
 
-.pildora-hero-coral {
-  background: var(--gradiente-coral);
-  color: #FFFFFF;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  padding: 0.3rem 0.8rem;
-  border-radius: 9999px;
-  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.35);
-}
-
-.pildora-hero-oscura {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #E2E8F0;
+.pildora-hero-quindio {
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  border: 1px solid rgba(44, 82, 63, 0.2);
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.28rem 0.8rem;
+  font-weight: 700;
+  padding: 0.32rem 0.85rem;
   border-radius: 9999px;
+  letter-spacing: 0.03em;
 }
 
 .hero-titulo {
   font-family: var(--fuente-titulos);
   font-size: 2.35rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-secundario);
   letter-spacing: -0.03em;
-  line-height: 1.15;
+  line-height: 1.18;
   margin-bottom: 0.75rem;
 }
 
 .hero-subtitulo {
-  font-size: 1rem;
-  color: #CBD5E1;
+  font-size: 1.02rem;
+  color: #5C5248;
   line-height: 1.6;
   max-width: 680px;
 }
 
-/* Floating Airbnb Search Bar Pill */
+/* Floating Search Bar Pill */
 .barra-busqueda-airbnb {
   background: #FFFFFF;
   border-radius: 9999px;
-  padding: 0.55rem 0.65rem 0.55rem 1.5rem;
+  padding: 0.6rem 0.75rem 0.6rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 28px rgba(80, 50, 25, 0.08);
+  border: 1px solid var(--color-borde);
 }
 
 .campo-busqueda {
@@ -124,13 +114,13 @@ input.input-busqueda-limpio {
 }
 
 .input-busqueda-limpio::placeholder {
-  color: #9CA3AF;
+  color: #A09488;
 }
 
 .divisor-busqueda {
   width: 1px;
   height: 36px;
-  background: #E5E7EB;
+  background: var(--color-borde);
   flex-shrink: 0;
 }
 
@@ -142,8 +132,8 @@ input.input-busqueda-limpio {
 }
 
 .btn-limpiar-pill {
-  background: #F3F4F6;
-  color: #4B5563;
+  background: #F4EFE9;
+  color: #5C5248;
   font-size: 0.82rem;
   font-weight: 600;
   padding: 0.65rem 1rem;
@@ -152,7 +142,7 @@ input.input-busqueda-limpio {
 }
 
 .btn-limpiar-pill:hover {
-  background: #E5E7EB;
+  background: var(--color-borde);
   color: var(--color-secundario);
 }
 
@@ -166,13 +156,13 @@ input.input-busqueda-limpio {
   border-radius: 9999px;
   font-size: 0.92rem;
   font-weight: 700;
-  box-shadow: 0 6px 18px rgba(255, 56, 92, 0.35);
+  box-shadow: 0 4px 14px rgba(182, 93, 56, 0.28);
   transition: all 0.2s ease;
 }
 
 .btn-buscar-coral:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 22px rgba(255, 56, 92, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(182, 93, 56, 0.35);
 }
 
 @media (max-width: 960px) {
@@ -207,7 +197,7 @@ input.input-busqueda-limpio {
   }
 }
 
-/* Franja de Categorías Estilo Airbnb */
+/* Franja de Categorías */
 .franja-categorias {
   display: flex;
   align-items: center;
@@ -231,7 +221,7 @@ input.input-busqueda-limpio {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
+  padding: 0.6rem 1.15rem;
   border-radius: 9999px;
   background: #FFFFFF;
   border: 1.5px solid var(--color-borde);
@@ -257,7 +247,7 @@ input.input-busqueda-limpio {
   background: var(--color-secundario);
   border-color: var(--color-secundario);
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(30, 36, 58, 0.2);
+  box-shadow: 0 4px 12px rgba(44, 82, 63, 0.2);
 }
 
 .resumen-resultados {
@@ -288,12 +278,12 @@ input.input-busqueda-limpio {
 }
 
 .tarjeta-propiedad:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--sombra-fuerte);
-  border-color: #DCDCDC;
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-media);
+  border-color: var(--color-borde-fuerte);
 }
 
-/* Portada Visual Color-Coded */
+/* Portada Visual en Tonos Cálidos de la Naturaleza */
 .portada-propiedad {
   height: 132px;
   padding: 0.95rem 1.15rem;
@@ -305,19 +295,19 @@ input.input-busqueda-limpio {
 }
 
 .portada-finca {
-  background: linear-gradient(135deg, #FF385C 0%, #BE123C 100%);
+  background: linear-gradient(135deg, #C2673D 0%, #A44F2D 100%);
 }
 
 .portada-glamping {
-  background: linear-gradient(135deg, #D97706 0%, #92400E 100%);
+  background: linear-gradient(135deg, #D48B38 0%, #9E611E 100%);
 }
 
 .portada-hotel {
-  background: linear-gradient(135deg, #1E243A 0%, #312E81 100%);
+  background: linear-gradient(135deg, #37634D 0%, #224734 100%);
 }
 
 .portada-hostal {
-  background: linear-gradient(135deg, #0284C7 0%, #1E3A8A 100%);
+  background: linear-gradient(135deg, #3B6B75 0%, #254B52 100%);
 }
 
 .patron-portada {
@@ -342,13 +332,13 @@ input.input-busqueda-limpio {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
   color: var(--color-secundario);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.28rem 0.65rem;
   border-radius: 9999px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .insignia-favorito svg {
@@ -359,7 +349,7 @@ input.input-busqueda-limpio {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(40, 35, 30, 0.7);
   backdrop-filter: blur(6px);
   color: #FFFFFF;
   font-size: 0.76rem;
@@ -372,8 +362,8 @@ input.input-busqueda-limpio {
   font-family: var(--fuente-mono);
   font-size: 0.72rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.88);
-  background: rgba(0, 0, 0, 0.24);
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.25);
   padding: 0.18rem 0.5rem;
   border-radius: 6px;
 }
@@ -422,16 +412,16 @@ input.input-busqueda-limpio {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F7F3ED;
+  border: 1px solid var(--color-borde);
   padding: 0.35rem 0.68rem;
   border-radius: 8px;
   font-size: 0.8rem;
-  color: #334155;
+  color: #4A4036;
 }
 
 .chip-atributo svg {
-  color: var(--color-acento-indigo);
+  color: var(--color-secundario);
 }
 
 .fila-anfitrion {

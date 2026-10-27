@@ -1,5 +1,5 @@
 <div class="contenedor" *ngIf="alojamiento">
-  <!-- Migas de Pan / Breadcrumb Pill -->
+  <!-- Migas de Pan / Breadcrumb -->
   <div class="migas-pan">
     <a routerLink="/catalogo" class="pildora-regreso">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -14,7 +14,7 @@
     <span class="miga-actual">{{ alojamiento.nombre }}</span>
   </div>
 
-  <!-- Showcase Header Estilo Airbnb Listing -->
+  <!-- Showcase Header -->
   <section class="showcase-propiedad">
     <div class="showcase-info">
       <div class="showcase-badges">
@@ -23,7 +23,7 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
           </svg>
-          4.95 · Superanfitrión Verificado
+          4.95 · Anfitrión Verificado
         </span>
         <span class="badge-id-alojamiento">ID #{{ alojamiento.idAlojamiento }}</span>
       </div>
@@ -67,7 +67,7 @@
     </div>
   </section>
 
-  <!-- Split View: Selector de Habitaciones (Izquierda) + Sticky Cotizador PL/SQL (Derecha) -->
+  <!-- Split View: Selector de Habitaciones (Izquierda) + Sticky Cotizador (Derecha) -->
   <div class="cuadricula-detalle">
     <!-- Columna Izquierda: Habitaciones Disponibles -->
     <div class="columna-habitaciones">
@@ -75,7 +75,7 @@
         <div class="cabecera-habs">
           <div>
             <h3>Selecciona tu Habitación</h3>
-            <p class="subtexto">Haz clic en cualquier unidad para consultar sus tarifas por temporada y cotizar en vivo</p>
+            <p class="subtexto">Haz clic en cualquier unidad para consultar sus tarifas por temporada y cotizar tu estadía</p>
           </div>
           <span class="contador-habs">{{ habitaciones.length }} unidades</span>
         </div>
@@ -125,7 +125,7 @@
         </div>
       </div>
 
-      <!-- Garantías de Reserva Airbnb / Oracle -->
+      <!-- Garantías de Reserva -->
       <div class="tarjeta-garantias">
         <div class="item-garantia">
           <div class="icono-garantia">
@@ -134,8 +134,8 @@
             </svg>
           </div>
           <div>
-            <h4>Cálculo Ponderado en Motor Oracle 21c</h4>
-            <p>La función almacenada <code>PKG_TURISMO_UQ.fn_valor_estadia</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja.</p>
+            <h4>Cálculo Ponderado de Tarifas</h4>
+            <p>La función almacenada <code>PKG_TURISMO_UQ.fn_valor_estadia</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja para liquidar el valor exacto.</p>
           </div>
         </div>
 
@@ -146,22 +146,22 @@
             </svg>
           </div>
           <div>
-            <h4>Protección Anti-Solapamiento por Trigger</h4>
-            <p>Al continuar tu reserva, el motor verifica disponibilidad real en la tabla <code>RESERVA</code> antes de confirmar la transacción.</p>
+            <h4>Protección Anti-Solapamiento</h4>
+            <p>Al confirmar tu reserva, el disparador en la base de datos verifica la disponibilidad real en la tabla <code>RESERVA</code> para evitar cruces de fecha.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Columna Derecha: Sticky Floating Booking & PL/SQL Quoter Card -->
+    <!-- Columna Derecha: Sticky Floating Booking & Quoter Card -->
     <div class="columna-cotizador">
       <div class="tarjeta-cotizador-sticky" *ngIf="habitacionSeleccionada">
         <div class="cabecera-cotizador">
           <div>
-            <span class="subtitulo-cotizador">COTIZADOR INTERACTIVO PL/SQL</span>
+            <span class="subtitulo-cotizador">Cotizador de Estadía</span>
             <h3>{{ habitacionSeleccionada.numeroNombre }}</h3>
           </div>
-          <span class="badge-funcion">fn_valor_estadia</span>
+          <span class="badge-funcion">Tarifa en Tiempo Real</span>
         </div>
 
         <!-- Tarifas Base por Temporada -->
@@ -177,7 +177,7 @@
           </div>
         </div>
 
-        <!-- Selector de Fechas Unificado Estilo Airbnb -->
+        <!-- Selector de Fechas Unificado -->
         <div class="caja-fechas-airbnb">
           <div class="celda-fecha">
             <label class="etiqueta-celda">LLEGADA (CHECK-IN)</label>
@@ -192,7 +192,7 @@
         <!-- Estado Calculando -->
         <div *ngIf="cargandoCotizacion" class="estado-cotizacion">
           <div class="spinner-mini"></div>
-          <span>Ejecutando <code>fn_valor_estadia</code> en Oracle XE...</span>
+          <span>Calculando tarifa según temporada...</span>
         </div>
 
         <!-- Alerta de Error -->
@@ -235,7 +235,7 @@
           <div class="total-resumen">
             <div>
               <span class="etiqueta-total">Total estimado</span>
-              <small class="sub-total-impuestos">Calculado por Oracle PL/SQL</small>
+              <small class="sub-total-impuestos">Tarifa calculada según temporada</small>
             </div>
             <span class="valor-total">${{ cotizacion.totalPagar | number:'1.0-0' }} <small>COP</small></span>
           </div>

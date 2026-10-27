@@ -3,18 +3,14 @@
     <!-- Marca / Brand -->
     <a routerLink="/catalogo" class="marca">
       <div class="logo-emblema" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2L2 19.5h20L12 2z" />
           <path d="M12 10.5l-4.5 9h9l-4.5-9z" fill="rgba(255,255,255,0.28)" />
           <circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
         </svg>
       </div>
       <div class="marca-textos">
-        <div class="marca-linea-superior">
-          <span class="marca-titulo">TurismoUQ</span>
-          <span class="marca-badge">2026</span>
-        </div>
-        <p class="marca-subtitulo">QuindíoStays · Oracle 21c</p>
+        <span class="marca-titulo">TurismoUQ</span>
       </div>
     </a>
 
@@ -79,8 +75,7 @@
     <div class="estado-motor">
       <div class="pildora-estado" title="Conexión activa al motor Oracle Database 21c Express Edition">
         <span class="punto-pulso"></span>
-        <span class="texto-estado">XEPDB1 Online</span>
-        <span class="tag-plsql">PL/SQL</span>
+        <span class="texto-estado">Base de datos activa</span>
       </div>
     </div>
   </div>
@@ -89,53 +84,3 @@
 <main class="cuerpo-aplicacion">
   <router-outlet></router-outlet>
 </main>
-
-<footer class="pie-pagina">
-  <div class="contenedor">
-    <div class="cuadricula-pie">
-      <div class="columna-pie">
-        <div class="marca-pie">
-          <div class="logo-emblema-mini">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2L2 19.5h20L12 2z" />
-            </svg>
-          </div>
-          <span class="titulo-pie-marca">TurismoUQ · QuindíoStays</span>
-        </div>
-        <p class="descripcion-pie">
-          Plataforma de reservas turísticas, liquidación masiva de anfitriones y analítica avanzada sobre motor relacional Oracle Database 21c XE.
-        </p>
-      </div>
-
-      <div class="columna-pie">
-        <h4 class="titulo-columna-pie">Arquitectura PL/SQL & Storage</h4>
-        <ul class="lista-pie">
-          <li><code>TBS_HISTORICO_RESERVAS</code> · Storage Engine & ILM</li>
-          <li><code>PKG_TURISMO_UQ.fn_valor_estadia</code> · Cotizador ponderado</li>
-          <li><code>PKG_TURISMO_UQ.sp_crear_reserva</code> · Transacción atómica</li>
-          <li><code>PKG_TURISMO_UQ.sp_liquidar_reservas</code> · Cursor explícito</li>
-          <li><code>TRG_AUDITORIA_TARIFA_STMT</code> · Trazabilidad de tarifas</li>
-        </ul>
-      </div>
-
-      <div class="columna-pie">
-        <h4 class="titulo-columna-pie">Contexto Académico</h4>
-        <p class="texto-institucional">
-          <strong>Proyecto Integrador · Bases de Datos II (12338)</strong><br />
-          Universidad del Quindío · Facultad de Ingeniería<br />
-          Programa de Ingeniería de Sistemas y Computación · Armenia, Quindío
-        </p>
-      </div>
-    </div>
-
-    <div class="barra-inferior-pie">
-      <span>© 2026 TurismoUQ · QuindíoStays. Todos los derechos reservados.</span>
-      <div class="etiquetas-pie">
-        <span class="chip-pie">60 Alojamientos</span>
-        <span class="chip-pie">12 Municipios</span>
-        <span class="chip-pie">TBS_HISTORICO (9.3 MB)</span>
-        <span class="chip-pie">Oracle 21c XEPDB1</span>
-      </div>
-    </div>
-  </div>
-</footer>

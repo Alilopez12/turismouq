@@ -1,14 +1,14 @@
 <div class="contenedor">
-  <!-- Encabezado de Seguridad y Cumplimiento -->
+  <!-- Encabezado de Auditoría -->
   <header class="encabezado-auditoria">
     <div>
       <div class="badges-seguridad">
-        <span class="insignia insignia-finca">SECURITY & COMPLIANCE LOG</span>
+        <span class="insignia insignia-finca">Trazabilidad y Auditoría</span>
         <span class="badge-trigger">TRG_AUDITORIA_TARIFA_STMT</span>
       </div>
       <h2>Auditoría de Sentencias sobre Tarifas</h2>
       <p class="subtexto">
-        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en Oracle 21c
+        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en la base de datos.
       </p>
     </div>
 
@@ -45,7 +45,7 @@
 
     <div *ngIf="cargando" class="estado-auditoria">
       <div class="spinner-coral"></div>
-      <p>Recuperando trazas de auditoría desde Oracle 21c...</p>
+      <p>Recuperando trazas de auditoría...</p>
     </div>
 
     <div class="tabla-contenedor" *ngIf="!cargando && registros.length > 0">
@@ -114,7 +114,7 @@
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
       <span>
-        Aún no se han registrado eventos en la tabla <code>AUDITORIA_TARIFA</code>. Al modificar una tarifa en Oracle o mediante el sistema se registrará la traza automáticamente.
+        Aún no se han registrado eventos en la tabla <code>AUDITORIA_TARIFA</code>. Al modificar una tarifa en el sistema se registrará la traza automáticamente.
       </span>
     </div>
   </div>

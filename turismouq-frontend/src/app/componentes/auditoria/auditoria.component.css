@@ -1,5 +1,6 @@
 /* ==========================================================================
-   AUDITORÍA DE TARIFAS — SECURITY & COMPLIANCE STATEMENT LOG
+   AUDITORÍA DE TARIFAS — TURISMOUQ
+   Estilo: Quindío Cálido, Humano y Elegante
    ========================================================================== */
 
 .encabezado-auditoria {
@@ -25,8 +26,9 @@
   font-family: var(--fuente-mono);
   font-size: 0.74rem;
   font-weight: 600;
-  background: var(--color-secundario);
-  color: #FFFFFF;
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  border: 1px solid rgba(44, 82, 63, 0.2);
   padding: 0.25rem 0.65rem;
   border-radius: 9999px;
 }
@@ -34,6 +36,7 @@
 .encabezado-auditoria h2 {
   font-size: 1.85rem;
   margin-bottom: 0.25rem;
+  color: var(--color-secundario);
 }
 
 .subtexto {
@@ -44,8 +47,8 @@
 
 .subtexto code {
   font-size: 0.8rem;
-  background: #F1F5F9;
-  color: var(--color-acento-indigo);
+  background: #FAF7F2;
+  color: var(--color-secundario);
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
   font-weight: 600;
@@ -76,8 +79,8 @@
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: var(--color-primario-claro);
-  color: var(--color-primario);
+  background: #EDF4F0;
+  color: var(--color-secundario);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,6 +90,7 @@
 .cabecera-auditoria h3 {
   margin: 0 0 0.15rem 0;
   font-size: 1.15rem;
+  color: var(--color-secundario);
 }
 
 .sub-bitacora {
@@ -96,7 +100,7 @@
 
 .sub-bitacora code {
   font-size: 0.76rem;
-  background: #F1F5F9;
+  background: #FAF7F2;
   color: var(--color-secundario);
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
@@ -104,7 +108,8 @@
 }
 
 .contador-eventos {
-  background: #F1F5F9;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
   color: var(--color-secundario);
   font-size: 0.78rem;
   font-weight: 700;
@@ -123,11 +128,11 @@
   font-family: var(--fuente-mono);
   font-size: 0.78rem;
   font-weight: 600;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
   padding: 0.22rem 0.55rem;
   border-radius: 6px;
-  color: #334155;
+  color: var(--color-texto);
 }
 
 .comparativa-precios {
@@ -139,7 +144,7 @@
 }
 
 .precio-antiguo {
-  color: #94A3B8;
+  color: #A09488;
   text-decoration: line-through;
 }
 
@@ -148,20 +153,22 @@
 }
 
 .precio-nuevo-badge {
-  background: #E0F2FE;
-  color: #0369A1;
+  background: #EDF5F0;
+  color: #24583E;
   font-weight: 700;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
 }
 
 .badge-usuario-oracle {
-  background: var(--color-acento-indigo-claro);
-  color: var(--color-acento-indigo);
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  color: var(--color-secundario);
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .celda-fecha-log {
@@ -172,13 +179,13 @@
 }
 
 .detalle-sentencia {
-  font-size: 0.83rem;
+  font-size: 0.82rem;
   color: var(--color-texto);
 }
 
 .estado-auditoria {
   text-align: center;
-  padding: 3.5rem 1rem;
+  padding: 3rem 1rem;
   color: var(--color-texto-apagado);
   display: flex;
   flex-direction: column;
@@ -192,10 +199,10 @@
   border: 3px solid var(--color-primario-claro);
   border-top-color: var(--color-primario);
   border-radius: 50%;
-  animation: giroAudit 0.8s linear infinite;
+  animation: giroSpinner 0.8s linear infinite;
 }
 
-@keyframes giroAudit {
+@keyframes giroSpinner {
   to {
     transform: rotate(360deg);
   }

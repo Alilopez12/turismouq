@@ -1,5 +1,6 @@
 /* ==========================================================================
-   MODULO TABLESPACE & STORAGE ENGINE — TURISMOUQ QUINDÍOSTAYS 2026
+   MODULO TABLESPACE & STORAGE ENGINE — TURISMOUQ
+   Paleta Cálida del Quindío · Rendimiento & Arquitectura Relacional
    ========================================================================== */
 
 .modulo-tablespace {
@@ -21,55 +22,57 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(79, 70, 229, 0.08);
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  color: #4F46E5;
+  background: #E8F0EB;
+  border: 1px solid #C8DDD0;
+  color: #2C523F;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0.35rem 0.85rem;
   border-radius: 9999px;
   margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
 }
 
 .punto-pulso {
   width: 8px;
   height: 8px;
-  background: #10B981;
+  background: #2C523F;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(44, 82, 63, 0.2);
   animation: pulsoVerde 2s infinite;
 }
 
 @keyframes pulsoVerde {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(44, 82, 63, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(44, 82, 63, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(44, 82, 63, 0); }
 }
 
 .titulo-modulo {
   font-family: 'Outfit', sans-serif;
   font-size: 2.1rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1F2937;
   margin: 0 0 0.5rem;
   letter-spacing: -0.025em;
 }
 
 .subtitulo-modulo {
   font-size: 0.95rem;
-  color: #64748B;
+  color: #6B7280;
   margin: 0;
   max-width: 780px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .subtitulo-modulo code {
-  background: #F1F5F9;
-  color: #0F172A;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
+  background: #F2EAE1;
+  color: #8C4123;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.88rem;
+  border: 1px solid #EADBCE;
 }
 
 .boton-refrescar {
@@ -77,21 +80,23 @@
   align-items: center;
   gap: 0.5rem;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  color: #1E293B;
+  border: 1.5px solid #EADBCE;
+  color: #4A3B32;
   padding: 0.7rem 1.25rem;
   border-radius: 12px;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(44, 82, 63, 0.04);
 }
 
 .boton-refrescar:hover:not(:disabled) {
-  border-color: #CBD5E1;
-  background: #F8FAFC;
+  border-color: #B65D38;
+  color: #B65D38;
+  background: #FAF7F2;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(182, 93, 56, 0.12);
 }
 
 .icono-btn {
@@ -113,15 +118,16 @@
   text-align: center;
   padding: 4rem 2rem;
   background: #FFFFFF;
-  border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  border: 1px solid #EADBCE;
+  box-shadow: 0 4px 16px rgba(44, 82, 63, 0.04);
 }
 
 .spinner-coral {
   width: 44px;
   height: 44px;
-  border: 4px solid #F1F5F9;
-  border-top-color: #FF385C;
+  border: 4px solid #F2EAE1;
+  border-top-color: #B65D38;
   border-radius: 50%;
   animation: girar 0.8s linear infinite;
   margin: 0 auto 1.25rem;
@@ -133,7 +139,7 @@
   gap: 0.75rem;
   background: #FEF2F2;
   border: 1px solid #FCA5A5;
-  color: #B91C1C;
+  color: #991B1B;
   padding: 1rem 1.25rem;
   border-radius: 12px;
   margin-bottom: 2rem;
@@ -150,16 +156,17 @@
 
 .tarjeta-kpi {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
   border-radius: 18px;
   padding: 1.4rem;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .tarjeta-kpi:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  border-color: #D9C3B0;
+  box-shadow: 0 8px 20px rgba(182, 93, 56, 0.08);
 }
 
 .kpi-encabezado {
@@ -170,9 +177,9 @@
 }
 
 .kpi-etiqueta {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748B;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6B7280;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -184,42 +191,43 @@
 .kpi-valor-grande {
   font-family: 'Outfit', sans-serif;
   font-size: 1.9rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1F2937;
   margin-bottom: 0.4rem;
 }
 
 .kpi-valor-grande.estado-online {
-  color: #059669;
+  color: #2C523F;
 }
 
 .kpi-unidad {
   font-size: 1rem;
   font-weight: 600;
-  color: #64748B;
+  color: #6B7280;
 }
 
 .kpi-detalle {
   font-size: 0.8rem;
-  color: #64748B;
+  color: #6B7280;
   line-height: 1.4;
 }
 
 .kpi-detalle code {
-  background: #F1F5F9;
-  padding: 0.1rem 0.3rem;
+  background: #F2EAE1;
+  padding: 0.1rem 0.35rem;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
+  color: #8C4123;
 }
 
 /* Medidor de Almacenamiento */
 .seccion-medidor-almacenamiento {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
   border-radius: 20px;
   padding: 1.75rem;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
 }
 
 .encabezado-medidor {
@@ -233,19 +241,19 @@
 .medidor-titulo {
   font-family: 'Outfit', sans-serif;
   font-size: 1.15rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1F2937;
   margin: 0 0 0.25rem;
 }
 
 .medidor-ruta code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.82rem;
-  color: #475569;
-  background: #F8FAFC;
-  padding: 0.2rem 0.5rem;
+  color: #4A3B32;
+  background: #FAF7F2;
+  padding: 0.25rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
 }
 
 .medidor-porcentajes {
@@ -254,19 +262,19 @@
 }
 
 .chip-medidor-porcentaje {
-  background: #FFF1F2;
-  border: 1px solid #FFE4E6;
-  color: #E11D48;
+  background: #FDF2EC;
+  border: 1px solid #F6D6C6;
+  color: #B65D38;
   font-size: 0.8rem;
   font-weight: 700;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.8rem;
   border-radius: 9999px;
 }
 
 .chip-medidor-max {
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  color: #475569;
+  background: #F2EAE1;
+  border: 1px solid #EADBCE;
+  color: #6B7280;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.35rem 0.75rem;
@@ -275,16 +283,16 @@
 
 .barra-progreso-contenedor {
   height: 14px;
-  background: #F1F5F9;
+  background: #F2EAE1;
   border-radius: 9999px;
   overflow: hidden;
   margin-bottom: 1.25rem;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
 }
 
 .barra-progreso-llenado {
   height: 100%;
-  background: linear-gradient(90deg, #FF385C, #E31C5F);
+  background: linear-gradient(90deg, #B65D38, #D97706);
   border-radius: 9999px;
   transition: width 0.8s ease-in-out;
 }
@@ -294,36 +302,37 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid #F2EAE1;
 }
 
 .item-datafile {
   font-size: 0.85rem;
-  color: #475569;
+  color: #4A3B32;
 }
 
 .subetiqueta-df {
-  color: #94A3B8;
+  color: #8C7B70;
   margin-right: 0.35rem;
 }
 
 .badge-ilimitada {
-  background: #ECFDF5;
-  color: #059669;
+  background: #E8F0EB;
+  color: #2C523F;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid #A7F3D0;
+  border: 1px solid #C8DDD0;
 }
 
 /* Barra de Pestañas / Segmented Tabs */
 .barra-pestanas {
   display: flex;
   gap: 0.5rem;
-  background: #F1F5F9;
+  background: #F2EAE1;
   padding: 0.4rem;
-  border-radius: 14px;
+  border-radius: 16px;
+  border: 1px solid #EADBCE;
   margin-bottom: 1.75rem;
   overflow-x: auto;
 }
@@ -331,24 +340,25 @@
 .pestana-boton {
   background: transparent;
   border: none;
-  color: #64748B;
+  color: #6B7280;
   font-weight: 600;
   font-size: 0.88rem;
   padding: 0.65rem 1.25rem;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .pestana-boton:hover {
-  color: #0F172A;
+  color: #1F2937;
 }
 
 .pestana-boton.activa {
   background: #FFFFFF;
-  color: #0F172A;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  color: #B65D38;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(182, 93, 56, 0.12);
 }
 
 /* Panel de Pestaña */
@@ -373,13 +383,13 @@
   background: #FFFFFF;
   border-radius: 18px;
   padding: 1.75rem;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  border: 1.5px solid #EADBCE;
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
 }
 
 .tarjeta-comparativa.historico-destacada {
-  border-color: rgba(255, 56, 92, 0.25);
-  background: linear-gradient(180deg, #FFFFFF, #FFF9FA);
+  border-color: #D9C3B0;
+  background: linear-gradient(180deg, #FFFFFF, #FAF7F2);
 }
 
 .tarjeta-comp-cabecera {
@@ -391,45 +401,45 @@
 
 .icono-comp {
   font-size: 2.2rem;
-  background: #F8FAFC;
+  background: #FAF7F2;
   width: 52px;
   height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
 }
 
 .tag-tipo-ts {
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #FF385C;
+  color: #B65D38;
   letter-spacing: 0.04em;
 }
 
 .tarjeta-comparativa.users-estandar .tag-tipo-ts {
-  color: #4F46E5;
+  color: #2C523F;
 }
 
 .titulo-comp {
   font-family: 'Outfit', sans-serif;
   font-size: 1.3rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1F2937;
   margin: 0.15rem 0 0;
 }
 
 .desc-comp {
   font-size: 0.9rem;
-  color: #64748B;
-  line-height: 1.5;
+  color: #6B7280;
+  line-height: 1.55;
   margin-bottom: 1.25rem;
 }
 
 .metricas-comp-lista {
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid #F2EAE1;
   padding-top: 1rem;
   display: flex;
   flex-direction: column;
@@ -441,47 +451,48 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  color: #475569;
+  color: #4A3B32;
 }
 
 .fila-metrica-comp strong {
-  color: #0F172A;
+  color: #1F2937;
 }
 
 .badge-ro {
-  background: #ECFDF5;
-  color: #059669;
+  background: #E8F0EB;
+  color: #2C523F;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid #A7F3D0;
+  border: 1px solid #C8DDD0;
 }
 
 .badge-rw {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #FAF7F2;
+  color: #8C4123;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid #BFDBFE;
+  border: 1px solid #EADBCE;
 }
 
 /* Diagrama de Arquitectura */
 .caja-diagrama-arquitectura {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
   border-radius: 18px;
   padding: 1.75rem;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
 }
 
 .titulo-diagrama {
   font-family: 'Outfit', sans-serif;
   font-size: 1.1rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1F2937;
   margin: 0 0 1.5rem;
 }
 
@@ -494,8 +505,8 @@
 }
 
 .nodo-flujo {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #FAF7F2;
+  border: 1px solid #EADBCE;
   border-radius: 14px;
   padding: 1rem 1.5rem;
   display: flex;
@@ -505,8 +516,9 @@
 }
 
 .nodo-flujo.cliente-app {
-  border-color: #CBD5E1;
+  border-color: #D9C3B0;
   background: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(44, 82, 63, 0.04);
 }
 
 .nodo-icono {
@@ -515,12 +527,12 @@
 
 .nodo-sub {
   font-size: 0.75rem;
-  color: #64748B;
+  color: #6B7280;
 }
 
 .flecha-flujo {
   font-size: 1.5rem;
-  color: #94A3B8;
+  color: #B65D38;
 }
 
 .nodo-flujo.bifurcacion {
@@ -534,42 +546,42 @@
 
 .rama {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
   border-radius: 14px;
   padding: 1.25rem;
   text-align: left;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 6px rgba(44, 82, 63, 0.03);
   min-width: 240px;
 }
 
 .rama.rama-historico {
-  border-color: #FF385C;
-  background: #FFF9FA;
+  border-color: #B65D38;
+  background: #FFFDFC;
 }
 
 .nodo-badge-rama {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #4F46E5;
+  color: #2C523F;
 }
 
 .rama.rama-historico .nodo-badge-rama {
-  color: #FF385C;
+  color: #B65D38;
 }
 
 .rama strong {
   font-family: 'Outfit', sans-serif;
   font-size: 1.05rem;
-  color: #0F172A;
+  color: #1F2937;
 }
 
 .rama small {
   font-size: 0.78rem;
-  color: #64748B;
+  color: #6B7280;
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -579,12 +591,13 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .filtro-rotulo {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #64748B;
+  color: #6B7280;
 }
 
 .grupo-botones-filtro {
@@ -594,33 +607,35 @@
 
 .btn-filtro {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  color: #475569;
+  border: 1px solid #EADBCE;
+  color: #4A3B32;
   font-size: 0.82rem;
   font-weight: 600;
-  padding: 0.4rem 0.9rem;
-  border-radius: 8px;
+  padding: 0.45rem 0.95rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
 }
 
 .btn-filtro:hover {
-  background: #F8FAFC;
-  color: #0F172A;
+  background: #FAF7F2;
+  color: #1F2937;
+  border-color: #D9C3B0;
 }
 
 .btn-filtro.activo {
-  background: #0F172A;
+  background: #B65D38;
   color: #FFFFFF;
-  border-color: #0F172A;
+  border-color: #B65D38;
+  box-shadow: 0 2px 8px rgba(182, 93, 56, 0.25);
 }
 
 .tabla-contenedor {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #EADBCE;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
 }
 
 .tabla-estilizada {
@@ -631,20 +646,20 @@
 }
 
 .tabla-estilizada th {
-  background: #F8FAFC;
-  padding: 0.9rem 1.25rem;
-  font-weight: 600;
-  color: #475569;
-  border-bottom: 1px solid #E2E8F0;
-  font-size: 0.8rem;
+  background: #FAF7F2;
+  padding: 0.95rem 1.25rem;
+  font-weight: 700;
+  color: #4A3B32;
+  border-bottom: 1.5px solid #EADBCE;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .tabla-estilizada td {
   padding: 0.95rem 1.25rem;
-  border-bottom: 1px solid #F1F5F9;
-  color: #1E293B;
+  border-bottom: 1px solid #F2EAE1;
+  color: #1F2937;
 }
 
 .tabla-estilizada tr:last-child td {
@@ -652,7 +667,7 @@
 }
 
 .tabla-estilizada tr:hover td {
-  background: #F8FAFC;
+  background: #FCFAF7;
 }
 
 .nombre-segmento-celda {
@@ -670,10 +685,11 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #0F172A;
-  background: #F1F5F9;
+  color: #1F2937;
+  background: #F2EAE1;
   padding: 0.15rem 0.45rem;
   border-radius: 6px;
+  border: 1px solid #EADBCE;
 }
 
 .badge-tipo-seg {
@@ -684,14 +700,14 @@
 }
 
 .badge-tipo-seg.tipo-tabla {
-  background: #EFF6FF;
-  color: #2563EB;
-  border: 1px solid #BFDBFE;
+  background: #E8F0EB;
+  color: #2C523F;
+  border: 1px solid #C8DDD0;
 }
 
 .badge-tipo-seg.tipo-indice {
   background: #FEF3C7;
-  color: #D97706;
+  color: #92400E;
   border: 1px solid #FDE68A;
 }
 
@@ -704,15 +720,15 @@
 }
 
 .chip-ts.badge-historico {
-  background: #FFF1F2;
-  color: #E11D48;
-  border: 1px solid #FECDD3;
+  background: #FDF2EC;
+  color: #B65D38;
+  border: 1px solid #F6D6C6;
 }
 
 .chip-ts.badge-users {
-  background: #F1F5F9;
-  color: #475569;
-  border: 1px solid #E2E8F0;
+  background: #F2EAE1;
+  color: #4A3B32;
+  border: 1px solid #EADBCE;
 }
 
 .tier-badge {
@@ -723,15 +739,15 @@
 }
 
 .tier-badge.tier-olap {
-  background: #ECFDF5;
-  color: #059669;
-  border: 1px solid #A7F3D0;
+  background: #E8F0EB;
+  color: #2C523F;
+  border: 1px solid #C8DDD0;
 }
 
 .tier-badge.tier-oltp {
-  background: #F8FAFC;
-  color: #64748B;
-  border: 1px solid #E2E8F0;
+  background: #FAF7F2;
+  color: #6B7280;
+  border: 1px solid #EADBCE;
 }
 
 .fuente-mono {
@@ -743,7 +759,7 @@
 }
 
 .texto-secundario {
-  color: #64748B;
+  color: #6B7280;
   font-size: 0.82rem;
 }
 
@@ -756,19 +772,25 @@
 
 .tarjeta-pilar {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1.5px solid #EADBCE;
   border-radius: 20px;
   padding: 2rem 1.75rem;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.04);
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tarjeta-pilar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(182, 93, 56, 0.08);
 }
 
 .pilar-icono-circulo {
   width: 54px;
   height: 54px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #FAF7F2;
+  border: 1px solid #EADBCE;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -779,53 +801,54 @@
 
 .pilar-numero {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  color: #FF385C;
+  color: #B65D38;
   letter-spacing: 0.06em;
   margin-bottom: 0.35rem;
 }
 
 .pilar-titulo {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0F172A;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1F2937;
   margin: 0 0 0.85rem;
   line-height: 1.35;
 }
 
 .pilar-desc {
   font-size: 0.88rem;
-  color: #64748B;
+  color: #6B7280;
   line-height: 1.6;
   margin: 0 0 1.5rem;
   flex-grow: 1;
 }
 
 .pilar-desc code {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: #F2EAE1;
+  color: #8C4123;
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.82rem;
+  border: 1px solid #EADBCE;
 }
 
 .pilar-beneficios {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid #F2EAE1;
   padding-top: 1rem;
 }
 
 .chip-beneficio {
   display: inline-flex;
   align-items: center;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  color: #334155;
+  background: #FAF7F2;
+  border: 1px solid #EADBCE;
+  color: #4A3B32;
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.35rem 0.75rem;
@@ -834,27 +857,28 @@
 
 .chip-beneficio::before {
   content: "✓";
-  color: #10B981;
-  font-weight: 700;
+  color: #2C523F;
+  font-weight: 800;
   margin-right: 0.4rem;
 }
 
 /* Tarjeta Código SQL (Pestaña 5) */
 .tarjeta-codigo-sql {
-  background: #0B0F19;
+  background: #1F2421;
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  border: 1px solid #363F3A;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
 .barra-codigo-cabecera {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #111827;
+  background: #282F2B;
   padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid #1F2937;
+  border-bottom: 1px solid #363F3A;
 }
 
 .codigo-titulo-wrapper {
@@ -876,15 +900,15 @@
 .codigo-archivo {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.82rem;
-  color: #9CA3AF;
+  color: #A3B899;
   font-weight: 600;
   margin-left: 0.25rem;
 }
 
 .boton-copiar {
-  background: #1F2937;
-  border: 1px solid #374151;
-  color: #E5E7EB;
+  background: #363F3A;
+  border: 1px solid #4D5952;
+  color: #E2E8F0;
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.35rem 0.8rem;
@@ -894,7 +918,7 @@
 }
 
 .boton-copiar:hover {
-  background: #374151;
+  background: #4D5952;
   color: #FFFFFF;
 }
 
@@ -904,7 +928,7 @@
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
-  color: #E5E7EB;
+  color: #F8FAFC;
   line-height: 1.6;
 }
 

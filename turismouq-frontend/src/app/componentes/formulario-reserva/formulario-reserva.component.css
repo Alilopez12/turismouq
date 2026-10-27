@@ -1,5 +1,6 @@
 /* ==========================================================================
-   FORMULARIO DE RESERVA — EXPEDIA / AIRBNB CHECKOUT & LIVE FEED
+   FORMULARIO DE RESERVA — TURISMOUQ
+   Estilo: Quindío Cálido, Humano y Elegante
    ========================================================================== */
 
 .encabezado-checkout {
@@ -21,11 +22,12 @@
 }
 
 .badge-plsql-proc {
-  font-family: var(--fuente-mono);
+  font-family: var(--fuente-cuerpo);
   font-size: 0.74rem;
   font-weight: 600;
-  background: var(--color-acento-indigo-claro);
-  color: var(--color-acento-indigo);
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  border: 1px solid rgba(44, 82, 63, 0.2);
   padding: 0.25rem 0.65rem;
   border-radius: 9999px;
 }
@@ -33,6 +35,7 @@
 .encabezado-checkout h2 {
   font-size: 1.85rem;
   margin-bottom: 0.25rem;
+  color: var(--color-secundario);
 }
 
 .subtexto {
@@ -96,31 +99,22 @@
   color: var(--color-texto-apagado);
 }
 
-.subtitulo-paso code {
-  font-size: 0.76rem;
-  background: #F1F5F9;
-  color: var(--color-secundario);
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.divisor-pasos {
-  height: 1px;
-  background: var(--color-borde);
-  margin: 1.35rem 0;
-}
-
 .fila-formulario {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 600px) {
   .fila-formulario {
     grid-template-columns: 1fr;
   }
+}
+
+.divisor-pasos {
+  height: 1px;
+  background: var(--color-borde);
+  margin: 1.35rem 0 1.5rem;
 }
 
 .input-icono-caja {
@@ -131,30 +125,37 @@
 
 .icono-input {
   position: absolute;
-  left: 0.85rem;
+  left: 0.9rem;
   width: 17px;
   height: 17px;
-  color: #94A3B8;
+  color: #A09488;
   pointer-events: none;
 }
 
 .control-input.con-icono {
-  padding-left: 2.55rem;
+  padding-left: 2.5rem;
 }
 
 .btn-confirmar-checkout {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* Voucher Recién Creado */
+/* Columna Recientes / Voucher */
+.columna-recientes {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Voucher Confirmado */
 .voucher-confirmado {
-  background: linear-gradient(135deg, #1E243A 0%, #0F172A 100%);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: var(--color-texto);
   border-radius: 18px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--sombra-media);
+  border: 1.5px solid var(--color-borde);
+  animation: fadeIn 0.3s ease-out;
 }
 
 .voucher-cabecera {
@@ -162,7 +163,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding-bottom: 1rem;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+  border-bottom: 1px dashed var(--color-borde-fuerte);
   margin-bottom: 1rem;
 }
 
@@ -171,12 +172,12 @@
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #FDA4AF;
+  color: var(--color-primario);
   margin-bottom: 0.2rem;
 }
 
 .voucher-cabecera h4 {
-  color: #FFFFFF;
+  color: var(--color-secundario);
   font-size: 1.2rem;
   margin: 0;
 }
@@ -185,7 +186,7 @@
   font-family: var(--fuente-mono);
   font-size: 1rem;
   font-weight: 700;
-  background: var(--gradiente-coral);
+  background: var(--color-secundario);
   color: #FFFFFF;
   padding: 0.28rem 0.75rem;
   border-radius: 8px;
@@ -205,18 +206,18 @@
 
 .dato-voucher small {
   font-size: 0.72rem;
-  color: #94A3B8;
+  color: var(--color-texto-apagado);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .dato-voucher strong {
   font-size: 0.92rem;
-  color: #F8FAFC;
+  color: var(--color-texto);
 }
 
 .total-voucher {
-  color: #FDA4AF !important;
+  color: var(--color-primario) !important;
   font-size: 1.08rem !important;
 }
 
@@ -236,6 +237,7 @@
 
 .cabecera-feed h3 {
   margin-bottom: 0.2rem;
+  color: var(--color-secundario);
 }
 
 .texto-ayuda {
@@ -243,16 +245,9 @@
   font-size: 0.85rem;
 }
 
-.texto-ayuda code {
-  background: #F1F5F9;
-  padding: 0.12rem 0.4rem;
-  border-radius: 4px;
-  font-weight: 600;
-  color: var(--color-acento-indigo);
-}
-
 .pildora-contador-feed {
-  background: #F1F5F9;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
   color: var(--color-secundario);
   font-size: 0.76rem;
   font-weight: 700;
@@ -266,7 +261,8 @@
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-secundario);
-  background: #F1F5F9;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
   padding: 0.22rem 0.55rem;
   border-radius: 6px;
 }
@@ -281,8 +277,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--color-primario-claro);
-  color: var(--color-primario-oscuro);
+  background: #FBF1EB;
+  color: var(--color-primario);
   font-family: var(--fuente-titulos);
   font-size: 0.85rem;
   font-weight: 800;
@@ -314,11 +310,11 @@
 }
 
 .fecha-tag {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
   padding: 0.15rem 0.45rem;
   border-radius: 5px;
-  color: #334155;
+  color: var(--color-texto);
 }
 
 .flecha-fecha {
@@ -333,16 +329,16 @@
 }
 
 /* ==========================================================================
-   BANCO DE PRUEBAS DOCENTE (TEST BENCH PL/SQL)
+   ESCENARIOS DE DEMOSTRACIÓN Y REGLAS DE NEGOCIO
    ========================================================================== */
 .banner-banco-pruebas {
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  background: #FAF7F2;
   border-radius: 18px;
   padding: 1.5rem 1.75rem;
   margin-bottom: 2rem;
-  color: #FFFFFF;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-texto);
+  box-shadow: var(--sombra-suave);
+  border: 1.5px solid var(--color-borde);
 }
 
 .banco-pruebas-header {
@@ -363,49 +359,30 @@
 }
 
 .insignia-banco {
-  font-family: var(--fuente-mono);
+  font-family: var(--fuente-cuerpo);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  background: rgba(224, 86, 36, 0.25);
-  color: #FF8A65;
-  border: 1px solid rgba(224, 86, 36, 0.4);
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-}
-
-.badge-docente {
-  font-family: var(--fuente-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  background: rgba(59, 130, 246, 0.25);
-  color: #93C5FD;
-  border: 1px solid rgba(59, 130, 246, 0.4);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #EDF4F0;
+  color: var(--color-secundario);
+  border: 1px solid rgba(44, 82, 63, 0.25);
   padding: 0.25rem 0.65rem;
   border-radius: 9999px;
 }
 
 .banco-pruebas-titulo h3 {
   font-size: 1.25rem;
-  color: #FFFFFF;
+  color: var(--color-secundario);
   margin: 0 0 0.3rem 0;
   font-family: var(--fuente-titulos);
 }
 
 .banco-pruebas-titulo p {
-  color: #94A3B8;
+  color: var(--color-texto-apagado);
   font-size: 0.86rem;
   margin: 0;
   max-width: 650px;
-}
-
-.banco-pruebas-titulo p code {
-  background: rgba(255, 255, 255, 0.12);
-  color: #E2E8F0;
-  padding: 0.12rem 0.35rem;
-  border-radius: 4px;
-  font-family: var(--fuente-mono);
-  font-size: 0.8rem;
 }
 
 .badge-caso {
@@ -418,15 +395,15 @@
 }
 
 .badge-caso.badge-exito {
-  background: rgba(16, 185, 129, 0.25);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: #EDF5F0;
+  color: #24583E;
+  border: 1px solid #C6E2D2;
 }
 
 .badge-caso.badge-error {
-  background: rgba(239, 68, 68, 0.25);
-  color: #F87171;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: #FDF2F0;
+  color: #8A2E24;
+  border: 1px solid #F6CDC7;
 }
 
 .banco-pruebas-botones {
@@ -449,8 +426,8 @@
 }
 
 .btn-prueba {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-borde);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   text-align: left;
@@ -459,19 +436,20 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  color: #FFFFFF;
+  color: var(--color-texto);
+  box-shadow: var(--sombra-suave);
 }
 
 .btn-prueba:hover {
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-borde-fuerte);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: var(--sombra-media);
 }
 
 .btn-prueba.activo {
-  border-color: #38BDF8;
-  background: rgba(56, 189, 248, 0.12);
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+  border-color: var(--color-primario);
+  background: #FBF1EB;
+  box-shadow: 0 0 0 2px rgba(182, 93, 56, 0.2);
 }
 
 .btn-prueba-top {
@@ -490,44 +468,44 @@
 }
 
 .codigo-commit {
-  background: rgba(16, 185, 129, 0.25);
-  color: #34D399;
+  background: #EDF5F0;
+  color: #24583E;
 }
 
 .codigo-20001 {
-  background: rgba(245, 158, 11, 0.25);
-  color: #FBBF24;
+  background: #FDF6EC;
+  color: #8F5C1B;
 }
 
 .codigo-20003 {
-  background: rgba(139, 92, 246, 0.25);
-  color: #C084FC;
+  background: #FBF1EB;
+  color: #984928;
 }
 
 .codigo-20002 {
-  background: rgba(239, 68, 68, 0.25);
-  color: #F87171;
+  background: #FDF2F0;
+  color: #8A2E24;
 }
 
 .btn-tag {
   font-size: 0.7rem;
-  color: #94A3B8;
-  font-weight: 500;
+  color: var(--color-texto-apagado);
+  font-weight: 600;
 }
 
 .btn-tag.tag-error {
-  color: #F87171;
+  color: #B23B2B;
 }
 
 .btn-nombre {
   font-size: 0.92rem;
-  color: #FFFFFF;
+  color: var(--color-secundario);
   font-family: var(--fuente-titulos);
 }
 
 .btn-desc {
   font-size: 0.75rem;
-  color: #94A3B8;
+  color: var(--color-texto-apagado);
   line-height: 1.25;
 }
 
@@ -535,23 +513,23 @@
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde);
   border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.84rem;
-  color: #E2E8F0;
+  color: var(--color-texto);
   animation: fadeIn 0.25s ease-out;
 }
 
 .icono-info-banco {
-  color: #38BDF8;
+  color: var(--color-primario);
   flex-shrink: 0;
   margin-top: 1px;
 }
 
 .texto-info-banco strong {
-  color: #FFFFFF;
+  color: var(--color-secundario);
   margin-right: 0.35rem;
 }
 
