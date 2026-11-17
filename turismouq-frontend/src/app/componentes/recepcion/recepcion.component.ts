@@ -84,8 +84,12 @@ export class RecepcionComponent implements OnInit {
   }
 
   consultarVoucher(id?: number): void {
-    const idABuscar = id || this.idReservaBuscar;
-    if (!idABuscar) return;
+    const idABuscar = id !== undefined ? id : Number(this.idReservaBuscar);
+    if (!idABuscar || idABuscar < 1) {
+      this.errorVoucher = 'Ingresa un número de reserva válido (mayor o igual a 1).';
+      this.voucherActual = null;
+      return;
+    }
 
     this.idReservaBuscar = idABuscar;
     this.cargandoVoucher = true;

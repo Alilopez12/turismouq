@@ -571,13 +571,27 @@
 
 .voucher-resumen-pago {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   background: #F9F7F2;
   border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 2rem;
   border: 1px solid #EAE3D6;
+}
+
+.alerta {
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+}
+
+.alerta-error {
+  background: #FDF2F0;
+  border: 1px solid #F5C6CB;
+  color: #B3261E;
 }
 
 .resumen-item {

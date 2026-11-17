@@ -12,7 +12,11 @@ import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -32,11 +36,14 @@ public class EntregaTresServicioImpl implements EntregaTresServicio {
         if (peticion.getIdCliente() == null) {
             peticion.setIdCliente(1L);
         }
-        if (peticion.getFechaCheckIn() == null) {
-            peticion.setFechaCheckIn(java.time.LocalDate.of(2027, 9, 1));
-        }
-        if (peticion.getFechaCheckOut() == null) {
-            peticion.setFechaCheckOut(java.time.LocalDate.of(2027, 9, 5));
+        if (peticion.getFechaCheckIn() == null || peticion.getFechaCheckOut() == null) {
+            Map<String, Object> disp = obtenerSiguienteDisponibilidad(peticion.getIdHabitacion());
+            if (peticion.getFechaCheckIn() == null) {
+                peticion.setFechaCheckIn(LocalDate.parse((String) disp.get("fechaCheckIn")));
+            }
+            if (peticion.getFechaCheckOut() == null) {
+                peticion.setFechaCheckOut(LocalDate.parse((String) disp.get("fechaCheckOut")));
+            }
         }
         if (peticion.getNumeroHuespedes() == null || peticion.getNumeroHuespedes() <= 0) {
             peticion.setNumeroHuespedes(2);
@@ -80,8 +87,108 @@ public class EntregaTresServicioImpl implements EntregaTresServicio {
             return respuesta;
 
         } catch (Exception ex) {
-            throw new NegocioExcepcion("Error al ejecutar transacción con SAVEPOINT en Oracle 21c: " + ex.getMessage());
+            throw new NegocioExcepcion(formatearErrorSavepoint(ex));
         }
+    }
+
+    /**
+     * Calcula el próximo rango de 4 noches completamente libre para una habitación en Oracle 21c.
+     */
+    @Override
+    public Map<String, Object> obtenerSiguienteDisponibilidad(Long idHabitacion) {
+        long habId = (idHabitacion != null && idHabitacion > 0) ? idHabitacion : 1L;
+        Map<String, Object> resultado = new LinkedHashMap<>();
+
+        String sqlHab = "SELECT h.id_habitacion, h.numero_nombre, h.capacidad, a.nombre AS alojamiento " +
+                        "FROM HABITACION h JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento " +
+                        "WHERE h.id_habitacion = ?";
+
+        String sqlMax = "SELECT MAX(r.fecha_check_out) " +
+                        "FROM RESERVA r JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva " +
+                        "WHERE rh.id_habitacion = ? AND r.estado != 'CANCELADA'";
+
+        try (Connection conexion = dataSource.getConnection()) {
+            String nombreHab = "Habitación #" + habId;
+            String alojamiento = "";
+            int capacidad = 4;
+            boolean existe = false;
+
+            try (PreparedStatement psHab = conexion.prepareStatement(sqlHab)) {
+                psHab.setLong(1, habId);
+                try (ResultSet rs = psHab.executeQuery()) {
+                    if (rs.next()) {
+                        existe = true;
+                        nombreHab = rs.getString("numero_nombre");
+                        capacidad = rs.getInt("capacidad");
+                        alojamiento = rs.getString("alojamiento");
+                    }
+                }
+            }
+
+            if (!existe) {
+                throw new NegocioExcepcion("La habitación #" + habId + " no existe en la base de datos.");
+            }
+
+            LocalDate fechaBase = LocalDate.now().plusDays(1);
+            try (PreparedStatement psMax = conexion.prepareStatement(sqlMax)) {
+                psMax.setLong(1, habId);
+                try (ResultSet rs = psMax.executeQuery()) {
+                    if (rs.next()) {
+                        Date maxDate = rs.getDate(1);
+                        if (maxDate != null) {
+                            LocalDate candidate = maxDate.toLocalDate().plusDays(1);
+                            if (candidate.isAfter(fechaBase)) {
+                                fechaBase = candidate;
+                            }
+                        }
+                    }
+                }
+            }
+
+            LocalDate checkIn = fechaBase;
+            LocalDate checkOut = checkIn.plusDays(4);
+
+            resultado.put("idHabitacion", habId);
+            resultado.put("nombreHabitacion", nombreHab);
+            resultado.put("alojamiento", alojamiento);
+            resultado.put("capacidadMaxima", capacidad);
+            resultado.put("fechaCheckIn", checkIn.toString());
+            resultado.put("fechaCheckOut", checkOut.toString());
+            return resultado;
+
+        } catch (NegocioExcepcion ne) {
+            throw ne;
+        } catch (Exception ex) {
+            throw new NegocioExcepcion("No se pudo consultar la disponibilidad de la habitación #" + habId + ": " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Extrae la descripción legible de reglas Oracle sin exponer trazas ORA-06512 innecesarias.
+     */
+    private String formatearErrorSavepoint(Exception ex) {
+        Throwable causa = ex;
+        SQLException sqlEx = null;
+        while (causa != null) {
+            if (causa instanceof SQLException se) {
+                sqlEx = se;
+                break;
+            }
+            causa = causa.getCause();
+        }
+        String raw = (sqlEx != null && sqlEx.getMessage() != null) ? sqlEx.getMessage() : ex.getMessage();
+        if (raw == null || raw.isBlank()) {
+            return "Error al ejecutar la transacción con SAVEPOINT en Oracle 21c.";
+        }
+        String primeraLinea = raw.split("\\r?\\n")[0].trim();
+        if (primeraLinea.contains("ORA-20002")) {
+            String detalle = primeraLinea.replaceFirst("^ORA-20002:\\s*", "");
+            return detalle + " Selecciona otro rango de fechas o pulsa 'Buscar Fechas Libres'.";
+        }
+        if (primeraLinea.contains("ORA-20001") || primeraLinea.contains("ORA-20003") || primeraLinea.contains("ORA-20004")) {
+            return primeraLinea.replaceFirst("^ORA-2000[134]:\\s*", "");
+        }
+        return "Error en Oracle 21c: " + primeraLinea;
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/entrega3")
@@ -26,6 +27,13 @@ public class EntregaTresControlador {
             @RequestBody TransaccionPeticionDTO peticion) {
         TransaccionRespuestaDTO respuesta = entregaTresServicio.ejecutarTransaccionSavepoint(peticion);
         return ResponseEntity.ok(RespuestaApiDTO.exito(respuesta.getMensaje(), respuesta));
+    }
+
+    @GetMapping("/siguiente-disponibilidad")
+    public ResponseEntity<RespuestaApiDTO<Map<String, Object>>> obtenerSiguienteDisponibilidad(
+            @RequestParam(required = false, defaultValue = "1") Long idHabitacion) {
+        Map<String, Object> disponibilidad = entregaTresServicio.obtenerSiguienteDisponibilidad(idHabitacion);
+        return ResponseEntity.ok(RespuestaApiDTO.exito("Siguiente rango de fechas libre en Oracle 21c", disponibilidad));
     }
 
     @GetMapping("/planes-cbo")

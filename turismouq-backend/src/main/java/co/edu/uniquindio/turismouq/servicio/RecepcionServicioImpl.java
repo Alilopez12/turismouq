@@ -125,7 +125,10 @@ public class RecepcionServicioImpl implements RecepcionServicio {
         }, params);
 
         if (lista.isEmpty()) {
-            throw new NegocioExcepcion("No se encontró comprobante de voucher para la reserva especificada.");
+            String detalle = (idReserva != null)
+                    ? "No se encontró comprobante de voucher para la reserva #" + idReserva + "."
+                    : "No se encontraron comprobantes de reserva registrados.";
+            throw new NegocioExcepcion(detalle);
         }
 
         return lista.get(0);

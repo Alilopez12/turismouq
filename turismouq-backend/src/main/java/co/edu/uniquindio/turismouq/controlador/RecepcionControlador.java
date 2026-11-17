@@ -33,9 +33,13 @@ public class RecepcionControlador {
     }
 
     @GetMapping("/voucher")
-    public ResponseEntity<RespuestaApiDTO<RecepcionVoucherDTO>> obtenerVoucherUltimo() {
-        RecepcionVoucherDTO voucher = recepcionServicio.obtenerVoucher(null);
-        return ResponseEntity.ok(RespuestaApiDTO.exito("Comprobante de reserva (V_RECEPCION_VOUCHER_RESERVA)", voucher));
+    public ResponseEntity<RespuestaApiDTO<RecepcionVoucherDTO>> obtenerVoucher(
+            @RequestParam(required = false) Long idReserva) {
+        RecepcionVoucherDTO voucher = recepcionServicio.obtenerVoucher(idReserva);
+        String msg = (idReserva != null)
+                ? "Comprobante de reserva #" + idReserva
+                : "Comprobante de reserva (V_RECEPCION_VOUCHER_RESERVA)";
+        return ResponseEntity.ok(RespuestaApiDTO.exito(msg, voucher));
     }
 
     @GetMapping("/voucher/{idReserva}")

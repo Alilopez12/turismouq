@@ -205,6 +205,7 @@
               type="number" 
               class="input-num-reserva" 
               [(ngModel)]="idReservaBuscar" 
+              (keyup.enter)="consultarVoucher()"
               min="1" 
               placeholder="Ej: 1" />
             <button type="button" class="btn-buscar-voucher" (click)="consultarVoucher()" [disabled]="cargandoVoucher">

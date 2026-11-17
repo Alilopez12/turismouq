@@ -6,10 +6,13 @@ import co.edu.uniquindio.turismouq.dto.TransaccionPeticionDTO;
 import co.edu.uniquindio.turismouq.dto.TransaccionRespuestaDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EntregaTresServicio {
 
     TransaccionRespuestaDTO ejecutarTransaccionSavepoint(TransaccionPeticionDTO peticion);
+
+    Map<String, Object> obtenerSiguienteDisponibilidad(Long idHabitacion);
 
     List<CboAnalisisDTO> obtenerAnalisisCbo();
 

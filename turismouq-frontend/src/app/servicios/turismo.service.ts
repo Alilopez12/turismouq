@@ -169,6 +169,19 @@ export class TurismoService {
       .pipe(map(r => r.datos));
   }
 
+  obtenerSiguienteDisponibilidadSavepoint(idHabitacion: number): Observable<{
+    idHabitacion: number;
+    nombreHabitacion: string;
+    alojamiento: string;
+    capacidadMaxima: number;
+    fechaCheckIn: string;
+    fechaCheckOut: string;
+  }> {
+    const params = new HttpParams().set('idHabitacion', idHabitacion.toString());
+    return this.http.get<RespuestaApi<any>>(`${this.urlBase}/entrega3/siguiente-disponibilidad`, { params })
+      .pipe(map(r => r.datos));
+  }
+
   obtenerPlanesCbo(): Observable<CboAnalisisItem[]> {
     return this.http.get<RespuestaApi<CboAnalisisItem[]>>(`${this.urlBase}/entrega3/planes-cbo`)
       .pipe(map(r => r.datos));

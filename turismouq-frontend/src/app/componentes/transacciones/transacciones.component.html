@@ -7,7 +7,7 @@
     </div>
     <h2>Transacciones Atómicas & Rollback Parcial con SAVEPOINT</h2>
     <p class="subtexto">
-      Implementación del procedimiento almacenado <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> con punto de guardado <code>SAVEPOINT sv_reserva</code> para garantizar integridad ACID sin perder reservas cuando el pago bancario es rechazado.
+      Implementación del procedimiento almacenado <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> con punto de guardado <code>SAVEPOINT pto_reserva_creada</code> para garantizar integridad ACID sin perder reservas cuando el pago bancario es rechazado.
     </p>
   </header>
 
@@ -23,7 +23,7 @@
     <div>
       <h4>Mecanismo de Recuperación Parcial ante Fallas Bancarias</h4>
       <p>
-        Al registrar una reserva, se guarda el registro de la estadía y de inmediato se fija un <code>SAVEPOINT sv_reserva</code>. Si la pasarela bancaria o el medio de pago falla, la transacción no aborta toda la operación: ejecuta <code>ROLLBACK TO sv_reserva</code>, conservando la reserva en estado <strong>PENDIENTE</strong> para reintento y finaliza con <code>COMMIT</code> seguro.
+        Al registrar una reserva, se guarda el registro de la estadía y de inmediato se fija un <code>SAVEPOINT pto_reserva_creada</code>. Si la pasarela bancaria o el medio de pago falla, la transacción no aborta toda la operación: ejecuta <code>ROLLBACK TO pto_reserva_creada</code>, conservando la reserva en estado <strong>PENDIENTE</strong> para reintento y finaliza con <code>COMMIT</code> seguro.
       </p>
     </div>
   </div>
@@ -43,12 +43,23 @@
         <div class="fila-campos">
           <div class="grupo-campo">
             <label for="fHabitacion">ID Habitación</label>
-            <input id="fHabitacion" type="number" [(ngModel)]="peticionSavepoint.idHabitacion" name="idHabitacion" min="1" max="25" required>
+            <input id="fHabitacion" type="number" [(ngModel)]="peticionSavepoint.idHabitacion" (change)="buscarFechasDisponibles(false)" name="idHabitacion" min="1" max="180" required>
           </div>
           <div class="grupo-campo">
             <label for="fCliente">ID Cliente Huésped</label>
-            <input id="fCliente" type="number" [(ngModel)]="peticionSavepoint.idCliente" name="idCliente" min="1" max="50" required>
+            <input id="fCliente" type="number" [(ngModel)]="peticionSavepoint.idCliente" name="idCliente" min="1" max="3000" required>
           </div>
+        </div>
+
+        <!-- Resumen de la Habitación y Botón de Disponibilidad -->
+        <div class="barra-info-disponibilidad">
+          <div class="info-hab-texto" *ngIf="infoHabitacion">
+            <strong>{{ infoHabitacion.nombreHabitacion }}</strong>
+            <span>{{ infoHabitacion.alojamiento }} · Cupo máx: {{ infoHabitacion.capacidadMaxima }} pers.</span>
+          </div>
+          <button type="button" class="btn-buscar-fechas" (click)="buscarFechasDisponibles(false)" [disabled]="buscandoDisponibilidad">
+            {{ buscandoDisponibilidad ? 'Buscando...' : 'Buscar Fechas Libres' }}
+          </button>
         </div>
 
         <div class="fila-campos">
@@ -60,6 +71,10 @@
             <label for="fCheckOut">Fecha Check-Out</label>
             <input id="fCheckOut" type="date" [(ngModel)]="peticionSavepoint.fechaCheckOut" name="fechaCheckOut" required>
           </div>
+        </div>
+
+        <div *ngIf="fechasAutoAvanzadas" class="aviso-auto-fechas">
+          ✓ Formulario actualizado automáticamente al siguiente rango libre en Oracle para tu próxima ejecución.
         </div>
 
         <div class="fila-campos">
@@ -84,7 +99,7 @@
           </div>
           <div class="toggle-textos">
             <strong>Simular Fallo en Pasarela de Pago</strong>
-            <small>Dispara excepción controlada para forzar <code>ROLLBACK TO sv_reserva</code> y verificar que la reserva no se pierde</small>
+            <small>Dispara rechazo bancario para activar <code>ROLLBACK TO pto_reserva_creada</code> y conservar la reserva pendiente</small>
           </div>
         </div>
 
@@ -115,7 +130,7 @@
       <div *ngIf="!resultadoSavepoint && !ejecutandoSavepoint" class="estado-espera-tx">
         <div class="icono-espera">⚡</div>
         <h4>Ninguna Transacción Ejecutada</h4>
-        <p>Configura los parámetros a la izquierda y pulsa el botón para observar cómo Oracle gestiona el punto de guardado y el commit.</p>
+        <p>Las fechas libres de la habitación ya fueron consultadas automáticamente. Pulsa ejecutar para probar el flujo con <code>COMMIT</code> o activa el fallo simulado para probar <code>ROLLBACK TO</code>.</p>
       </div>
 
       <!-- Cargando -->
@@ -132,8 +147,11 @@
             <span *ngIf="resultadoSavepoint.rollbackParcial">⚠</span>
           </div>
           <div>
-            <h4>{{ resultadoSavepoint.rollbackParcial ? 'Rollback Parcial a SAVEPOINT sv_reserva' : 'Transacción Confirmada (COMMIT)' }}</h4>
+            <h4>{{ resultadoSavepoint.rollbackParcial ? 'Rollback Parcial a SAVEPOINT pto_reserva_creada' : 'Transacción Confirmada (COMMIT)' }}</h4>
             <p>{{ resultadoSavepoint.mensaje }}</p>
+            <small *ngIf="rangoEjecutado" class="rango-ejecutado-txt">
+              Habitación #{{ rangoEjecutado.idHabitacion }} · Estadía: {{ rangoEjecutado.fechaCheckIn }} → {{ rangoEjecutado.fechaCheckOut }}
+            </small>
           </div>
         </div>
 
@@ -166,30 +184,30 @@
             <li class="paso completado">
               <span class="num-paso">1</span>
               <div>
-                <strong>INSERT en RESERVA</strong>
-                <small>Se genera ID Reserva #{{ resultadoSavepoint.idReserva }} en estado PENDIENTE</small>
+                <strong>INSERT en RESERVA y RESERVA_HABITACION</strong>
+                <small>Se crea Reserva #{{ resultadoSavepoint.idReserva }} tras validar fechas, cupo y solapamientos</small>
               </div>
             </li>
             <li class="paso completado">
               <span class="num-paso">2</span>
               <div>
-                <strong>Fijar SAVEPOINT sv_reserva</strong>
-                <small>Punto de retorno establecido en el registro undo de Oracle</small>
+                <strong>Fijar SAVEPOINT pto_reserva_creada</strong>
+                <small>Punto de retorno establecido en el registro transaccional de Oracle 21c</small>
               </div>
             </li>
             <li class="paso" [ngClass]="resultadoSavepoint.rollbackParcial ? 'paso-revertido' : 'completado'">
               <span class="num-paso">3</span>
               <div>
                 <strong>Cobro en Pasarela (INSERT en PAGO)</strong>
-                <small *ngIf="!resultadoSavepoint.rollbackParcial">Pago procesado exitosamente por ${{ resultadoSavepoint.total | number:'1.0-0' }} COP</small>
-                <small *ngIf="resultadoSavepoint.rollbackParcial">Fallo simulado detectado; se ejecutó <code>ROLLBACK TO sv_reserva</code></small>
+                <small *ngIf="!resultadoSavepoint.rollbackParcial">Pago #{{ resultadoSavepoint.idPago }} aprobado por ${{ resultadoSavepoint.total | number:'1.0-0' }} COP</small>
+                <small *ngIf="resultadoSavepoint.rollbackParcial">Fallo simulado detectado; se ejecutó <code>ROLLBACK TO pto_reserva_creada</code></small>
               </div>
             </li>
             <li class="paso completado">
               <span class="num-paso">4</span>
               <div>
                 <strong>COMMIT Transaccional</strong>
-                <small>La reserva permanece guardada en la base de datos sin cancelarse</small>
+                <small>La reserva permanece guardada en la base de datos en estado {{ resultadoSavepoint.estadoReserva }}</small>
               </div>
             </li>
           </ol>
@@ -204,49 +222,47 @@
       <h3>Implementación en Paquete PL/SQL (Oracle 21c)</h3>
       <span class="chip-tecnico">05_paquete_turismo_cuerpo.sql</span>
     </div>
-    <pre class="codigo-sql"><code>PROCEDURE sp_registrar_reserva_con_pago (
-    p_id_habitacion   IN  NUMBER,
+    <pre class="codigo-sql"><code>PROCEDURE sp_registrar_reserva_con_pago(
     p_id_cliente      IN  NUMBER,
-    p_fecha_checkin   IN  DATE,
-    p_fecha_checkout  IN  DATE,
+    p_id_habitacion   IN  NUMBER,
+    p_fecha_in        IN  DATE,
+    p_fecha_out       IN  DATE,
     p_num_huespedes   IN  NUMBER,
     p_metodo_pago     IN  VARCHAR2,
-    p_simular_fallo   IN  NUMBER,    -- 1: Simula excepción bancaria, 0: Normal
+    p_simular_fallo   IN  NUMBER,    -- 1: Simula rechazo bancario, 0: Normal
     p_id_reserva      OUT NUMBER,
     p_id_pago         OUT NUMBER,
+    p_total           OUT NUMBER,
+    p_estado_reserva  OUT VARCHAR2,
     p_mensaje         OUT VARCHAR2
 ) IS
+    v_id_reserva NUMBER;
+    v_total      NUMBER;
+    v_metodo     VARCHAR2(30);
 BEGIN
-    -- 1. Inserta la reserva en estado PENDIENTE
-    INSERT INTO reserva (id_habitacion, id_cliente, fecha_checkin, fecha_checkout, num_huespedes, estado)
-    VALUES (p_id_habitacion, p_id_cliente, p_fecha_checkin, p_fecha_checkout, p_num_huespedes, 'PENDIENTE')
-    RETURNING id_reserva INTO p_id_reserva;
+    -- 1. Crear la reserva (valida ORA-20001 fechas, ORA-20002 solapamiento, ORA-20003 aforo)
+    sp_crear_reserva(p_id_cliente, p_id_habitacion, p_fecha_in, p_fecha_out, p_num_huespedes, v_id_reserva, v_total);
+    p_id_reserva := v_id_reserva;
+    p_total      := v_total;
 
-    -- 2. FIJAR SAVEPOINT
-    SAVEPOINT sv_reserva;
+    -- 2. Fijar SAVEPOINT antes del cobro financiero
+    SAVEPOINT pto_reserva_creada;
 
-    BEGIN
-        IF p_simular_fallo = 1 THEN
-            RAISE_APPLICATION_ERROR(-20010, 'Fallo simulado en pasarela bancaria.');
-        END IF;
-
-        -- Normalización y registro del pago
-        INSERT INTO pago (id_reserva, monto, metodo_pago, estado)
-        VALUES (p_id_reserva, v_total, v_metodo_normalizado, 'APROBADO')
+    -- 3. Flujo de pago: Exitoso vs Rollback parcial simulado
+    IF p_simular_fallo = 1 THEN
+        ROLLBACK TO pto_reserva_creada;
+        UPDATE RESERVA SET ESTADO = 'PENDIENTE' WHERE ID_RESERVA = v_id_reserva;
+        COMMIT;
+        p_id_pago := NULL;
+        p_estado_reserva := 'PENDIENTE';
+    ELSE
+        -- Normalización de método de pago y cobro aprobado en PAGO
+        INSERT INTO PAGO (fecha_pago, monto, metodo_pago, estado, id_reserva)
+        VALUES (SYSDATE, v_total, v_metodo, 'APROBADO', v_id_reserva)
         RETURNING id_pago INTO p_id_pago;
-
-        UPDATE reserva SET estado = 'CONFIRMADA' WHERE id_reserva = p_id_reserva;
-        p_mensaje := 'Reserva y pago completados exitosamente.';
-    EXCEPTION
-        WHEN OTHERS THEN
-            -- ROLLBACK PARCIAL AL SAVEPOINT
-            ROLLBACK TO sv_reserva;
-            p_id_pago := NULL;
-            p_mensaje := 'Pago rechazado. Se preserva la reserva #' || p_id_reserva || ' en estado PENDIENTE.';
-    END;
-
-    -- 3. Confirmación final de los cambios no revertidos
-    COMMIT;
+        COMMIT;
+        p_estado_reserva := 'CONFIRMADA';
+    END IF;
 END sp_registrar_reserva_con_pago;</code></pre>
   </div>
 </div>
