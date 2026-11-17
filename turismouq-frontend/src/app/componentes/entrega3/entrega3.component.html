@@ -1,0 +1,590 @@
+<div class="modulo-entrega3">
+  <!-- Cabecera del Módulo -->
+  <header class="cabecera-modulo">
+    <div class="titulos-modulo">
+      <div class="insignia-modulo">
+        <span class="punto-pulso"></span>
+        <span>ENTREGA 3 · PROYECTO INTEGRADOR BDII</span>
+      </div>
+      <h2>Rendimiento, Concurrencia & Seguridad en Oracle 21c</h2>
+      <p class="subtitulo-modulo">
+        Implementación de transacciones atómicas con <code>SAVEPOINT</code>, concurrencia pesimista con <code>WAIT</code>, optimización del CBO con índices compuestos/funcionales y seguridad estricta basada en roles y vistas.
+      </p>
+    </div>
+
+    <div class="pildora-oracle">
+      <div class="marca-oracle">
+        <span class="punto-oracle"></span>
+        <strong>Oracle Database 21c XE</strong>
+      </div>
+      <span class="esquema-tag">TURISMO_UQ / XEPDB1</span>
+    </div>
+  </header>
+
+  <!-- Pestañas de Navegación de Entrega 3 -->
+  <nav class="nav-pestanas" aria-label="Navegación de Entrega 3">
+    <button type="button" class="btn-pestana" [class.activo]="pestanaActiva === 'savepoint'" (click)="seleccionarPestana('savepoint')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+      </svg>
+      <span>1. Transacciones & SAVEPOINT</span>
+    </button>
+
+    <button type="button" class="btn-pestana" [class.activo]="pestanaActiva === 'concurrencia'" (click)="seleccionarPestana('concurrencia')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      <span>2. Concurrencia & Bloqueos</span>
+    </button>
+
+    <button type="button" class="btn-pestana" [class.activo]="pestanaActiva === 'cbo'" (click)="seleccionarPestana('cbo')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span>3. Optimizador CBO & Índices</span>
+    </button>
+
+    <button type="button" class="btn-pestana" [class.activo]="pestanaActiva === 'seguridad'" (click)="seleccionarPestana('seguridad')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+      <span>4. Seguridad, Roles & Vistas</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       PESTAÑA 1: TRANSACCIONES & SAVEPOINT
+       ========================================================================= -->
+  <section *ngIf="pestanaActiva === 'savepoint'" class="seccion-contenido">
+    <div class="banner-intro-pilar">
+      <div class="icono-intro-pilar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
+      <div>
+        <h4>Arquitectura Transaccional Atómica con Rollback Parcial</h4>
+        <p>
+          Procedimiento almacenado <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code>. Crea la reserva, fija un <code>SAVEPOINT sp_reserva_creada</code> y procesa el cobro bancario. Si el pago falla, la transacción no se aborta por completo: revierte solo el cobro al SAVEPOINT y preserva la reserva en estado <strong>PENDIENTE</strong>, cumpliendo el principio ACID sin pérdida de reservas.
+        </p>
+      </div>
+    </div>
+
+    <div class="cuadricula-savepoint">
+      <!-- Formulario de Prueba Interactiva -->
+      <div class="tarjeta tarjeta-prueba-tx">
+        <div class="tarjeta-cabecera">
+          <h3>Simulador de Transacción PL/SQL</h3>
+          <span class="chip-tecnico">sp_registrar_reserva_con_pago</span>
+        </div>
+
+        <form (ngSubmit)="ejecutarTransaccion()" class="formulario-tx">
+          <div class="fila-campos">
+            <div class="grupo-campo">
+              <label for="fHabitacion">ID Habitación</label>
+              <input id="fHabitacion" type="number" [(ngModel)]="peticionSavepoint.idHabitacion" name="idHabitacion" min="1" max="20" required>
+            </div>
+            <div class="grupo-campo">
+              <label for="fCliente">ID Cliente Huésped</label>
+              <input id="fCliente" type="number" [(ngModel)]="peticionSavepoint.idCliente" name="idCliente" min="1" max="50" required>
+            </div>
+          </div>
+
+          <div class="fila-campos">
+            <div class="grupo-campo">
+              <label for="fCheckIn">Fecha Check-In</label>
+              <input id="fCheckIn" type="date" [(ngModel)]="peticionSavepoint.fechaCheckIn" name="fechaCheckIn" required>
+            </div>
+            <div class="grupo-campo">
+              <label for="fCheckOut">Fecha Check-Out</label>
+              <input id="fCheckOut" type="date" [(ngModel)]="peticionSavepoint.fechaCheckOut" name="fechaCheckOut" required>
+            </div>
+          </div>
+
+          <div class="fila-campos">
+            <div class="grupo-campo">
+              <label for="fHuespedes">Número de Huéspedes</label>
+              <input id="fHuespedes" type="number" [(ngModel)]="peticionSavepoint.numeroHuespedes" name="numeroHuespedes" min="1" max="10" required>
+            </div>
+            <div class="grupo-campo">
+              <label for="fMetodo">Método de Pago</label>
+              <select id="fMetodo" [(ngModel)]="peticionSavepoint.metodoPago" name="metodoPago">
+                <option value="TARJETA">Tarjeta de Crédito / Débito</option>
+                <option value="PSE">Transferencia PSE</option>
+                <option value="TRANSFERENCIA">Transferencia Bancolombia</option>
+                <option value="EFECTIVO">Efectivo en Recepción</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Switch para simular fallo de pasarela -->
+          <div class="caja-toggle-fallo" [class.activo]="peticionSavepoint.simularFallo" (click)="alternarFallo()">
+            <div class="toggle-switch">
+              <div class="toggle-circulo" [class.activado]="peticionSavepoint.simularFallo"></div>
+            </div>
+            <div class="toggle-textos">
+              <strong>Simular Fallo en Pasarela de Pago</strong>
+              <small>Dispara excepción interna en bloque PL/SQL para activar <code>ROLLBACK TO SAVEPOINT</code></small>
+            </div>
+          </div>
+
+          <div *ngIf="errorSavepoint" class="alerta alerta-error-tx">
+            {{ errorSavepoint }}
+          </div>
+
+          <button type="submit" class="btn btn-primario ancho-completo btn-ejecutar-tx" [disabled]="ejecutandoSavepoint">
+            <span *ngIf="!ejecutandoSavepoint">
+              Ejecutar Transacción en Oracle ({{ peticionSavepoint.simularFallo ? 'Probar Rollback Parcial' : 'Probar Commit Completo' }})
+            </span>
+            <span *ngIf="ejecutandoSavepoint">Procesando en Oracle Database 21c...</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Panel de Resultado en Tiempo Real -->
+      <div class="tarjeta tarjeta-resultado-tx">
+        <div class="tarjeta-cabecera">
+          <h3>Traza de Ejecución Transaccional</h3>
+          <span class="chip-tecnico" *ngIf="resultadoSavepoint">
+            {{ resultadoSavepoint.rollbackParcial ? 'ROLLBACK TO SAVEPOINT' : 'COMMIT COMPLETO' }}
+          </span>
+        </div>
+
+        <div *ngIf="!resultadoSavepoint && !ejecutandoSavepoint" class="vacio-resultado">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <p>Presiona el botón de ejecución para ver la respuesta del procedimiento almacenado y el comportamiento del SAVEPOINT.</p>
+        </div>
+
+        <div *ngIf="ejecutandoSavepoint" class="cargando-tx">
+          <div class="spinner-tx"></div>
+          <p>Ejecutando procedimiento almacenado en el motor de base de datos...</p>
+        </div>
+
+        <div *ngIf="resultadoSavepoint" class="detalle-resultado-tx">
+          <!-- Banner de Estado -->
+          <div class="estado-transaccion-banner" [class.exito]="!resultadoSavepoint.rollbackParcial" [class.aviso]="resultadoSavepoint.rollbackParcial">
+            <div class="estado-icono">
+              <svg *ngIf="!resultadoSavepoint.rollbackParcial" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <svg *ngIf="resultadoSavepoint.rollbackParcial" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div>
+              <strong class="estado-titulo">
+                {{ !resultadoSavepoint.rollbackParcial ? 'Transacción Atómica Completada (Commit)' : 'Rollback Parcial Ejecutado con Éxito' }}
+              </strong>
+              <p class="estado-desc">{{ resultadoSavepoint.mensaje }}</p>
+            </div>
+          </div>
+
+          <!-- Métricas de la Transacción -->
+          <div class="metricas-tx-grid">
+            <div class="metrica-item">
+              <small>ID Reserva Generada</small>
+              <strong class="metrica-reserva">#{{ resultadoSavepoint.idReserva }}</strong>
+            </div>
+
+            <div class="metrica-item">
+              <small>Estado en BD (CHK)</small>
+              <span class="badge-estado-bd" [class.confirmada]="resultadoSavepoint.estadoReserva === 'CONFIRMADA'" [class.pendiente]="resultadoSavepoint.estadoReserva === 'PENDIENTE'">
+                {{ resultadoSavepoint.estadoReserva }}
+              </span>
+            </div>
+
+            <div class="metrica-item">
+              <small>ID Pago Registrado</small>
+              <strong *ngIf="resultadoSavepoint.idPago">#{{ resultadoSavepoint.idPago }}</strong>
+              <strong *ngIf="!resultadoSavepoint.idPago" class="pago-nulo">NULL (Revertido)</strong>
+            </div>
+
+            <div class="metrica-item">
+              <small>Total Facturado</small>
+              <strong class="metrica-total">${{ resultadoSavepoint.total | number:'1.0-0' }} COP</strong>
+            </div>
+          </div>
+
+          <!-- Caja Técnica Explicativa -->
+          <div class="explicacion-tecnica-tx">
+            <h5>Mecánica Interna PL/SQL:</h5>
+            <ol>
+              <li>Se validó la disponibilidad de fechas con función <code>fn_verificar_disponibilidad</code>.</li>
+              <li>Se insertó la cabecera en <code>RESERVA</code> y se ejecutó <code>SAVEPOINT sp_reserva_creada;</code>.</li>
+              <li *ngIf="!resultadoSavepoint.rollbackParcial">
+                El cobro fue exitoso: se insertó en <code>PAGO</code>, la reserva pasó a <code>CONFIRMADA</code> y se ejecutó <code>COMMIT;</code>.
+              </li>
+              <li *ngIf="resultadoSavepoint.rollbackParcial">
+                Falló el pago: la excepción capturada ejecutó <code>ROLLBACK TO SAVEPOINT sp_reserva_creada;</code>, preservó la reserva en estado <code>PENDIENTE</code> y persistió con <code>COMMIT;</code> para no perder el turno del cliente.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PESTAÑA 2: CONCURRENCIA & BLOQUEOS
+       ========================================================================= -->
+  <section *ngIf="pestanaActiva === 'concurrencia'" class="seccion-contenido">
+    <div class="banner-intro-pilar">
+      <div class="icono-intro-pilar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <div>
+        <h4>Control de Concurrencia Pesimista: <code>SELECT ... FOR UPDATE WAIT 5</code></h4>
+        <p>
+          Procedimiento <code>sp_reserva_concurrente_for_update</code> en <code>02_concurrencia_bloqueos.sql</code>. Evita la sobreventa de alojamientos (race condition) bloqueando la fila de la habitación a nivel de transacción exclusiva. Si otra sesión intenta reservar al mismo tiempo, espera ordenadamente hasta 5 segundos antes de abortar de forma limpia con <code>ORA-30006</code>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Protocolo de 2 Sesiones -->
+    <div class="protocolo-concurrencia-card">
+      <div class="cabecera-protocolo">
+        <h3>Protocolo de Demostración Multisesión en Oracle XE</h3>
+        <span class="pildora-sesiones">2 Sesiones Concurrentes</span>
+      </div>
+
+      <div class="cuadricula-sesiones">
+        <!-- Sesión 1 -->
+        <div class="tarjeta-sesion sesion-1">
+          <div class="cabecera-sesion">
+            <span class="badge-sesion">Terminal 1 · Sesión A</span>
+            <h4>Transacción Adquirente</h4>
+          </div>
+          <div class="cuerpo-sesion">
+            <p>Ejecuta la reserva adquiriendo el cerrojo exclusivo de fila en la habitación #1:</p>
+            <pre class="codigo-sql"><code>-- Sesión A (SQL*Plus / DBeaver)
+VARIABLE v_res NUMBER;
+VARIABLE v_msg VARCHAR2(300);
+
+EXEC sp_reserva_concurrente_for_update(
+  p_id_habitacion   => 1,
+  p_id_cliente      => 1,
+  p_fecha_checkin   => DATE '2026-11-01',
+  p_fecha_checkout  => DATE '2026-11-05',
+  p_num_huespedes   => 2,
+  p_id_reserva      => :v_res,
+  p_mensaje         => :v_msg
+);
+
+-- Estado: TX Lock exclusiva adquirida.
+-- NO se ha ejecutado COMMIT todavÃ­a.</code></pre>
+            <div class="estado-fila-bloqueada">
+              <span class="candado-icono">🔒</span>
+              <div>
+                <strong>Fila HABITACION #1 Bloqueada</strong>
+                <small>Modo: Exclusive Row Lock (TX Lock)</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sesión 2 -->
+        <div class="tarjeta-sesion sesion-2">
+          <div class="cabecera-sesion">
+            <span class="badge-sesion">Terminal 2 · Sesión B</span>
+            <h4>Transacción Competidora</h4>
+          </div>
+          <div class="cuerpo-sesion">
+            <p>Intenta reservar la misma habitación #1 en las mismas fechas inmediatamente después:</p>
+            <pre class="codigo-sql"><code>-- Sesión B (Segunda terminal concurrente)
+VARIABLE v_res2 NUMBER;
+VARIABLE v_msg2 VARCHAR2(300);
+
+EXEC sp_reserva_concurrente_for_update(
+  p_id_habitacion   => 1,
+  p_id_cliente      => 2,
+  p_fecha_checkin   => DATE '2026-11-02',
+  p_fecha_checkout  => DATE '2026-11-04',
+  p_num_huespedes   => 1,
+  p_id_reserva      => :v_res2,
+  p_mensaje         => :v_msg2
+);
+
+-- Comportamiento:
+-- Espera en cola hasta 5 segundos (WAIT 5).</code></pre>
+            <div class="resultado-espera">
+              <div class="linea-resultado exito">
+                <strong>Caso A (Sesión 1 hace COMMIT):</strong>
+                <span>Sesión 2 detecta habitación no disponible y devuelve <code>ORA-20002</code> controlada sin duplicidad.</span>
+              </div>
+              <div class="linea-resultado timeout">
+                <strong>Caso B (Sesión 1 retiene &gt; 5 seg):</strong>
+                <span>Sesión 2 captura <code>ORA-30006</code> y aborta limpiamente sin congelar el hilo de la aplicación.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Comparativa de Concurrencia -->
+      <div class="comparativa-concurrencia">
+        <h4>¿Por qué <code>SELECT ... FOR UPDATE WAIT 5</code> frente a otras alternativas?</h4>
+        <div class="tabla-contenedor">
+          <table class="tabla-datos">
+            <thead>
+              <tr>
+                <th>Estrategia</th>
+                <th>Bloqueo en BD</th>
+                <th>Riesgo de Bloqueo Indefinido</th>
+                <th>Manejo en la Aplicación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Sin Bloqueo</strong></td>
+                <td>Ninguno</td>
+                <td>Ninguno</td>
+                <td><span class="tag-rojo">Grave: Sobreventa y solapamiento de habitaciones</span></td>
+              </tr>
+              <tr>
+                <td><strong>FOR UPDATE (Sin WAIT)</strong></td>
+                <td>Exclusivo Fila</td>
+                <td><span class="tag-rojo">Muy Alto (Hilos congelados indefinidamente)</span></td>
+                <td>El usuario queda esperando sin respuesta</td>
+              </tr>
+              <tr>
+                <td><strong>FOR UPDATE NOWAIT</strong></td>
+                <td>Exclusivo Fila</td>
+                <td>Ninguno</td>
+                <td>Falla inmediatamente al menor milisegundo de competencia</td>
+              </tr>
+              <tr class="fila-destacada">
+                <td><strong>FOR UPDATE WAIT 5 (Implementada)</strong></td>
+                <td>Exclusivo Fila</td>
+                <td><span class="tag-verde">Cero (Timeout garantizado a 5 seg)</span></td>
+                <td><span class="tag-verde">Óptimo: reintenta brevemente y responde de forma elegante</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PESTAÑA 3: OPTIMIZADOR CBO & ÍNDICES
+       ========================================================================= -->
+  <section *ngIf="pestanaActiva === 'cbo'" class="seccion-contenido">
+    <div class="banner-intro-pilar">
+      <div class="icono-intro-pilar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+      </div>
+      <div>
+        <h4>Optimización de Consultas con el CBO (Cost-Based Optimizer)</h4>
+        <p>
+          Script <code>03_indices_optimizacion_cbo.sql</code>. Se analizaron las 3 consultas más pesadas del sistema, diseñando índices compuestos, índices basados en funciones y el <strong>caso negativo obligatorio</strong> donde el CBO decide inteligentemente descartar el índice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Selector de Consultas CBO -->
+    <div class="selector-cbo-tabs">
+      <button *ngFor="let plan of planesCbo" type="button" class="btn-subtab-cbo" [class.activo]="cboActivoId === plan.id" (click)="seleccionarPlanCbo(plan.id)">
+        <span class="subtab-tag" [class.negativo]="plan.casoNegativo">{{ plan.id }}</span>
+        <div class="subtab-textos">
+          <strong>{{ plan.titulo }}</strong>
+          <small>{{ plan.tipoIndice }}</small>
+        </div>
+      </button>
+    </div>
+
+    <!-- Detalle de la Consulta Seleccionada -->
+    <div *ngIf="obtenerPlanActivo() as activo" class="detalle-plan-card">
+      <div class="cabecera-plan-activo">
+        <div>
+          <span class="badge-tipo-indice" [class.badge-negativo]="activo.casoNegativo">
+            {{ activo.tipoIndice }}
+          </span>
+          <h3>{{ activo.titulo }}</h3>
+        </div>
+        <div class="indicador-mejora" *ngIf="!activo.casoNegativo">
+          <small>Reducción de Costo</small>
+          <strong>{{ activo.costoAntes }} → {{ activo.costoDespues }}</strong>
+        </div>
+        <div class="indicador-mejora negativo" *ngIf="activo.casoNegativo">
+          <small>Decisión del CBO</small>
+          <strong>FTS Más Eficiente</strong>
+        </div>
+      </div>
+
+      <!-- Consulta SQL y DDL de Índice -->
+      <div class="cuadricula-codigo-cbo">
+        <div class="caja-codigo">
+          <div class="codigo-cabecera">
+            <span>Consulta SQL Analizada</span>
+          </div>
+          <pre><code>{{ activo.consultaSql }}</code></pre>
+        </div>
+
+        <div class="caja-codigo">
+          <div class="codigo-cabecera">
+            <span>DDL del Índice Creado</span>
+          </div>
+          <pre><code>{{ activo.ddlIndice }}</code></pre>
+        </div>
+      </div>
+
+      <!-- Comparación de Planes de Ejecución (EXPLAIN PLAN) -->
+      <div class="comparativa-planes-grid">
+        <div class="plan-tarjeta antes">
+          <div class="plan-cabecera">
+            <span class="tag-plan-antes">Sin Índice</span>
+            <h4>{{ activo.costoAntes }}</h4>
+          </div>
+          <pre class="plan-salida"><code>{{ activo.planAntes }}</code></pre>
+        </div>
+
+        <div class="plan-tarjeta despues" [class.caso-negativo-plan]="activo.casoNegativo">
+          <div class="plan-cabecera">
+            <span class="tag-plan-despues" *ngIf="!activo.casoNegativo">Con Índice Especializado</span>
+            <span class="tag-plan-despues negativo" *ngIf="activo.casoNegativo">CBO Descarta el Índice</span>
+            <h4>{{ activo.costoDespues }}</h4>
+          </div>
+          <pre class="plan-salida"><code>{{ activo.planDespues }}</code></pre>
+        </div>
+      </div>
+
+      <!-- Explicación Técnica y Justificación del CBO -->
+      <div class="justificacion-cbo-box" [class.box-negativo]="activo.casoNegativo">
+        <div class="icono-justificacion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <div>
+          <strong>Análisis y Fundamento del Optimizador Basado en Costos:</strong>
+          <p>{{ activo.explicacion }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PESTAÑA 4: SEGURIDAD, ROLES & VISTAS
+       ========================================================================= -->
+  <section *ngIf="pestanaActiva === 'seguridad'" class="seccion-contenido">
+    <div class="banner-intro-pilar">
+      <div class="icono-intro-pilar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <div>
+        <h4>Seguridad por Capas: Privilegios Mínimos, Roles, Vistas y Perfil</h4>
+        <p>
+          Script <code>04_seguridad_roles_vistas_perfil.sql</code>. Se diseñaron 4 roles específicos. Destaca el <strong>ROL_RECEPCION</strong>, que cumple la regla de oro: <strong>0 acceso directo a tablas base</strong>, operando exclusivamente a través de 3 vistas seguras para proteger datos sensibles de facturación y propietarios.
+        </p>
+      </div>
+    </div>
+
+    <!-- Regla de Oro Recepción -->
+    <div class="banner-regla-oro" *ngIf="seguridadInfo">
+      <div class="insignia-oro">REGLA DE SEGURIDAD N° 1</div>
+      <h3>Principio de Mínimo Privilegio para Recepción</h3>
+      <p>{{ seguridadInfo.reglaOroRecepcion }}</p>
+    </div>
+
+    <!-- Cuadrícula de Roles -->
+    <div class="grid-roles" *ngIf="seguridadInfo">
+      <div *ngFor="let r of seguridadInfo.roles" class="tarjeta-rol" [class.rol-recepcion]="r.rol === 'ROL_RECEPCION'">
+        <div class="cabecera-rol">
+          <span class="chip-rol">{{ r.rol }}</span>
+        </div>
+        <h4>{{ r.descripcion }}</h4>
+
+        <div class="detalles-rol">
+          <div *ngIf="r.tablasBase" class="dato-rol">
+            <small>Acceso a Tablas Base:</small>
+            <span class="valor-rol-alerta">{{ r.tablasBase }}</span>
+          </div>
+
+          <div *ngIf="r.vistasAsignadas" class="dato-rol">
+            <small>Vistas Asignadas:</small>
+            <div class="lista-vistas-pildoras">
+              <span *ngFor="let v of r.vistasAsignadas" class="pildora-vista">{{ v }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="r.privilegios" class="dato-rol">
+            <small>Privilegios Otorgados:</small>
+            <span class="valor-rol">{{ r.privilegios }}</span>
+          </div>
+
+          <div *ngIf="r.paquete" class="dato-rol">
+            <small>Ejecución de Paquetes:</small>
+            <code>{{ r.paquete }}</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vistas de Recepción y Perfil de Recursos -->
+    <div class="cuadricula-vistas-perfil" *ngIf="seguridadInfo">
+      <!-- Vistas de Recepción -->
+      <div class="tarjeta tarjeta-vistas">
+        <div class="tarjeta-cabecera">
+          <h3>Vistas Autorizadas para Recepción</h3>
+          <span class="chip-tecnico">3 Vistas Seguras</span>
+        </div>
+        <div class="lista-vistas-recepcion">
+          <div *ngFor="let v of seguridadInfo.vistasRecepcion" class="item-vista-recepcion">
+            <div class="nombre-vista">
+              <code>{{ v.vista }}</code>
+            </div>
+            <p class="desc-vista">{{ v.proposito }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perfil de Sesión -->
+      <div class="tarjeta tarjeta-perfil">
+        <div class="tarjeta-cabecera">
+          <h3>Perfil de Seguridad de Sesión</h3>
+          <span class="chip-tecnico">PRF_TURISMO_SEGURIDAD</span>
+        </div>
+
+        <div class="tabla-contenedor">
+          <table class="tabla-datos">
+            <thead>
+              <tr>
+                <th>Parámetro del Perfil</th>
+                <th>Valor Aplicado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of seguridadInfo.perfilSesion | keyvalue">
+                <td><strong>{{ item.key }}</strong></td>
+                <td><code>{{ item.value }}</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

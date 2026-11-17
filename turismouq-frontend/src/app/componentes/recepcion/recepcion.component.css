@@ -1,0 +1,673 @@
+.contenedor-recepcion {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.encabezado-recepcion {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.insignias-cabecera {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.insignia {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.28rem 0.65rem;
+  border-radius: 6px;
+}
+
+.insignia-recepcion {
+  background: #E8F4EC;
+  color: #205E3B;
+  border: 1px solid #C4E2CF;
+}
+
+.insignia-db {
+  background: #FCF4EB;
+  color: #9C5123;
+  border: 1px solid #F3DCBF;
+}
+
+.encabezado-recepcion h2 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1F2E25;
+  margin: 0 0 0.4rem;
+}
+
+.subtexto {
+  font-size: 0.95rem;
+  color: #5D6D63;
+  margin: 0;
+  max-width: 780px;
+  line-height: 1.5;
+}
+
+/* Selector de Subvistas */
+.selector-subvistas {
+  display: inline-flex;
+  background: #EAE4D8;
+  padding: 0.35rem;
+  border-radius: 14px;
+  gap: 0.35rem;
+  align-self: flex-start;
+}
+
+.subvista-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  border: none;
+  background: transparent;
+  color: #5B6A60;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.subvista-btn:hover {
+  color: #1F2E25;
+}
+
+.subvista-btn.activo {
+  background: #ffffff;
+  color: #2C523F;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contador-badge {
+  background: #2C523F;
+  color: #ffffff;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* Tarjetas de Panel */
+.tarjeta-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #EAE3D6;
+  padding: 1.75rem;
+  box-shadow: 0 4px 18px rgba(32, 50, 40, 0.05);
+}
+
+.panel-cabecera-con-filtro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #EFEAE0;
+}
+
+.panel-cabecera-con-filtro h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  color: #1F2E25;
+}
+
+.panel-subtexto {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #6C7A71;
+}
+
+.caja-buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-buscar {
+  padding: 0.65rem 1rem;
+  border: 1.5px solid #D9D2C5;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  min-width: 280px;
+  background: #FCFBF9;
+  font-family: inherit;
+}
+
+.input-buscar:focus {
+  outline: none;
+  border-color: #2C523F;
+  background: #ffffff;
+}
+
+.btn-recargar {
+  background: #F3EFE7;
+  border: 1px solid #D9D2C5;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #2C523F;
+}
+
+/* Estados */
+.estado-cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 3rem 1rem;
+  color: #6B7B70;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #E2D9CC;
+  border-top-color: #2C523F;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  color: #6C7A71;
+}
+
+.icono-vacio {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Tablas */
+.tabla-contenedor {
+  overflow-x: auto;
+}
+
+.tabla-recepcion {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tabla-recepcion th {
+  background: #F8F5EE;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4A5B51;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1.5px solid #E4DCCF;
+}
+
+.tabla-recepcion td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #EFEAE0;
+  color: #26382E;
+}
+
+.tabla-recepcion tr:hover {
+  background: #FAF8F3;
+}
+
+.codigo-res {
+  color: #2C523F;
+  font-weight: 700;
+}
+
+.nombre-huesped {
+  font-weight: 600;
+  color: #1F2E25;
+}
+
+.telefono-huesped {
+  font-size: 0.84rem;
+  color: #6C7A71;
+}
+
+.badge-hab {
+  background: #F1EFEA;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.84rem;
+}
+
+.badge-pago {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.pago-completo {
+  background: #EFF8F2;
+  color: #1E6B37;
+  border: 1px solid #C3E6CB;
+}
+
+.pago-pendiente {
+  background: #FFF3EB;
+  color: #B55227;
+  border: 1px solid #FCD7C3;
+}
+
+.saldo-cero {
+  color: #1E6B37;
+}
+
+.saldo-alerta {
+  color: #B55227;
+}
+
+.btn-accion-voucher {
+  background: #2C523F;
+  color: #ffffff;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-accion-voucher:hover {
+  background: #1F3B2D;
+}
+
+/* Rejilla de Disponibilidad */
+.rejilla-habitaciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.tarjeta-habitacion-disp {
+  border: 1.5px solid #EAE3D6;
+  border-radius: 14px;
+  padding: 1.25rem;
+  background: #FCFBF9;
+  transition: all 0.2s ease;
+}
+
+.tarjeta-habitacion-disp:hover {
+  border-color: #2C523F;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(44, 82, 63, 0.08);
+}
+
+.cabecera-hab-disp {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.piso-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #F0ECE4;
+  color: #5F6E64;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+.tipo-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #C25B3B;
+}
+
+.tarjeta-habitacion-disp h4 {
+  margin: 0 0 0.2rem;
+  font-size: 1.1rem;
+  color: #1F2E25;
+}
+
+.alojamiento-hab {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: #6C7A71;
+}
+
+.detalles-hab-disp {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-top: 1px solid #EFEAE1;
+  border-bottom: 1px solid #EFEAE1;
+  margin-bottom: 0.85rem;
+}
+
+.item-hab-disp {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-hab-disp small {
+  font-size: 0.72rem;
+  color: #8C9990;
+}
+
+.item-hab-disp strong {
+  font-size: 0.86rem;
+  color: #26382E;
+}
+
+.precio-disp {
+  color: #2C523F !important;
+}
+
+.pie-hab-disp {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.estado-libre {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1E6B37;
+  letter-spacing: 0.04em;
+}
+
+/* Voucher de Reserva */
+.barra-busqueda-voucher {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #EFEAE0;
+}
+
+.busqueda-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.etiqueta-pequena {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4A5B51;
+}
+
+.input-voucher-caja {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-num-reserva {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid #D9D2C5;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  width: 140px;
+  background: #FCFBF9;
+}
+
+.btn-buscar-voucher {
+  background: #2C523F;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-buscar-voucher:hover {
+  background: #1F3B2D;
+}
+
+.btn-imprimir {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: #FAF8F4;
+  border: 1.5px solid #2C523F;
+  color: #2C523F;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-imprimir:hover {
+  background: #EBF3EE;
+}
+
+/* Hoja de Voucher */
+.documento-voucher {
+  background: #ffffff;
+  border: 2px solid #2C523F;
+  border-radius: 16px;
+  padding: 2.25rem;
+  box-shadow: 0 10px 30px rgba(44, 82, 63, 0.08);
+}
+
+.voucher-top-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #EAE3D6;
+  margin-bottom: 1.75rem;
+}
+
+.voucher-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.emblema-triangulo {
+  font-size: 1.6rem;
+  color: #C25B3B;
+}
+
+.voucher-logo h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #1F2E25;
+}
+
+.voucher-logo small {
+  color: #6C7A71;
+  font-size: 0.84rem;
+}
+
+.voucher-numero {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.lbl-reserva {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #C25B3B;
+}
+
+.folio {
+  font-size: 1.3rem;
+  color: #1F2E25;
+}
+
+.fecha-emision {
+  font-size: 0.8rem;
+  color: #8C9990;
+  margin-top: 0.2rem;
+}
+
+.voucher-contenido-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.bloque-voucher h4 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  color: #2C523F;
+  border-bottom: 1px solid #EFEAE0;
+  padding-bottom: 0.5rem;
+}
+
+.fila-dato {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+  font-size: 0.9rem;
+}
+
+.fila-dato .clave {
+  color: #6C7A71;
+}
+
+.fila-dato .valor {
+  color: #1F2E25;
+  font-weight: 500;
+}
+
+.destacada {
+  font-weight: 700 !important;
+  color: #1F2E25 !important;
+}
+
+.verde {
+  color: #1E6B37 !important;
+  font-weight: 700 !important;
+}
+
+.voucher-resumen-pago {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  background: #F9F7F2;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  border: 1px solid #EAE3D6;
+}
+
+.resumen-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.res-lbl {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #79877E;
+  font-weight: 600;
+}
+
+.res-val {
+  font-size: 1.15rem;
+  color: #1F2E25;
+}
+
+.saldo-pagado {
+  color: #1E6B37;
+}
+
+.badge-estado-vch {
+  display: inline-block;
+  background: #E8F4EC;
+  color: #205E3B;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.voucher-pie-firmas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px dashed #D9D2C5;
+}
+
+.nota-voucher {
+  color: #79877E;
+  max-width: 60%;
+}
+
+.sello-borde {
+  border: 2px solid #2C523F;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #2C523F;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-size: 0.88rem;
+  transform: rotate(-3deg);
+}
+
+.sello-borde small {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+/* Reglas de Impresión */
+@media print {
+  .no-print,
+  .encabezado-recepcion,
+  .barra-navegacion {
+    display: none !important;
+  }
+
+  .contenedor-recepcion {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .tarjeta-panel {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .documento-voucher {
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+    padding: 1.5rem !important;
+  }
+}

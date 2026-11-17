@@ -1,0 +1,197 @@
+<div class="contenedor-concurrencia">
+  <!-- Cabecera -->
+  <header class="encabezado-seccion">
+    <div class="insignias-cabecera">
+      <span class="insignia insignia-lock">Bloqueo Pesimista Fila a Fila</span>
+      <span class="insignia insignia-db">Oracle 21c XE</span>
+    </div>
+    <h2>Concurrencia, Bloqueos & Prevención de Sobreventa</h2>
+    <p class="subtexto">
+      Mecanismo de aislamiento transaccional mediante <code>SELECT ... FOR UPDATE WAIT 5</code> implementado en <code>sp_reserva_concurrente_for_update</code> para evitar el fenómeno de "Double Booking" bajo concurrencia extrema de usuarios.
+    </p>
+  </header>
+
+  <!-- Banner Informativo -->
+  <div class="banner-intro-pilar">
+    <div class="icono-intro-pilar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <div>
+      <h4>Manejo Robusto de Esperas Transaccionales</h4>
+      <p>
+        Cuando dos clientes intentan reservar la misma habitación para las mismas fechas en el mismo instante, la primera sesión bloquea exclusivamente la fila. La cláusula <code>WAIT 5</code> asegura que la segunda sesión espere pacientemente hasta 5 segundos sin colgar indefinidamente la aplicación web. Si la primera confirma, la segunda detecta el solapamiento y aborta limpiamente.
+      </p>
+    </div>
+  </div>
+
+  <!-- Stepper de Pasos -->
+  <div class="tarjeta tarjeta-stepper">
+    <div class="cabecera-stepper">
+      <h3>Simulación Paso a Paso de Concurrencia entre Terminales</h3>
+      <div class="controles-stepper">
+        <button type="button" class="btn-paso" (click)="anteriorPaso()" [disabled]="pasoActual === 1">← Anterior</button>
+        <button type="button" class="btn-paso" (click)="siguientePaso()" [disabled]="pasoActual === 4">Siguiente →</button>
+        <button type="button" class="btn-paso btn-reiniciar" (click)="reiniciar()">Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- Barra de progreso de pasos -->
+    <div class="barra-pasos">
+      <div class="item-indicador-paso" [class.activo]="pasoActual === 1" [class.completado]="pasoActual > 1" (click)="irAPaso(1)">
+        <span class="circulo-paso">1</span>
+        <span class="nombre-paso">Sesión A: Bloqueo</span>
+      </div>
+      <div class="linea-conexion" [class.activa]="pasoActual > 1"></div>
+
+      <div class="item-indicador-paso" [class.activo]="pasoActual === 2" [class.completado]="pasoActual > 2" (click)="irAPaso(2)">
+        <span class="circulo-paso">2</span>
+        <span class="nombre-paso">Sesión B: Competencia</span>
+      </div>
+      <div class="linea-conexion" [class.activa]="pasoActual > 2"></div>
+
+      <div class="item-indicador-paso" [class.activo]="pasoActual === 3" [class.completado]="pasoActual > 3" (click)="irAPaso(3)">
+        <span class="circulo-paso">3</span>
+        <span class="nombre-paso">Oracle: Cola WAIT 5</span>
+      </div>
+      <div class="linea-conexion" [class.activa]="pasoActual > 3"></div>
+
+      <div class="item-indicador-paso" [class.activo]="pasoActual === 4" (click)="irAPaso(4)">
+        <span class="circulo-paso">4</span>
+        <span class="nombre-paso">Resolución y COMMIT</span>
+      </div>
+    </div>
+
+    <!-- Visualizador de Terminales A y B -->
+    <div class="grid-terminales">
+      <!-- Terminal A: Sesión Primaria -->
+      <div class="terminal-card terminal-a" [class.terminal-activa]="pasoActual === 1 || pasoActual === 4">
+        <div class="terminal-header">
+          <div class="puntos-terminal">
+            <span class="pto rojo"></span>
+            <span class="pto amarillo"></span>
+            <span class="pto verde"></span>
+          </div>
+          <span class="titulo-terminal">Terminal 1 · Sesión A (Cliente Juan)</span>
+          <span class="badge-estado-terminal" *ngIf="pasoActual === 1">BLOQUEO EXCLUSIVO</span>
+          <span class="badge-estado-terminal terminal-ok" *ngIf="pasoActual >= 2">TRANSACCIÓN EN CURSO</span>
+        </div>
+        <div class="terminal-body">
+          <pre><code><span class="c-comment">-- Paso 1: Sesión A inicia reserva y toma candado de fila</span>
+<span class="c-keyword">SELECT</span> id_habitacion, precio_noche_alta
+<span class="c-keyword">INTO</span>   v_id_hab, v_precio
+<span class="c-keyword">FROM</span>   habitacion
+<span class="c-keyword">WHERE</span>  id_habitacion = 1
+<span class="c-keyword">FOR UPDATE WAIT</span> 5;
+
+<span class="c-output" *ngIf="pasoActual >= 1">1 row selected. (Bloqueo TX Enqueue adquirido por SID #42)</span>
+<span class="c-output" *ngIf="pasoActual >= 4">INSERT INTO reserva (...) VALUES (1, 101, '2026-11-01', ...);
+COMMIT; -> Candado liberado exitosamente.</span></code></pre>
+        </div>
+      </div>
+
+      <!-- Terminal B: Sesión Concurrente -->
+      <div class="terminal-card terminal-b" [class.terminal-activa]="pasoActual >= 2">
+        <div class="terminal-header">
+          <div class="puntos-terminal">
+            <span class="pto rojo"></span>
+            <span class="pto amarillo"></span>
+            <span class="pto verde"></span>
+          </div>
+          <span class="titulo-terminal">Terminal 2 · Sesión B (Cliente María)</span>
+          <span class="badge-estado-terminal terminal-espera" *ngIf="pasoActual === 2 || pasoActual === 3">EN COLA (ESPERANDO CANDADO)</span>
+          <span class="badge-estado-terminal terminal-rechazo" *ngIf="pasoActual === 4">RECHAZO CONTROLADO</span>
+        </div>
+        <div class="terminal-body">
+          <pre><code><span class="c-comment">-- Paso 2: Sesión B intenta reservar misma habitación #1</span>
+<span class="c-keyword">SELECT</span> id_habitacion
+<span class="c-keyword">FROM</span>   habitacion
+<span class="c-keyword">WHERE</span>  id_habitacion = 1
+<span class="c-keyword">FOR UPDATE WAIT</span> 5;
+
+<span class="c-espera" *ngIf="pasoActual === 3">... Esperando liberación de fila (enqueue TX - row lock) ...
+Temporizador de seguridad: 5 segundos máximos.</span>
+<span class="c-output" *ngIf="pasoActual === 4">-- Sesión A confirmó su reserva:
+ORA-20002: La habitación ya se encuentra reservada en el rango solicitado.
+Rollback ejecutado limpiamente. ¡Sin sobreventa!</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explicación del Paso Activo -->
+    <div class="caja-explicacion-paso">
+      <div class="icono-paso-info">ℹ</div>
+      <div class="contenido-paso-info">
+        <div *ngIf="pasoActual === 1">
+          <strong>Paso 1: Adquisición del Candado Exclusivo</strong>
+          <p>La Sesión A consulta la disponibilidad de la habitación #1 solicitando un bloqueo pesimista en Oracle XE. El motor marca la cabecera del bloque de datos con el identificador de transacción (XID) de la Sesión A.</p>
+        </div>
+        <div *ngIf="pasoActual === 2">
+          <strong>Paso 2: Intento Simultáneo por Parte de la Sesión B</strong>
+          <p>Una fracción de segundo después, la Sesión B ejecuta la misma consulta. Oracle detecta que la fila solicitada ya está bloqueada por la transacción de la Sesión A.</p>
+        </div>
+        <div *ngIf="pasoActual === 3">
+          <strong>Paso 3: Espera Controlada por la Cláusula WAIT 5</strong>
+          <p>En lugar de fallar inmediatamente o congelarse para siempre, la Sesión B entra en un estado de espera (evento de espera <code>enq: TX - row lock contention</code>). Oracle mantendrá en cola a la Sesión B hasta un máximo estricto de 5 segundos.</p>
+        </div>
+        <div *ngIf="pasoActual === 4">
+          <strong>Paso 4: Resolución Determinista sin Solapamiento</strong>
+          <p>La Sesión A finaliza con <code>COMMIT</code>. De inmediato, la Sesión B es despertada por Oracle, re-evalúa la disponibilidad, detecta que la habitación ya quedó ocupada y devuelve la excepción controlada <code>ORA-20002</code> protegiendo al negocio de la sobreventa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla Comparativa de Concurrencia -->
+  <div class="tarjeta tarjeta-comparativa">
+    <div class="tarjeta-cabecera">
+      <h3>Comparativa de Estrategias de Concurrencia en Motores SQL</h3>
+      <span class="chip-tecnico">Patrones Transaccionales</span>
+    </div>
+    <div class="tabla-contenedor">
+      <table class="tabla-concurrencia">
+        <thead>
+          <tr>
+            <th>Estrategia Transaccional</th>
+            <th>Nivel de Bloqueo</th>
+            <th>Riesgo de Inconsistencia</th>
+            <th>Riesgo de Hilos Congelados</th>
+            <th>Veredicto para TurismoUQ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Sin Bloqueo Pesimista</strong></td>
+            <td>Ninguno (Lectura normal)</td>
+            <td><span class="tag-critico">Crítico (Doble reserva de la misma habitación)</span></td>
+            <td>Ninguno</td>
+            <td>Inaceptable en turismo</td>
+          </tr>
+          <tr>
+            <td><strong>FOR UPDATE (Sin WAIT)</strong></td>
+            <td>Exclusivo a nivel de fila</td>
+            <td>Cero</td>
+            <td><span class="tag-critico">Muy Alto (Bloqueo indefinido si la sesión cae)</span></td>
+            <td>Peligroso para aplicaciones web</td>
+          </tr>
+          <tr>
+            <td><strong>FOR UPDATE NOWAIT</strong></td>
+            <td>Exclusivo a nivel de fila</td>
+            <td>Cero</td>
+            <td>Cero</td>
+            <td>Rechaza transacciones legítimas por milisegundos</td>
+          </tr>
+          <tr class="fila-ganadora">
+            <td><strong>FOR UPDATE WAIT 5 (Implementada)</strong></td>
+            <td>Exclusivo con timeout</td>
+            <td><span class="tag-optimo">Cero (Garantía ACID absoluta)</span></td>
+            <td><span class="tag-optimo">Cero (Timeout automático a los 5 segundos)</span></td>
+            <td><strong class="tag-recomendado">✓ Elección Óptima de Arquitectura</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

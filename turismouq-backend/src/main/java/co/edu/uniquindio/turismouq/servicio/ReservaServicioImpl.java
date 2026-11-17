@@ -19,7 +19,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Types;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -51,27 +50,55 @@ public class ReservaServicioImpl implements ReservaServicio {
             throw new NegocioExcepcion(20001, "La fecha de check-out debe ser posterior al check-in.");
         }
 
-        // Llamada a la función PL/SQL PKG_TURISMO_UQ.fn_valor_estadia
+        // Invocación al procedimiento PL/SQL PKG_TURISMO_UQ.sp_cotizar_desglose
         try (Connection conexion = dataSource.getConnection();
-             CallableStatement sentencia = conexion.prepareCall("{? = call PKG_TURISMO_UQ.fn_valor_estadia(?, ?, ?)}")) {
+             CallableStatement sentencia = conexion.prepareCall("{call PKG_TURISMO_UQ.sp_cotizar_desglose(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
-            sentencia.registerOutParameter(1, Types.NUMERIC);
-            sentencia.setLong(2, peticion.getIdHabitacion());
-            sentencia.setDate(3, Date.valueOf(peticion.getFechaCheckIn()));
-            sentencia.setDate(4, Date.valueOf(peticion.getFechaCheckOut()));
+            sentencia.setLong(1, peticion.getIdHabitacion());
+            sentencia.setDate(2, Date.valueOf(peticion.getFechaCheckIn()));
+            sentencia.setDate(3, Date.valueOf(peticion.getFechaCheckOut()));
+            sentencia.registerOutParameter(4, Types.NUMERIC); // p_noches_baja
+            sentencia.registerOutParameter(5, Types.NUMERIC); // p_tarifa_baja
+            sentencia.registerOutParameter(6, Types.NUMERIC); // p_subtotal_baja
+            sentencia.registerOutParameter(7, Types.NUMERIC); // p_noches_alta
+            sentencia.registerOutParameter(8, Types.NUMERIC); // p_tarifa_alta
+            sentencia.registerOutParameter(9, Types.NUMERIC); // p_subtotal_alta
+            sentencia.registerOutParameter(10, Types.NUMERIC); // p_total_estimado
 
             sentencia.execute();
-            BigDecimal totalCalculado = sentencia.getBigDecimal(1);
 
-            long noches = ChronoUnit.DAYS.between(peticion.getFechaCheckIn(), peticion.getFechaCheckOut());
+            long nochesBaja = sentencia.getLong(4);
+            BigDecimal tarifaBaja = sentencia.getBigDecimal(5);
+            BigDecimal subtotalBaja = sentencia.getBigDecimal(6);
+            long nochesAlta = sentencia.getLong(7);
+            BigDecimal tarifaAlta = sentencia.getBigDecimal(8);
+            BigDecimal subtotalAlta = sentencia.getBigDecimal(9);
+            BigDecimal totalEstimado = sentencia.getBigDecimal(10);
+            long noches = nochesBaja + nochesAlta;
 
             CotizacionRespuestaDTO respuesta = new CotizacionRespuestaDTO();
             respuesta.setIdHabitacion(peticion.getIdHabitacion());
             respuesta.setFechaCheckIn(peticion.getFechaCheckIn());
             respuesta.setFechaCheckOut(peticion.getFechaCheckOut());
             respuesta.setTotalNoches(noches);
-            respuesta.setTotalPagar(totalCalculado);
-            respuesta.setDescripcionTemporadas("Cálculo ponderado por noches según tarifas de Temporada Baja y Temporada Alta");
+            respuesta.setTotalPagar(totalEstimado);
+            respuesta.setTotalEstimado(totalEstimado);
+            respuesta.setNochesTemporadaAlta(nochesAlta);
+            respuesta.setTarifaNocheAlta(tarifaAlta != null ? tarifaAlta : BigDecimal.ZERO);
+            respuesta.setSubtotalAlta(subtotalAlta != null ? subtotalAlta : BigDecimal.ZERO);
+            respuesta.setNochesTemporadaBaja(nochesBaja);
+            respuesta.setTarifaNocheBaja(tarifaBaja != null ? tarifaBaja : BigDecimal.ZERO);
+            respuesta.setSubtotalBaja(subtotalBaja != null ? subtotalBaja : BigDecimal.ZERO);
+
+            String desc;
+            if (nochesAlta > 0 && nochesBaja > 0) {
+                desc = nochesAlta + " noches Alta + " + nochesBaja + " noches Baja";
+            } else if (nochesAlta > 0) {
+                desc = nochesAlta + " noches en Temporada Alta";
+            } else {
+                desc = nochesBaja + " noches en Temporada Baja";
+            }
+            respuesta.setDescripcionTemporadas(desc);
 
             return respuesta;
 
@@ -99,9 +126,9 @@ public class ReservaServicioImpl implements ReservaServicio {
                             nuevo.setDocumento(docLimpio);
                             nuevo.setNombres(peticion.getNombresCliente().trim());
                             nuevo.setApellidos(peticion.getApellidosCliente() != null && !peticion.getApellidosCliente().isBlank()
-                                    ? peticion.getApellidosCliente().trim() : "UQ");
+                                     ? peticion.getApellidosCliente().trim() : "UQ");
                             nuevo.setTelefono(peticion.getTelefonoCliente() != null && !peticion.getTelefonoCliente().isBlank()
-                                    ? peticion.getTelefonoCliente().trim() : "3001234567");
+                                     ? peticion.getTelefonoCliente().trim() : "3001234567");
                             String sufijoUnico = String.valueOf(System.currentTimeMillis() % 1000000);
                             String correoBase = peticion.getCorreoCliente() != null && !peticion.getCorreoCliente().isBlank()
                                     ? peticion.getCorreoCliente().trim() : ("cliente." + sufijoUnico + "@turismouq.com");

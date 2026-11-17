@@ -64,6 +64,15 @@ export interface CotizacionRespuesta {
   totalNoches: number;
   totalPagar: number;
   descripcionTemporadas: string;
+
+  // Desglose por temporadas
+  nochesTemporadaAlta?: number;
+  tarifaNocheAlta?: number;
+  subtotalAlta?: number;
+  nochesTemporadaBaja?: number;
+  tarifaNocheBaja?: number;
+  subtotalBaja?: number;
+  totalEstimado?: number;
 }
 
 export interface ReservaPeticion {
@@ -189,4 +198,149 @@ export interface MonitoreoTablespace {
   tablasPorTablespace: ItemTablaTablespace[];
   datafileInfo: DatafileInfo;
   scriptDdl: string;
+}
+
+// ============================================================================
+// MODELOS PARA ENTREGA 3 (Transacciones, Concurrencia, CBO y Seguridad)
+// ============================================================================
+export interface TransaccionPeticion {
+  idCliente?: number;
+  idHabitacion: number;
+  fechaCheckIn: string;
+  fechaCheckOut: string;
+  numeroHuespedes: number;
+  metodoPago: string;
+  simularFallo: boolean;
+}
+
+export interface TransaccionRespuesta {
+  idReserva: number;
+  idPago?: number;
+  total: number;
+  saldoPendiente?: number;
+  exito?: boolean;
+  estadoReserva: string;
+  mensaje: string;
+  rollbackParcial: boolean;
+}
+
+export interface CboAnalisisItem {
+  id: string;
+  titulo: string;
+  consultaSql: string;
+  tipoIndice: string;
+  ddlIndice: string;
+  costoAntes: string;
+  costoDespues: string;
+  planAntes: string;
+  planDespues: string;
+  explicacion: string;
+  casoNegativo: boolean;
+}
+
+export interface SeguridadInfo {
+  perfilSesion: { [key: string]: string };
+  roles: Array<{
+    rol: string;
+    descripcion: string;
+    vistasAsignadas?: string[];
+    tablasBase?: string;
+    privilegios?: string;
+    paquete?: string;
+  }>;
+  vistasRecepcion: Array<{
+    vista: string;
+    proposito: string;
+  }>;
+  reglaOroRecepcion: string;
+}
+
+// ============================================================================
+// MODELOS PARA AUTENTICACIÓN, LOGIN Y RECEPCIÓN
+// ============================================================================
+export interface LoginPeticion {
+  usuario: string;
+  nombreUsuario?: string;
+  contrasena: string;
+}
+
+export interface RegistroPeticion {
+  usuario: string;
+  nombreUsuario?: string;
+  contrasena: string;
+  nombreCompleto: string;
+  correo: string;
+  rol: string;
+}
+
+export interface LoginRespuesta {
+  usuario: string;
+  nombreUsuario?: string;
+  nombreCompleto: string;
+  correo: string;
+  rol: string;
+  descripcionRol: string;
+  rolDesc?: string;
+  rutasPermitidas: string[];
+}
+
+export interface RecepcionCheckin {
+  idReserva: number;
+  documentoHuesped: string;
+  nombreHuesped: string;
+  nombreCliente?: string;
+  telefonoContacto: string;
+  telefono?: string;
+  alojamiento: string;
+  municipio: string;
+  habitacion: string;
+  fechaCheckIn: string;
+  fechaCheckOut: string;
+  totalNoches: number;
+  estado: string;
+  estadoPago?: string;
+  saldoPendiente?: number;
+  adultos?: number;
+  ninos?: number;
+}
+
+export interface RecepcionDisponibilidad {
+  idHabitacion: number;
+  habitacion: string;
+  tipoCama: string;
+  tipoHabitacion?: string;
+  aforoMaximo: number;
+  capacidad?: number;
+  tarifaBase?: number;
+  piso?: number;
+  idAlojamiento: number;
+  alojamiento: string;
+  municipio: string;
+  telefonoAlojamiento: string;
+}
+
+export interface RecepcionVoucher {
+  idReserva: number;
+  fechaCreacion: string;
+  fechaRegistro?: string;
+  documentoCliente: string;
+  identificacionCliente?: string;
+  clienteTitular: string;
+  nombreCliente?: string;
+  correoCliente?: string;
+  telefonoCliente?: string;
+  alojamiento: string;
+  tipoHabitacion?: string;
+  direccion: string;
+  municipio: string;
+  habitacion: string;
+  fechaCheckIn: string;
+  fechaCheckOut: string;
+  noches?: number;
+  adultos?: number;
+  ninos?: number;
+  totalFacturado: number;
+  montoPagado?: number;
+  saldoPendiente?: number;
+  estadoReserva: string;
 }

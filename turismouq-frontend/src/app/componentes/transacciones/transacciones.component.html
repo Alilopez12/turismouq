@@ -1,0 +1,252 @@
+<div class="contenedor-transacciones">
+  <!-- Cabecera -->
+  <header class="encabezado-seccion">
+    <div class="insignias-cabecera">
+      <span class="insignia insignia-tx">Transacciones Atómicas PL/SQL</span>
+      <span class="insignia insignia-db">Oracle 21c XE</span>
+    </div>
+    <h2>Transacciones Atómicas & Rollback Parcial con SAVEPOINT</h2>
+    <p class="subtexto">
+      Implementación del procedimiento almacenado <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> con punto de guardado <code>SAVEPOINT sv_reserva</code> para garantizar integridad ACID sin perder reservas cuando el pago bancario es rechazado.
+    </p>
+  </header>
+
+  <!-- Banner Explicativo -->
+  <div class="banner-intro-pilar">
+    <div class="icono-intro-pilar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+      </svg>
+    </div>
+    <div>
+      <h4>Mecanismo de Recuperación Parcial ante Fallas Bancarias</h4>
+      <p>
+        Al registrar una reserva, se guarda el registro de la estadía y de inmediato se fija un <code>SAVEPOINT sv_reserva</code>. Si la pasarela bancaria o el medio de pago falla, la transacción no aborta toda la operación: ejecuta <code>ROLLBACK TO sv_reserva</code>, conservando la reserva en estado <strong>PENDIENTE</strong> para reintento y finaliza con <code>COMMIT</code> seguro.
+      </p>
+    </div>
+  </div>
+
+  <div class="cuadricula-savepoint">
+    <!-- Formulario de Prueba Interactiva -->
+    <div class="tarjeta tarjeta-prueba-tx">
+      <div class="tarjeta-cabecera">
+        <div>
+          <h3>Simulador Transaccional</h3>
+          <p class="sub-form">Invoca <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> en tiempo real</p>
+        </div>
+        <span class="chip-tecnico">SAVEPOINT Activo</span>
+      </div>
+
+      <form (ngSubmit)="ejecutarTransaccion()" class="formulario-tx">
+        <div class="fila-campos">
+          <div class="grupo-campo">
+            <label for="fHabitacion">ID Habitación</label>
+            <input id="fHabitacion" type="number" [(ngModel)]="peticionSavepoint.idHabitacion" name="idHabitacion" min="1" max="25" required>
+          </div>
+          <div class="grupo-campo">
+            <label for="fCliente">ID Cliente Huésped</label>
+            <input id="fCliente" type="number" [(ngModel)]="peticionSavepoint.idCliente" name="idCliente" min="1" max="50" required>
+          </div>
+        </div>
+
+        <div class="fila-campos">
+          <div class="grupo-campo">
+            <label for="fCheckIn">Fecha Check-In</label>
+            <input id="fCheckIn" type="date" [(ngModel)]="peticionSavepoint.fechaCheckIn" name="fechaCheckIn" required>
+          </div>
+          <div class="grupo-campo">
+            <label for="fCheckOut">Fecha Check-Out</label>
+            <input id="fCheckOut" type="date" [(ngModel)]="peticionSavepoint.fechaCheckOut" name="fechaCheckOut" required>
+          </div>
+        </div>
+
+        <div class="fila-campos">
+          <div class="grupo-campo">
+            <label for="fHuespedes">Número de Huéspedes</label>
+            <input id="fHuespedes" type="number" [(ngModel)]="peticionSavepoint.numeroHuespedes" name="numeroHuespedes" min="1" max="10" required>
+          </div>
+          <div class="grupo-campo">
+            <label for="fMetodo">Método de Pago (Validado por CHK_PAGO_METODO)</label>
+            <select id="fMetodo" [(ngModel)]="peticionSavepoint.metodoPago" name="metodoPago">
+              <option *ngFor="let m of metodosPago" [value]="m.valor">
+                {{ m.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Switch para simular fallo de pasarela -->
+        <div class="caja-toggle-fallo" [class.activo]="peticionSavepoint.simularFallo" (click)="alternarFallo()">
+          <div class="toggle-switch">
+            <div class="toggle-circulo" [class.activado]="peticionSavepoint.simularFallo"></div>
+          </div>
+          <div class="toggle-textos">
+            <strong>Simular Fallo en Pasarela de Pago</strong>
+            <small>Dispara excepción controlada para forzar <code>ROLLBACK TO sv_reserva</code> y verificar que la reserva no se pierde</small>
+          </div>
+        </div>
+
+        <div *ngIf="errorSavepoint" class="alerta alerta-error-tx">
+          {{ errorSavepoint }}
+        </div>
+
+        <button type="submit" class="btn btn-primario ancho-completo btn-ejecutar-tx" [disabled]="ejecutandoSavepoint">
+          <span *ngIf="!ejecutandoSavepoint">
+            Ejecutar en Oracle 21c ({{ peticionSavepoint.simularFallo ? 'Probar Rollback Parcial' : 'Probar Commit Exitoso' }})
+          </span>
+          <span *ngIf="ejecutandoSavepoint">Procesando en Oracle Database 21c XE...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Panel de Resultados y Traza Transaccional -->
+    <div class="tarjeta tarjeta-resultado-tx">
+      <div class="tarjeta-cabecera">
+        <h3>Monitoreo de Ejecución en Oracle</h3>
+        <span class="chip-tecnico chip-espera" *ngIf="!resultadoSavepoint && !ejecutandoSavepoint">En Espera</span>
+        <span class="chip-tecnico chip-procesando" *ngIf="ejecutandoSavepoint">Ejecutando...</span>
+        <span class="chip-tecnico chip-exito" *ngIf="resultadoSavepoint && !resultadoSavepoint.rollbackParcial">COMMIT Completo</span>
+        <span class="chip-tecnico chip-alerta" *ngIf="resultadoSavepoint && resultadoSavepoint.rollbackParcial">ROLLBACK Parcial</span>
+      </div>
+
+      <!-- Estado Vacío Inicial -->
+      <div *ngIf="!resultadoSavepoint && !ejecutandoSavepoint" class="estado-espera-tx">
+        <div class="icono-espera">⚡</div>
+        <h4>Ninguna Transacción Ejecutada</h4>
+        <p>Configura los parámetros a la izquierda y pulsa el botón para observar cómo Oracle gestiona el punto de guardado y el commit.</p>
+      </div>
+
+      <!-- Cargando -->
+      <div *ngIf="ejecutandoSavepoint" class="estado-cargando-tx">
+        <div class="spinner-tx"></div>
+        <span>Ejecutando bloque PL/SQL en Oracle 21c...</span>
+      </div>
+
+      <!-- Resultado Detallado -->
+      <div *ngIf="resultadoSavepoint && !ejecutandoSavepoint" class="detalle-resultado-tx">
+        <div class="banner-resultado-estado" [ngClass]="resultadoSavepoint.rollbackParcial ? 'estado-rollback' : 'estado-commit'">
+          <div class="icono-estado-tx">
+            <span *ngIf="!resultadoSavepoint.rollbackParcial">✓</span>
+            <span *ngIf="resultadoSavepoint.rollbackParcial">⚠</span>
+          </div>
+          <div>
+            <h4>{{ resultadoSavepoint.rollbackParcial ? 'Rollback Parcial a SAVEPOINT sv_reserva' : 'Transacción Confirmada (COMMIT)' }}</h4>
+            <p>{{ resultadoSavepoint.mensaje }}</p>
+          </div>
+        </div>
+
+        <!-- Métricas de la Transacción -->
+        <div class="rejilla-metricas-tx">
+          <div class="item-metrica">
+            <span class="lbl-metrica">ID Reserva Creada</span>
+            <strong class="val-metrica">#{{ resultadoSavepoint.idReserva || 'N/A' }}</strong>
+          </div>
+          <div class="item-metrica">
+            <span class="lbl-metrica">Estado de Reserva</span>
+            <strong class="val-metrica" [class.val-pendiente]="resultadoSavepoint.rollbackParcial" [class.val-confirmada]="!resultadoSavepoint.rollbackParcial">
+              {{ resultadoSavepoint.estadoReserva }}
+            </strong>
+          </div>
+          <div class="item-metrica">
+            <span class="lbl-metrica">ID Registro Pago</span>
+            <strong class="val-metrica">{{ resultadoSavepoint.idPago ? '#' + resultadoSavepoint.idPago : 'Revertido (NULL)' }}</strong>
+          </div>
+          <div class="item-metrica">
+            <span class="lbl-metrica">Saldo Pendiente</span>
+            <strong class="val-metrica">${{ (resultadoSavepoint.saldoPendiente != null ? resultadoSavepoint.saldoPendiente : (resultadoSavepoint.rollbackParcial ? resultadoSavepoint.total : 0)) | number:'1.0-0' }} COP</strong>
+          </div>
+        </div>
+
+        <!-- Stepper / Flujo Visual -->
+        <div class="flujo-pasos-tx">
+          <h5>Flujo de Ejecución Transaccional en Base de Datos:</h5>
+          <ol class="lista-pasos">
+            <li class="paso completado">
+              <span class="num-paso">1</span>
+              <div>
+                <strong>INSERT en RESERVA</strong>
+                <small>Se genera ID Reserva #{{ resultadoSavepoint.idReserva }} en estado PENDIENTE</small>
+              </div>
+            </li>
+            <li class="paso completado">
+              <span class="num-paso">2</span>
+              <div>
+                <strong>Fijar SAVEPOINT sv_reserva</strong>
+                <small>Punto de retorno establecido en el registro undo de Oracle</small>
+              </div>
+            </li>
+            <li class="paso" [ngClass]="resultadoSavepoint.rollbackParcial ? 'paso-revertido' : 'completado'">
+              <span class="num-paso">3</span>
+              <div>
+                <strong>Cobro en Pasarela (INSERT en PAGO)</strong>
+                <small *ngIf="!resultadoSavepoint.rollbackParcial">Pago procesado exitosamente por ${{ resultadoSavepoint.total | number:'1.0-0' }} COP</small>
+                <small *ngIf="resultadoSavepoint.rollbackParcial">Fallo simulado detectado; se ejecutó <code>ROLLBACK TO sv_reserva</code></small>
+              </div>
+            </li>
+            <li class="paso completado">
+              <span class="num-paso">4</span>
+              <div>
+                <strong>COMMIT Transaccional</strong>
+                <small>La reserva permanece guardada en la base de datos sin cancelarse</small>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Código PL/SQL de Referencia -->
+  <div class="tarjeta tarjeta-codigo-savepoint">
+    <div class="tarjeta-cabecera">
+      <h3>Implementación en Paquete PL/SQL (Oracle 21c)</h3>
+      <span class="chip-tecnico">05_paquete_turismo_cuerpo.sql</span>
+    </div>
+    <pre class="codigo-sql"><code>PROCEDURE sp_registrar_reserva_con_pago (
+    p_id_habitacion   IN  NUMBER,
+    p_id_cliente      IN  NUMBER,
+    p_fecha_checkin   IN  DATE,
+    p_fecha_checkout  IN  DATE,
+    p_num_huespedes   IN  NUMBER,
+    p_metodo_pago     IN  VARCHAR2,
+    p_simular_fallo   IN  NUMBER,    -- 1: Simula excepción bancaria, 0: Normal
+    p_id_reserva      OUT NUMBER,
+    p_id_pago         OUT NUMBER,
+    p_mensaje         OUT VARCHAR2
+) IS
+BEGIN
+    -- 1. Inserta la reserva en estado PENDIENTE
+    INSERT INTO reserva (id_habitacion, id_cliente, fecha_checkin, fecha_checkout, num_huespedes, estado)
+    VALUES (p_id_habitacion, p_id_cliente, p_fecha_checkin, p_fecha_checkout, p_num_huespedes, 'PENDIENTE')
+    RETURNING id_reserva INTO p_id_reserva;
+
+    -- 2. FIJAR SAVEPOINT
+    SAVEPOINT sv_reserva;
+
+    BEGIN
+        IF p_simular_fallo = 1 THEN
+            RAISE_APPLICATION_ERROR(-20010, 'Fallo simulado en pasarela bancaria.');
+        END IF;
+
+        -- Normalización y registro del pago
+        INSERT INTO pago (id_reserva, monto, metodo_pago, estado)
+        VALUES (p_id_reserva, v_total, v_metodo_normalizado, 'APROBADO')
+        RETURNING id_pago INTO p_id_pago;
+
+        UPDATE reserva SET estado = 'CONFIRMADA' WHERE id_reserva = p_id_reserva;
+        p_mensaje := 'Reserva y pago completados exitosamente.';
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- ROLLBACK PARCIAL AL SAVEPOINT
+            ROLLBACK TO sv_reserva;
+            p_id_pago := NULL;
+            p_mensaje := 'Pago rechazado. Se preserva la reserva #' || p_id_reserva || ' en estado PENDIENTE.';
+    END;
+
+    -- 3. Confirmación final de los cambios no revertidos
+    COMMIT;
+END sp_registrar_reserva_con_pago;</code></pre>
+  </div>
+</div>

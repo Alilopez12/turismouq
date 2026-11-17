@@ -4,7 +4,7 @@
     <div>
       <div class="badges-encabezado">
         <span class="insignia insignia-finca">Confirmación de Reserva</span>
-        <span class="badge-plsql-proc">Transacción Verificada</span>
+        <span class="badge-plsql-proc">Confirmación en Línea</span>
       </div>
       <h2>Confirmar y Reservar Estadía</h2>
       <p class="subtexto">
@@ -18,14 +18,14 @@
     <div class="banco-pruebas-header">
       <div class="banco-pruebas-titulo">
         <div class="badges-banco">
-          <span class="insignia-banco">Demostración de Reglas de Negocio</span>
+          <span class="insignia-banco">Demostración Rápida</span>
         </div>
-        <h3>Escenarios de Validación y Reglas de Negocio</h3>
-        <p>Prueba en tiempo real las reglas de integridad garantizadas por la base de datos: control de fechas, límites de aforo y prevención de solapamientos.</p>
+        <h3>Ejemplos de Validación del Sistema</h3>
+        <p>Selecciona un escenario para comprobar la validación automática de fechas, límites de aforo y disponibilidad.</p>
       </div>
       <div class="banco-pruebas-indicador" *ngIf="casoPruebaActivo">
         <span class="badge-caso" [ngClass]="casoPruebaActivo === 'COMMIT' ? 'badge-exito' : 'badge-error'">
-          CASO ACTIVO: {{ casoPruebaActivo }}
+          CASO ACTIVO: {{ casoPruebaActivo === 'COMMIT' ? 'RESERVA EXITOSA' : casoPruebaActivo }}
         </span>
       </div>
     </div>
@@ -34,38 +34,38 @@
     <div class="banco-pruebas-botones">
       <button type="button" class="btn-prueba btn-prueba-commit" (click)="cargarCasoValido()" [class.activo]="casoPruebaActivo === 'COMMIT'">
         <div class="btn-prueba-top">
-          <span class="btn-codigo codigo-commit">COMMIT</span>
+          <span class="btn-codigo codigo-commit">ÉXITO</span>
           <span class="btn-tag">Válido</span>
         </div>
         <strong class="btn-nombre">1. Reserva Exitosa</strong>
-        <span class="btn-desc">Check-in 2027 sin cruces, 5 noches atómicas</span>
+        <span class="btn-desc">Fechas válidas, dentro del aforo y sin cruces</span>
       </button>
 
       <button type="button" class="btn-prueba btn-prueba-fechas" (click)="cargarCasoErrorFechas()" [class.activo]="casoPruebaActivo === 'ORA-20001'">
         <div class="btn-prueba-top">
-          <span class="btn-codigo codigo-20001">ORA-20001</span>
-          <span class="btn-tag tag-error">Fechas</span>
+          <span class="btn-codigo codigo-20001">FECHAS</span>
+          <span class="btn-tag tag-error">Alerta</span>
         </div>
         <strong class="btn-nombre">2. Invertir Fechas</strong>
-        <span class="btn-desc">Check-out (10 Mayo) &lt; Check-in (15 Mayo)</span>
+        <span class="btn-desc">Check-out anterior al día de Check-in</span>
       </button>
 
       <button type="button" class="btn-prueba btn-prueba-capacidad" (click)="cargarCasoErrorCapacidad()" [class.activo]="casoPruebaActivo === 'ORA-20003'">
         <div class="btn-prueba-top">
-          <span class="btn-codigo codigo-20003">ORA-20003</span>
-          <span class="btn-tag tag-error">Aforo</span>
+          <span class="btn-codigo codigo-20003">AFORO</span>
+          <span class="btn-tag tag-error">Alerta</span>
         </div>
         <strong class="btn-nombre">3. Exceder Cupo</strong>
-        <span class="btn-desc">99 huéspedes para habitación de 3 personas</span>
+        <span class="btn-desc">Huéspedes por encima del cupo permitido</span>
       </button>
 
       <button type="button" class="btn-prueba btn-prueba-solapamiento" (click)="cargarCasoErrorSolapamiento()" [class.activo]="casoPruebaActivo === 'ORA-20002'">
         <div class="btn-prueba-top">
-          <span class="btn-codigo codigo-20002">ORA-20002</span>
-          <span class="btn-tag tag-error">Conflicto</span>
+          <span class="btn-codigo codigo-20002">DISPONIBILIDAD</span>
+          <span class="btn-tag tag-error">Alerta</span>
         </div>
-        <strong class="btn-nombre">4. Solapamiento</strong>
-        <span class="btn-desc">Habitación ocupada en esas fechas (Trigger)</span>
+        <strong class="btn-nombre">4. Habitación Ocupada</strong>
+        <span class="btn-desc">Habitación ya reservada en ese rango</span>
       </button>
     </div>
 
@@ -127,7 +127,7 @@
                     <path d="M2 17h20"></path>
                     <path d="M6 8v9"></path>
                   </svg>
-                  <input type="number" class="control-input con-icono" [(ngModel)]="idHabitacion" name="idHabitacion" required min="1" max="400" (keydown)="bloquearNegativos($event)" (input)="validarNumerosPositivos()" />
+                  <input type="number" class="control-input con-icono" [(ngModel)]="idHabitacion" name="idHabitacion" required min="1" max="400" (keydown)="bloquearNegativos($event)" (input)="validarNumerosPositivos()" (change)="calcularCotizacionLive()" />
                 </div>
               </div>
 
@@ -146,12 +146,12 @@
             <div class="fila-formulario">
               <div class="grupo-control">
                 <label class="etiqueta">Fecha de Llegada (Check-In)</label>
-                <input type="date" class="control-input" [(ngModel)]="fechaCheckIn" name="fechaCheckIn" required />
+                <input type="date" class="control-input" [(ngModel)]="fechaCheckIn" name="fechaCheckIn" required (change)="calcularCotizacionLive()" />
               </div>
 
               <div class="grupo-control">
                 <label class="etiqueta">Fecha de Salida (Check-Out)</label>
-                <input type="date" class="control-input" [(ngModel)]="fechaCheckOut" name="fechaCheckOut" required />
+                <input type="date" class="control-input" [(ngModel)]="fechaCheckOut" name="fechaCheckOut" required (change)="calcularCotizacionLive()" />
               </div>
             </div>
           </div>
@@ -214,6 +214,59 @@
                 <input type="email" class="control-input con-icono" [(ngModel)]="correoCliente" name="correoCliente" required />
               </div>
             </div>
+          </div>
+
+          <!-- PASO 3: RESUMEN Y DESGLOSE NOCHE A NOCHE EXIGIDO POR EL USUARIO -->
+          <div *ngIf="cotizacion" class="bloque-cotizacion-checkout">
+            <div class="cabecera-cotizacion-checkout">
+              <div>
+                <span class="insignia-banco">Cotización Oficial</span>
+                <h4 class="titulo-cotizacion-checkout">Desglose de Tarifas por Temporada</h4>
+              </div>
+              <span class="badge-total-noches">{{ cotizacion.totalNoches }} noches totales</span>
+            </div>
+
+            <div class="desglose-lineas-checkout">
+              <!-- Desglose Temporada Alta -->
+              <div class="linea-temp-checkout alta" *ngIf="cotizacion.nochesTemporadaAlta && cotizacion.nochesTemporadaAlta > 0">
+                <div class="etiqueta-temp">
+                  <span class="punto-temp punto-alta">●</span>
+                  <strong>Temporada Alta ({{ cotizacion.nochesTemporadaAlta }} noches):</strong>
+                </div>
+                <div class="detalle-conversion">
+                  <span class="formula-temp">{{ cotizacion.nochesTemporadaAlta }} noches × ${{ cotizacion.tarifaNocheAlta | number:'1.0-0' }} =</span>
+                  <strong class="subtotal-txt">${{ cotizacion.subtotalAlta | number:'1.0-0' }} COP</strong>
+                </div>
+              </div>
+
+              <!-- Desglose Temporada Baja -->
+              <div class="linea-temp-checkout baja" *ngIf="cotizacion.nochesTemporadaBaja && cotizacion.nochesTemporadaBaja > 0">
+                <div class="etiqueta-temp">
+                  <span class="punto-temp punto-baja">●</span>
+                  <strong>Temporada Baja ({{ cotizacion.nochesTemporadaBaja }} noches):</strong>
+                </div>
+                <div class="detalle-conversion">
+                  <span class="formula-temp">{{ cotizacion.nochesTemporadaBaja }} noches × ${{ cotizacion.tarifaNocheBaja | number:'1.0-0' }} =</span>
+                  <strong class="subtotal-txt">${{ cotizacion.subtotalBaja | number:'1.0-0' }} COP</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total Estimado Sumado -->
+            <div class="total-estimado-checkout">
+              <div class="textos-total-checkout">
+                <span class="lbl-total">Total Estimado a Pagar:</span>
+                <small class="detalle-suma">
+                  (Alta: ${{ (cotizacion.subtotalAlta || 0) | number:'1.0-0' }} + Baja: ${{ (cotizacion.subtotalBaja || 0) | number:'1.0-0' }})
+                </small>
+              </div>
+              <strong class="valor-total-destacado">${{ (cotizacion.totalEstimado || cotizacion.totalPagar) | number:'1.0-0' }} COP</strong>
+            </div>
+          </div>
+
+          <div *ngIf="cargandoCotizacion" class="alerta-cargando-cotizacion">
+            <span class="punto-pulso"></span>
+            <span>Calculando desglose de tarifas en tiempo real...</span>
           </div>
 
           <button type="submit" class="btn btn-primario ancho-completo btn-grande btn-confirmar-checkout" [disabled]="procesando">

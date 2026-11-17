@@ -1,6 +1,6 @@
 -- ============================================================================
 -- PROYECTO INTEGRADOR: TURISMOUQ - BASES DE DATOS II
--- SCRIPT 06: ESPECIFICACIÓN DEL PAQUETE PKG_TURISMO_UQ (ENTREGA 2)
+-- SCRIPT 06: ESPECIFICACIÓN DEL PAQUETE PKG_TURISMO_UQ (ENTREGA 2 Y 3)
 -- MOTOR: ORACLE XE 21c (PDB: XEPDB1)
 -- ============================================================================
 
@@ -77,6 +77,46 @@ CREATE OR REPLACE PACKAGE PKG_TURISMO_UQ AS
         p_anio             IN  NUMBER,
         p_id_alojamiento   IN  NUMBER DEFAULT NULL,
         p_total_procesados OUT NUMBER
+    );
+
+    -- ------------------------------------------------------------------------
+    -- PROCEDIMIENTO 3: sp_cotizar_desglose
+    -- Calcula noche a noche desglosando los días tomados en temporada alta,
+    -- los días tomados en temporada baja, las tarifas unitarias, la conversión
+    -- de cada uno (subtotales) y el total estimado resultante de la suma.
+    -- ------------------------------------------------------------------------
+    PROCEDURE sp_cotizar_desglose(
+        p_id_habitacion    IN  NUMBER,
+        p_fecha_in         IN  DATE,
+        p_fecha_out        IN  DATE,
+        p_noches_baja      OUT NUMBER,
+        p_tarifa_baja      OUT NUMBER,
+        p_subtotal_baja    OUT NUMBER,
+        p_noches_alta      OUT NUMBER,
+        p_tarifa_alta      OUT NUMBER,
+        p_subtotal_alta    OUT NUMBER,
+        p_total_estimado   OUT NUMBER
+    );
+
+    -- ------------------------------------------------------------------------
+    -- PROCEDIMIENTO 4: sp_registrar_reserva_con_pago (Entrega 3)
+    -- Transacción atómica completa: registra reserva y pago utilizando SAVEPOINT.
+    -- Demuestra rollback parcial si el pago es rechazado, dejando la reserva
+    -- en estado 'PENDIENTE_PAGO' sin perder los datos del huésped.
+    -- ------------------------------------------------------------------------
+    PROCEDURE sp_registrar_reserva_con_pago(
+        p_id_cliente      IN  NUMBER,
+        p_id_habitacion   IN  NUMBER,
+        p_fecha_in        IN  DATE,
+        p_fecha_out       IN  DATE,
+        p_num_huespedes   IN  NUMBER,
+        p_metodo_pago     IN  VARCHAR2,
+        p_simular_fallo   IN  NUMBER, -- 1: simula fallo en pasarela de pago, 0: flujo exitoso
+        p_id_reserva      OUT NUMBER,
+        p_id_pago         OUT NUMBER,
+        p_total           OUT NUMBER,
+        p_estado_reserva  OUT VARCHAR2,
+        p_mensaje         OUT VARCHAR2
     );
 
 END PKG_TURISMO_UQ;

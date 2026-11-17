@@ -635,3 +635,60 @@
   font-weight: 700;
   color: var(--color-secundario);
 }
+
+
+/* ==========================================================================
+   DESGLOSE POR TEMPORADAS (ENTREGA 2 & 3)
+   ========================================================================== */
+.tarjeta-temporada-desglose {
+  background: #FAF7F2;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  margin-top: 0.25rem;
+}
+
+.tarjeta-temporada-desglose.alta {
+  background: #FDF8F0;
+  border-color: #F6DEBA;
+}
+
+.tarjeta-temporada-desglose.baja {
+  background: #F0F6FA;
+  border-color: #BCD7E8;
+}
+
+.encabezado-temp-desglose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.noches-conteo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.calculo-temp-desglose {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.82rem;
+}
+
+.calculo-temp-desglose small {
+  color: var(--color-texto-apagado);
+  font-size: 0.76rem;
+}
+
+.subtotal-valor {
+  font-family: var(--fuente-titulos);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+}

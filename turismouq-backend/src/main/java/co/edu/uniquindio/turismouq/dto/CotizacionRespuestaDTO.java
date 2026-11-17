@@ -12,6 +12,17 @@ public class CotizacionRespuestaDTO {
     private BigDecimal totalPagar;
     private String descripcionTemporadas;
 
+    // Desglose noche a noche por temporada exigido
+    private long nochesTemporadaAlta;
+    private BigDecimal tarifaNocheAlta;
+    private BigDecimal subtotalAlta;
+
+    private long nochesTemporadaBaja;
+    private BigDecimal tarifaNocheBaja;
+    private BigDecimal subtotalBaja;
+
+    private BigDecimal totalEstimado;
+
     public CotizacionRespuestaDTO() {}
 
     public Long getIdHabitacion() {
@@ -60,5 +71,61 @@ public class CotizacionRespuestaDTO {
 
     public void setDescripcionTemporadas(String descripcionTemporadas) {
         this.descripcionTemporadas = descripcionTemporadas;
+    }
+
+    public long getNochesTemporadaAlta() {
+        return nochesTemporadaAlta;
+    }
+
+    public void setNochesTemporadaAlta(long nochesTemporadaAlta) {
+        this.nochesTemporadaAlta = nochesTemporadaAlta;
+    }
+
+    public BigDecimal getTarifaNocheAlta() {
+        return tarifaNocheAlta;
+    }
+
+    public void setTarifaNocheAlta(BigDecimal tarifaNocheAlta) {
+        this.tarifaNocheAlta = tarifaNocheAlta;
+    }
+
+    public BigDecimal getSubtotalAlta() {
+        return subtotalAlta;
+    }
+
+    public void setSubtotalAlta(BigDecimal subtotalAlta) {
+        this.subtotalAlta = subtotalAlta;
+    }
+
+    public long getNochesTemporadaBaja() {
+        return nochesTemporadaBaja;
+    }
+
+    public void setNochesTemporadaBaja(long nochesTemporadaBaja) {
+        this.nochesTemporadaBaja = nochesTemporadaBaja;
+    }
+
+    public BigDecimal getTarifaNocheBaja() {
+        return tarifaNocheBaja;
+    }
+
+    public void setTarifaNocheBaja(BigDecimal tarifaNocheBaja) {
+        this.tarifaNocheBaja = tarifaNocheBaja;
+    }
+
+    public BigDecimal getSubtotalBaja() {
+        return subtotalBaja;
+    }
+
+    public void setSubtotalBaja(BigDecimal subtotalBaja) {
+        this.subtotalBaja = subtotalBaja;
+    }
+
+    public BigDecimal getTotalEstimado() {
+        return totalEstimado;
+    }
+
+    public void setTotalEstimado(BigDecimal totalEstimado) {
+        this.totalEstimado = totalEstimado;
     }
 }

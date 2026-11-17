@@ -135,7 +135,7 @@
           </div>
           <div>
             <h4>Cálculo Ponderado de Tarifas</h4>
-            <p>La función almacenada <code>PKG_TURISMO_UQ.fn_valor_estadia</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja para liquidar el valor exacto.</p>
+            <p>El procedimiento <code>PKG_TURISMO_UQ.sp_cotizar_desglose</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja para liquidar el desglose exacto.</p>
           </div>
         </div>
 
@@ -199,13 +199,13 @@
         <div *ngIf="errorCotizacion" class="alerta alerta-error">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
           <span>{{ errorCotizacion }}</span>
         </div>
 
-        <!-- Desglose de la Cotización -->
+        <!-- Desglose de la Cotización Noche a Noche -->
         <div *ngIf="cotizacion && !cargandoCotizacion" class="resumen-cotizacion">
           <button class="btn btn-primario ancho-completo btn-reservar-airbnb" (click)="irAReservar()">
             <span>Reservar esta Habitación</span>
@@ -219,25 +219,49 @@
 
           <div class="desglose-lineas">
             <div class="fila-resumen">
-              <span>Duración de la estadía</span>
+              <span>Duración total</span>
               <strong>{{ cotizacion.totalNoches }} noches</strong>
             </div>
-            <div class="fila-resumen">
-              <span>Unidad seleccionada</span>
-              <strong>{{ habitacionSeleccionada.numeroNombre }} (ID #{{ habitacionSeleccionada.idHabitacion }})</strong>
+
+            <!-- Desglose Temporada Alta (Días, Tarifa y Conversión) -->
+            <div class="tarjeta-temporada-desglose alta" *ngIf="cotizacion.nochesTemporadaAlta && cotizacion.nochesTemporadaAlta > 0">
+              <div class="encabezado-temp-desglose">
+                <span class="insignia insignia-alta">Temporada Alta</span>
+                <span class="noches-conteo">{{ cotizacion.nochesTemporadaAlta }} noches tomadas</span>
+              </div>
+              <div class="calculo-temp-desglose">
+                <small>{{ cotizacion.nochesTemporadaAlta }} noches × ${{ cotizacion.tarifaNocheAlta | number:'1.0-0' }} COP</small>
+                <strong class="subtotal-valor">${{ cotizacion.subtotalAlta | number:'1.0-0' }} COP</strong>
+              </div>
             </div>
+
+            <!-- Desglose Temporada Baja (Días, Tarifa y Conversión) -->
+            <div class="tarjeta-temporada-desglose baja" *ngIf="cotizacion.nochesTemporadaBaja && cotizacion.nochesTemporadaBaja > 0">
+              <div class="encabezado-temp-desglose">
+                <span class="insignia insignia-baja">Temporada Baja</span>
+                <span class="noches-conteo">{{ cotizacion.nochesTemporadaBaja }} noches tomadas</span>
+              </div>
+              <div class="calculo-temp-desglose">
+                <small>{{ cotizacion.nochesTemporadaBaja }} noches × ${{ cotizacion.tarifaNocheBaja | number:'1.0-0' }} COP</small>
+                <strong class="subtotal-valor">${{ cotizacion.subtotalBaja | number:'1.0-0' }} COP</strong>
+              </div>
+            </div>
+
             <div class="fila-resumen fila-ponderacion">
-              <span>Ponderación de temporadas</span>
+              <span>Ponderación PL/SQL</span>
               <span class="badge-ponderacion">{{ cotizacion.descripcionTemporadas }}</span>
             </div>
           </div>
 
+          <!-- Total Estimado con la Suma de Ambos -->
           <div class="total-resumen">
             <div>
               <span class="etiqueta-total">Total estimado</span>
-              <small class="sub-total-impuestos">Tarifa calculada según temporada</small>
+              <small class="sub-total-impuestos">
+                Suma: Alta (${{ (cotizacion.subtotalAlta || 0) | number:'1.0-0' }}) + Baja (${{ (cotizacion.subtotalBaja || 0) | number:'1.0-0' }})
+              </small>
             </div>
-            <span class="valor-total">${{ cotizacion.totalPagar | number:'1.0-0' }} <small>COP</small></span>
+            <span class="valor-total">${{ (cotizacion.totalEstimado || cotizacion.totalPagar) | number:'1.0-0' }} <small>COP</small></span>
           </div>
         </div>
       </div>

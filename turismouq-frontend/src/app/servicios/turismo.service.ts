@@ -16,7 +16,14 @@ import {
   ReservaItem,
   LiquidacionItem,
   AuditoriaTarifaItem,
-  MonitoreoTablespace
+  MonitoreoTablespace,
+  TransaccionPeticion,
+  TransaccionRespuesta,
+  CboAnalisisItem,
+  SeguridadInfo,
+  RecepcionCheckin,
+  RecepcionDisponibilidad,
+  RecepcionVoucher
 } from '../modelos/modelos';
 
 @Injectable({
@@ -153,6 +160,38 @@ export class TurismoService {
 
   obtenerMonitoreoTablespace(): Observable<MonitoreoTablespace> {
     return this.http.get<RespuestaApi<MonitoreoTablespace>>(`${this.urlBase}/analitica/tablespace`)
+      .pipe(map(r => r.datos));
+  }
+
+  // --- Módulo Entrega 3 (Transacciones, Concurrencia, Índices CBO y Seguridad) ---
+  ejecutarTransaccionSavepoint(peticion: TransaccionPeticion): Observable<TransaccionRespuesta> {
+    return this.http.post<RespuestaApi<TransaccionRespuesta>>(`${this.urlBase}/entrega3/transaccion-savepoint`, peticion)
+      .pipe(map(r => r.datos));
+  }
+
+  obtenerPlanesCbo(): Observable<CboAnalisisItem[]> {
+    return this.http.get<RespuestaApi<CboAnalisisItem[]>>(`${this.urlBase}/entrega3/planes-cbo`)
+      .pipe(map(r => r.datos));
+  }
+
+  obtenerSeguridadRoles(): Observable<SeguridadInfo> {
+    return this.http.get<RespuestaApi<SeguridadInfo>>(`${this.urlBase}/entrega3/seguridad-roles`)
+      .pipe(map(r => r.datos));
+  }
+
+  // --- Módulo de Recepción (Vistas de Seguridad Entrega 3) ---
+  obtenerCheckinHoy(): Observable<RecepcionCheckin[]> {
+    return this.http.get<RespuestaApi<RecepcionCheckin[]>>(`${this.urlBase}/recepcion/checkin-hoy`)
+      .pipe(map(r => r.datos));
+  }
+
+  obtenerDisponibilidadRecepcion(): Observable<RecepcionDisponibilidad[]> {
+    return this.http.get<RespuestaApi<RecepcionDisponibilidad[]>>(`${this.urlBase}/recepcion/disponibilidad`)
+      .pipe(map(r => r.datos));
+  }
+
+  obtenerVoucherRecepcion(idReserva: number): Observable<RecepcionVoucher> {
+    return this.http.get<RespuestaApi<RecepcionVoucher>>(`${this.urlBase}/recepcion/voucher?idReserva=${idReserva}`)
       .pipe(map(r => r.datos));
   }
 }

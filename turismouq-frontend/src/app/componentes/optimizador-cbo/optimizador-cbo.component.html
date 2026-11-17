@@ -1,0 +1,180 @@
+<div class="contenedor-cbo">
+  <!-- Cabecera -->
+  <header class="encabezado-seccion">
+    <div class="insignias-cabecera">
+      <span class="insignia insignia-cbo">Optimizador Basado en Costos (CBO)</span>
+      <span class="insignia insignia-db">Oracle 21c XE</span>
+    </div>
+    <h2>Optimización de Consultas, Índices Especializados & Análisis CBO</h2>
+    <p class="subtexto">
+      Evaluación de planes de ejecución generados mediante <code>EXPLAIN PLAN</code> para las consultas analíticas del sistema, incluyendo índices compuestos, basados en funciones y la comprobación del caso negativo de baja selectividad.
+    </p>
+  </header>
+
+  <!-- Banner Explicativo -->
+  <div class="banner-intro-pilar">
+    <div class="icono-intro-pilar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+    </div>
+    <div>
+      <h4>Mapeo de Rutas de Acceso (Access Paths) del Optimizador</h4>
+      <p>
+        El optimizador de Oracle (CBO) calcula matemáticamente el costo de E/S y ciclos de CPU estimados. Un índice no siempre acelera una consulta: cuando la condición devuelve más del ~15% de las filas, el escaneo secuencial (Full Table Scan) es mucho más rápido que saltar por punteros ROWID en memoria.
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="cargandoCbo" class="estado-cargando">
+    <div class="spinner"></div>
+    <span>Cargando análisis de planes CBO desde Oracle XE...</span>
+  </div>
+
+  <div *ngIf="!cargandoCbo">
+    <!-- Selector de Consultas CBO -->
+    <div class="selector-cbo-tabs">
+      <button 
+        *ngFor="let plan of planesCbo" 
+        type="button" 
+        class="btn-subtab-cbo" 
+        [class.activo]="cboActivoId === plan.id" 
+        (click)="seleccionarPlan(plan.id)">
+        <span class="subtab-tag" [class.negativo]="plan.casoNegativo">{{ plan.id }}</span>
+        <div class="subtab-textos">
+          <strong>{{ plan.titulo }}</strong>
+          <small>{{ plan.tipoIndice }}</small>
+        </div>
+      </button>
+    </div>
+
+    <!-- Detalle de la Consulta Seleccionada -->
+    <div *ngIf="obtenerPlanActivo() as activo" class="detalle-plan-card">
+      <div class="cabecera-plan-activo">
+        <div>
+          <span class="badge-tipo-indice" [class.badge-negativo]="activo.casoNegativo">
+            {{ activo.tipoIndice }}
+          </span>
+          <h3>{{ activo.titulo }}</h3>
+        </div>
+        <div class="indicador-mejora" *ngIf="!activo.casoNegativo">
+          <small>Optimización de Costo CBO</small>
+          <strong>{{ activo.costoAntes }} → {{ activo.costoDespues }}</strong>
+        </div>
+        <div class="indicador-mejora negativo" *ngIf="activo.casoNegativo">
+          <small>Decisión del CBO</small>
+          <strong>FTS Más Eficiente</strong>
+        </div>
+      </div>
+
+      <!-- TARJETA EXCLUSIVA: PÉRDIDA DE RENDIMIENTO DE CPU EN EL CASO NEGATIVO (EXIGIDA POR EL USUARIO) -->
+      <div class="tarjeta-perdida-cpu" *ngIf="activo.casoNegativo">
+        <div class="cabecera-perdida-cpu">
+          <div class="icono-alerta-cpu">⚠️</div>
+          <div>
+            <h4>Pérdida de Rendimiento de la CPU y E/S: +526% de Degradación</h4>
+            <p>Demostración cuantitativa de por qué forzar el índice en un filtro de baja selectividad perjudica severamente al motor Oracle.</p>
+          </div>
+        </div>
+
+        <div class="rejilla-comparativa-cpu">
+          <div class="item-cpu-metric plan-optimo">
+            <span class="tag-metric-optima">Plan Elegido por el CBO (FTS)</span>
+            <div class="valores-metric">
+              <div class="col-val">
+                <small>Costo del Optimizador</small>
+                <strong>72</strong>
+              </div>
+              <div class="col-val">
+                <small>Uso de CPU</small>
+                <strong>2% CPU</strong>
+              </div>
+              <div class="col-val">
+                <small>Tiempo Estimado</small>
+                <strong>00:00:01</strong>
+              </div>
+            </div>
+            <p class="desc-metric">Lee múltiples bloques contiguos en disco (Multi-Block Read) en una sola operación.</p>
+          </div>
+
+          <div class="item-cpu-metric plan-degradado">
+            <span class="tag-metric-degradada">Plan Forzado con Índice (HINT)</span>
+            <div class="valores-metric">
+              <div class="col-val">
+                <small>Costo Forzado</small>
+                <strong class="texto-rojo">451</strong>
+              </div>
+              <div class="col-val">
+                <small>Sobrecosto de Rendimiento</small>
+                <strong class="texto-rojo">+526%</strong>
+              </div>
+              <div class="col-val">
+                <small>Operación</small>
+                <strong class="texto-rojo">Single-Block I/O</strong>
+              </div>
+            </div>
+            <p class="desc-metric">Realiza 451 lecturas aleatorias individuales por cada ROWID, saturando el subsistema de E/S.</p>
+          </div>
+        </div>
+
+        <div class="conclusion-cpu-box">
+          <strong>Conclusión de Rendimiento:</strong> Al filtrar <code>WHERE estado != 'CANCELADA'</code> (el 94% de la tabla cumple el filtro), el CBO descarta el índice con total acierto. Forzar el índice generaría una pérdida de rendimiento de más de 6 veces (+526%) en costo y cientos de ciclos de CPU desperdiciados en saltos por memoria.
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Consulta SQL y DDL de Índice -->
+      <div class="cuadricula-codigo-cbo">
+        <div class="caja-codigo">
+          <div class="codigo-cabecera">
+            <span>Consulta SQL Analizada</span>
+          </div>
+          <pre class="codigo-sql"><code>{{ activo.consultaSql }}</code></pre>
+        </div>
+
+        <div class="caja-codigo">
+          <div class="codigo-cabecera">
+            <span>DDL del Índice Diseñado</span>
+          </div>
+          <pre class="codigo-sql"><code>{{ activo.ddlIndice }}</code></pre>
+        </div>
+      </div>
+
+      <!-- Comparación de Planes de Ejecución (EXPLAIN PLAN) -->
+      <div class="comparativa-planes-grid">
+        <div class="plan-tarjeta antes">
+          <div class="plan-cabecera">
+            <span class="tag-plan-antes">{{ activo.casoNegativo ? 'Plan Óptimo CBO (Sin Forzar)' : 'Sin Índice Especializado' }}</span>
+            <h4>{{ activo.costoAntes }}</h4>
+          </div>
+          <pre class="plan-salida"><code>{{ activo.planAntes }}</code></pre>
+        </div>
+
+        <div class="plan-tarjeta despues" [class.caso-negativo-plan]="activo.casoNegativo">
+          <div class="plan-cabecera">
+            <span class="tag-plan-despues" *ngIf="!activo.casoNegativo">Con Índice Especializado</span>
+            <span class="tag-plan-despues negativo" *ngIf="activo.casoNegativo">Plan Forzado con Índice (+526% Costo)</span>
+            <h4>{{ activo.costoDespues }}</h4>
+          </div>
+          <pre class="plan-salida"><code>{{ activo.planDespues }}</code></pre>
+        </div>
+      </div>
+
+      <!-- Justificación Técnica del CBO -->
+      <div class="justificacion-cbo-box" [class.box-negativo]="activo.casoNegativo">
+        <div class="icono-justificacion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <div>
+          <strong>Análisis y Fundamento del Optimizador Basado en Costos de Oracle:</strong>
+          <p>{{ activo.explicacion }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

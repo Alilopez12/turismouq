@@ -52,16 +52,24 @@
 
 .marca-textos {
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
 .marca-titulo {
   font-family: var(--fuente-titulos);
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--color-primario);
   letter-spacing: -0.025em;
   line-height: 1.1;
+}
+
+.marca-subtitulo {
+  font-size: 0.68rem;
+  color: #79877E;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* Center Floating Segmented Pill Dock */
@@ -112,7 +120,101 @@
   transform: scale(1.06);
 }
 
-/* Right Engine Status Pill */
+/* Right Engine Status Pill & User Auth Zone */
+.zona-usuario-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btn-iniciar-sesion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  background: #2C523F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(44, 82, 63, 0.2);
+}
+
+.btn-iniciar-sesion:hover {
+  background: #1F3B2D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(44, 82, 63, 0.28);
+}
+
+.chip-usuario-sesion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #FFFFFF;
+  border: 1px solid var(--color-borde);
+  border-radius: 9999px;
+  padding: 0.25rem 0.6rem 0.25rem 0.35rem;
+  box-shadow: var(--sombra-suave);
+}
+
+.avatar-usuario {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradiente-coral);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.datos-usuario-nav {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.nombre-usuario-nav {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.badge-rol-nav {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #C25B3B;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.btn-cerrar-sesion {
+  background: #F4EFE6;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6C7A71;
+  transition: all 0.15s ease;
+  margin-left: 0.15rem;
+}
+
+.btn-cerrar-sesion:hover {
+  background: #FDF2F0;
+  color: #B3261E;
+}
+
 .estado-motor {
   flex-shrink: 0;
 }
