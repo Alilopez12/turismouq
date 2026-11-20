@@ -1,5 +1,5 @@
 # TurismoUQ - Plataforma de Reservas Turísticas del Quindío
-**Asignatura:** Bases de Datos II (Código 12338)  
+**Asignatura:** Bases de Datos II   
 **Institución:** Universidad del Quindío - Facultad de Ingeniería de Sistemas y Computación  
 **Motor de Base de Datos:** Oracle Database 21c Express Edition (PDB: `XEPDB1`, Esquema: `TURISMO_UQ`)  
 **Stack Tecnológico:** Spring Boot 3 (Java 21) + Angular (HTML5 & CSS3)
