@@ -112,7 +112,7 @@ export class DetalleAlojamientoComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorCotizacion = err.error?.mensaje || 'Error al calcular tarifa en Oracle';
+        this.errorCotizacion = err.error?.mensaje || 'No pudimos calcular la tarifa para las fechas seleccionadas.';
         this.cargandoCotizacion = false;
         this.cotizacion = null;
         this.cdr.detectChanges();
@@ -124,6 +124,7 @@ export class DetalleAlojamientoComponent implements OnInit {
     if (!this.habitacionSeleccionada) return;
     this.router.navigate(['/reservas'], {
       queryParams: {
+        idAlojamiento: this.alojamiento?.idAlojamiento,
         idHabitacion: this.habitacionSeleccionada.idHabitacion,
         checkIn: this.fechaCheckIn,
         checkOut: this.fechaCheckOut

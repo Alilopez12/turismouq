@@ -5,28 +5,11 @@
       <span class="insignia insignia-tx">Transacciones Atómicas PL/SQL</span>
       <span class="insignia insignia-db">Oracle 21c XE</span>
     </div>
-    <h2>Transacciones Atómicas & Rollback Parcial con SAVEPOINT</h2>
+    <h2>Transacciones Atómicas & Rollback Parcial (SAVEPOINT)</h2>
     <p class="subtexto">
-      Implementación del procedimiento almacenado <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> con punto de guardado <code>SAVEPOINT pto_reserva_creada</code> para garantizar integridad ACID sin perder reservas cuando el pago bancario es rechazado.
+      Demostración interactiva de <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code>: preserva la reserva en estado <code>PENDIENTE</code> ante un fallo en pasarela usando <code>SAVEPOINT pto_reserva_creada</code>.
     </p>
   </header>
-
-  <!-- Banner Explicativo -->
-  <div class="banner-intro-pilar">
-    <div class="icono-intro-pilar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-        <polyline points="7 3 7 8 15 8"></polyline>
-      </svg>
-    </div>
-    <div>
-      <h4>Mecanismo de Recuperación Parcial ante Fallas Bancarias</h4>
-      <p>
-        Al registrar una reserva, se guarda el registro de la estadía y de inmediato se fija un <code>SAVEPOINT pto_reserva_creada</code>. Si la pasarela bancaria o el medio de pago falla, la transacción no aborta toda la operación: ejecuta <code>ROLLBACK TO pto_reserva_creada</code>, conservando la reserva en estado <strong>PENDIENTE</strong> para reintento y finaliza con <code>COMMIT</code> seguro.
-      </p>
-    </div>
-  </div>
 
   <div class="cuadricula-savepoint">
     <!-- Formulario de Prueba Interactiva -->
@@ -128,9 +111,13 @@
 
       <!-- Estado Vacío Inicial -->
       <div *ngIf="!resultadoSavepoint && !ejecutandoSavepoint" class="estado-espera-tx">
-        <div class="icono-espera">⚡</div>
-        <h4>Ninguna Transacción Ejecutada</h4>
-        <p>Las fechas libres de la habitación ya fueron consultadas automáticamente. Pulsa ejecutar para probar el flujo con <code>COMMIT</code> o activa el fallo simulado para probar <code>ROLLBACK TO</code>.</p>
+        <div class="icono-espera">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <h4>Listo para Ejecutar</h4>
+        <p>Las fechas disponibles ya están precargadas. Pulsa ejecutar para probar el flujo completo (<code>COMMIT</code>) o activa el fallo simulado (<code>ROLLBACK TO</code>).</p>
       </div>
 
       <!-- Cargando -->

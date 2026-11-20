@@ -21,6 +21,10 @@ public interface AnaliticaServicio {
 
     List<Map<String, Object>> obtenerServiciosNegocioLibre();
 
+    List<Map<String, Object>> obtenerHabitacionTopTemporadaAlta();
+
+    List<Map<String, Object>> obtenerClientesMasMunicipios();
+
     List<Map<String, Object>> obtenerAuditoriaTarifas();
 
     Map<String, Object> actualizarTarifa(Long idHabitacion, Long idTemporada, Double nuevoPrecio);

@@ -9,71 +9,115 @@
 ## 📁 Estructura del Proyecto
 
 ```
-Proyecto bases II/
-├── 01_basedatos/                               # Organización formal por entregas
-│   ├── 00_master_instalacion_completa.sql      # Script maestro de instalación limpia
-│   ├── entrega_1/                              # Contenido de la Entrega 1 (30%)
-│   │   ├── 01_tablespace_historico.sql         # Tablespace TBS_HISTORICO_RESERVAS con justificación técnica
-│   │   ├── 02_consultas_analisis.sql           # Las 8 consultas analíticas oficiales en SQL
-│   │   └── SQL consultas.md                    # Documentación Markdown de las 8 consultas (Obsidian)
+turismouq/
+├── 01_basedatos/                               # Scripts SQL/PL-SQL organizados por entrega
+│   ├── 00_master_instalacion_completa.sql      # Script maestro idempotente (14 pasos en orden)
 │   │
-│   └── entrega_2/                              # Contenido de la Entrega 2
-│       ├── 01_adecuacion_modelo.sql            # 4 tipos de alojamiento, 2 temporadas y 800 tarifas
-│       ├── 02_auditoria_tarifa.sql             # Trigger a nivel de sentencia en TARIFA (con tabla de log)
-│       ├── 03_trigger_solapamiento.sql         # Trigger compound para evitar solapamiento (sin ORA-04091)
-│       ├── 04_paquete_turismo_espec.sql        # Especificación de PKG_TURISMO_UQ
-│       ├── 05_paquete_turismo_cuerpo.sql       # Cuerpo completo de PKG_TURISMO_UQ (fn, sp, cursor explícito)
-│       └── 06_pruebas_verificacion.sql         # Suite de pruebas automatizadas en PL/SQL
+│   ├── entrega_1/                              # Entrega 1: Modelo, Tablespace, Carga y BI
+│   │   ├── 00_crear_esquema_tablas.sql         # DDL completo de las 16 entidades + PK/FK/CHECK
+│   │   ├── 01_tablespace_historico.sql         # Tablespace TBS_HISTORICO_RESERVAS y tabla histórica
+│   │   ├── 01_cargar_datos_volumen.sql         # Carga masiva idempotente (25.000 reservas, 3.000 clientes)
+│   │   ├── 02_consultas_analisis.sql           # MV_OCUPACION_MENSUAL + 10 consultas analíticas (8+2)
+│   │   └── SQL consultas.md                    # Documentación analítica
+│   │
+│   ├── entrega_2/                              # Entrega 2: PL/SQL, Paquetes y Triggers
+│   │   ├── 01_adecuacion_modelo.sql            # 4 tipos de alojamiento, 2 temporadas, PERIODO_TEMPORADA, 800 tarifas
+│   │   ├── 02_auditoria_tarifa.sql             # Trigger compuesto/sentencia sobre TARIFA + AUDITORIA_TARIFA
+│   │   ├── 03_trigger_solapamiento.sql         # Compound Trigger anti-solapamiento (sin ORA-04091)
+│   │   ├── 04_paquete_turismo_espec.sql        # Especificación de PKG_TURISMO_UQ + LIQUIDACION_MENSUAL
+│   │   ├── 05_paquete_turismo_cuerpo.sql       # Cuerpo completo (fn_valor_estadia, sp, cursor explícito, SAVEPOINT)
+│   │   ├── 06_pruebas_verificacion.sql         # Suite automatizada ORA-20001 / ORA-20002 / ORA-20003
+│   │   └── 07_indices_rendimiento.sql          # Índices B-Tree de rendimiento sobre claves foráneas
+│   │
+│   └── entrega_3/                              # Entrega 3: Transacciones, Concurrencia, CBO y Seguridad
+│       ├── 01_transacciones_savepoint.sql      # Demos de transacción atómica (COMMIT y ROLLBACK TO SAVEPOINT)
+│       ├── 02_concurrencia_bloqueos.sql        # sp_reserva_concurrente_for_update (FOR UPDATE WAIT 5 + SLEEP)
+│       ├── 03_indices_optimizacion_cbo.sql     # Planes EXPLAIN PLAN ANTES/DESPUÉS, Q1-Q3 + Caso Negativo Q4
+│       ├── 04_seguridad_roles_vistas_perfil.sql# Perfil PRF_TURISMO_SEGURIDAD, 3 vistas, 4 roles y 4 usuarios Oracle
+│       └── 05_tabla_usuarios_sistema.sql       # Tabla USUARIO_SISTEMA y credenciales RBAC de la aplicación web
 │
-├── turismouq-backend/                          # Backend Spring Boot 3 (Java 21)
+├── 02_documentacion/                           # Entregable documental final para Moodle
+│   ├── TurismoUQ_Documento_Tecnico_Entrega3.html
+│   └── TurismoUQ_Modelo_Diseno_y_Entrega3.pdf  # Modelo ER, 2 decisiones de diseño y evidencias reales Oracle XE
+│
+├── turismouq-backend/                          # Backend Spring Boot 3 (Java 21 + JDBC/JPA)
 │   ├── pom.xml
 │   └── src/main/java/co/edu/uniquindio/turismouq/
-│       ├── controlador/                        # Capa Web REST 100% en español
-│       ├── servicio/                           # Capa de Lógica y llamadas PL/SQL en español
-│       ├── repositorio/                        # Capa de Acceso a Datos Spring Data JPA
-│       ├── entidad/                            # Modelado de Entidades JPA en español
-│       ├── dto/                                # Data Transfer Objects
-│       ├── excepcion/                          # Manejo global de excepciones Oracle
-│       └── configuracion/                      # CORS y conexión Oracle XE (HikariCP)
+│       ├── controlador/                        # Alojamiento, Analitica, Auth, EntregaTres, Liquidacion, Recepcion, Reserva
+│       ├── servicio/                           # Invocaciones a PKG_TURISMO_UQ, JDBC y CBO
+│       ├── repositorio/
+│       ├── entidad/
+│       ├── dto/
+│       ├── excepcion/
+│       └── configuracion/
 │
-└── turismouq-frontend/                         # Frontend Angular (HTML5 + CSS3)
-    └── src/app/
-        ├── componentes/
-        │   ├── catalogo/                       # Explorador de los 60 alojamientos por municipio
-        │   ├── detalle-alojamiento/            # Habitaciones y cotizador en vivo (fn_valor_estadia)
-        │   ├── formulario-reserva/             # Creación de reservas atómicas (sp_crear_reserva)
-        │   ├── liquidaciones/                  # Proceso masivo con cursor explícito en Oracle
-        │   ├── analitica/                      # Módulo gráfico con las 8 consultas de Entrega 1
-        │   └── auditoria/                      # Visor de trazas del trigger de sentencias
-        ├── servicios/                          # Servicios HttpClient en español
-        └── modelos/                            # Interfaces TypeScript en español
+└── turismouq-frontend/                         # Frontend Angular Standalone
+    └── src/app/componentes/
+        ├── catalogo/                           # Explorador de los 60 alojamientos por municipio
+        ├── detalle-alojamiento/                # Habitaciones y cotizador en vivo (fn_valor_estadia)
+        ├── formulario-reserva/                 # Creación de reservas (sp_crear_reserva)
+        ├── recepcion/                          # Check-In y Vouchers mediante vistas V_RECEPCION_*
+        ├── liquidaciones/                      # Liquidación mensual masiva con cursor explícito
+        ├── transacciones/                      # Demo interactiva SAVEPOINT (Commit / Rollback Parcial)
+        ├── concurrencia/                       # Simulador de bloqueos TX Lock / FOR UPDATE WAIT 5
+        ├── optimizador-cbo/                    # Comparador visual EXPLAIN PLAN Q1-Q4 + caso negativo
+        ├── analitica/                          # Data Studio con las 10 consultas analíticas (PIVOT..LISTAGG)
+        ├── auditoria/                          # Trazas del trigger en TARIFA + seguridad RBAC
+        └── tablespace/                         # Monitoreo físico de TBS_HISTORICO_RESERVAS
 ```
+
+---
+
+## 📊 Consultas Analíticas Implementadas (`02_consultas_analisis.sql` y `/analitica`)
+
+1. **Q01 (`PIVOT`):** Ocupación por municipio y mes (12 meses × 12 municipios).
+2. **Q02 (`ROLLUP` + `GROUPING`):** Subtotales jerárquicos de ingresos por municipio, tipo de alojamiento y temporada.
+3. **Q03 (`RANK()`):** Top 3 alojamientos de mayor ingreso por cada municipio.
+4. **Q04 (`LAG()`):** Variación de ingresos mes contra mes.
+5. **Q05 (Bind Variables):** Consulta parametrizada `:fecha_inicio` / `:fecha_fin` reutilizando plan SQL.
+6. **Q06 (Vista Materializada):** `MV_OCUPACION_MENSUAL` con refresco `DBMS_MVIEW.REFRESH(..., 'C')`.
+7. **Q07 (`UNPIVOT`):** Desagregación de métodos de pago (`PSE`, `TARJETA_CREDITO`, `TRANSFERENCIA`).
+8. **Q08 (Negocio libre):** Ingresos y reservas por los 4 tipos oficiales de hospedaje.
+9. **Q09 (`RANK()` + `EXISTS`):** Habitación con más reservas en temporada alta (`PERIODO_TEMPORADA`, `id_temporada = 2`).
+10. **Q10 (`COUNT DISTINCT` + `LISTAGG`):** Listado de clientes con mayor cantidad de municipios visitados.
 
 ---
 
 ## 🚀 Guía de Puesta en Marcha
 
-### 1. Base de Datos Oracle XE 21c
-Conexión estándar:
+### 1. Base de Datos Oracle XE 21c (Instalación Limpia)
+Ejecutar de arriba a abajo en una sola pasada desde SQL*Plus o SQL Developer conectado en `XEPDB1` como `TURISMO_UQ` (o `SYSTEM`):
 ```powershell
-sqlplus TURISMO_UQ/Turismo2026#@localhost:1521/XEPDB1
-```
-
-Ejecutar la suite de pruebas de Entrega 2:
-```powershell
-@"C:\Users\DELL\Documents\Proyecto bases II\01_basedatos\entrega_2\06_pruebas_verificacion.sql"
+cd "01_basedatos"
+sqlplus TURISMO_UQ/Turismo2026#@localhost:1521/XEPDB1 @00_master_instalacion_completa.sql
 ```
 
 ### 2. Backend Spring Boot (Puerto 8080)
 ```powershell
-cd "C:\Users\DELL\Documents\Proyecto bases II\turismouq-backend"
-mvn spring-boot:run
+cd turismouq-backend
+.\mvnw spring-boot:run
 ```
-El backend estará disponible en `http://localhost:8080`.
+Disponible en `http://localhost:8080`.
 
 ### 3. Frontend Angular (Puerto 4200)
 ```powershell
-cd "C:\Users\DELL\Documents\Proyecto bases II\turismouq-frontend"
-ng serve --open
+cd turismouq-frontend
+npm install
+npm start
 ```
-El cliente web se abrirá automáticamente en `http://localhost:4200`.
+Disponible en `http://localhost:4200`.
+
+### 4. Credenciales de Prueba
+
+**Aplicación Web (`USUARIO_SISTEMA`, contraseña común `Turismo2026#`):**
+- `admin` / `ADMIN_TOTAL` (`ROL_SUPER_ADMIN`)
+- `USR_RECEPCION_01` (`ROL_RECEPCION`)
+- `USR_ADMIN_01` (`ROL_ADMIN_ALOJAMIENTO`)
+- `USR_GERENTE_01` (`ROL_GERENTE`)
+- `USR_AUDITOR_01` (`ROL_AUDITOR`)
+
+**Usuarios Nativos de Oracle XE (`04_seguridad_roles_vistas_perfil.sql`, perfil `PRF_TURISMO_SEGURIDAD`):**
+- `USR_RECEPCION_01` / `Recep2026#` (`ROL_RECEPCION`)
+- `USR_ADMIN_01` / `Admin2026#` (`ROL_ADMIN_ALOJAMIENTO`)
+- `USR_GERENTE_01` / `Geren2026#` (`ROL_GERENTE`)
+- `USR_AUDITOR_01` / `Audit2026#` (`ROL_AUDITOR`)

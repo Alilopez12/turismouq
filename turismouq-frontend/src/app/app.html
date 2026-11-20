@@ -1,173 +1,246 @@
-<header class="barra-navegacion">
-  <div class="contenedor-barra">
-    <!-- Marca / Brand -->
-    <a routerLink="/catalogo" class="marca">
-      <div class="logo-emblema" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 19.5h20L12 2z" />
-          <path d="M12 10.5l-4.5 9h9l-4.5-9z" fill="rgba(255,255,255,0.28)" />
-          <circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
-        </svg>
-      </div>
-      <div class="marca-textos">
-        <span class="marca-titulo">TurismoUQ</span>
-        <small class="marca-subtitulo">Quindío · Oracle 21c</small>
-      </div>
-    </a>
-
-    <!-- Floating Segmented Pill Navigation Dock (Filtrado por Permisos de Rol) -->
-    <nav class="muelle-navegacion" aria-label="Navegación Principal">
-      <!-- 1. Catálogo (Público / Huésped) -->
-      <a *ngIf="authService.tieneAcceso('/catalogo')" routerLink="/catalogo" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-        </svg>
-        <span>Explorar Destinos</span>
-      </a>
-
-      <!-- 2. Reservas (Público / Huésped) -->
-      <a *ngIf="authService.tieneAcceso('/reservas')" routerLink="/reservas" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-          <path d="M9 16l2 2 4-4"></path>
-        </svg>
-        <span>Reservar Estadía</span>
-      </a>
-
-      <!-- 3. Recepción & Check-in (ROL_RECEPCION / SUPER_ADMIN) -->
-      <a *ngIf="authService.tieneAcceso('/recepcion')" routerLink="/recepcion" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="8.5" cy="7" r="4"></circle>
-          <polyline points="17 11 19 13 23 9"></polyline>
-        </svg>
-        <span>Recepción & Check-In</span>
-      </a>
-
-      <!-- 4. Liquidaciones (ROL_ADMIN_ALOJAMIENTO / GERENTE / SUPER_ADMIN) -->
-      <a *ngIf="authService.tieneAcceso('/liquidaciones')" routerLink="/liquidaciones" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-          <line x1="2" y1="10" x2="22" y2="10"></line>
-          <line x1="6" y1="15" x2="10" y2="15"></line>
-        </svg>
-        <span>Liquidar Lotes</span>
-      </a>
-
-      <!-- 5. Transacciones & SAVEPOINT (Entrega 3) -->
-      <a *ngIf="authService.tieneAcceso('/transacciones')" routerLink="/transacciones" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-          <polyline points="17 21 17 13 7 13 7 21"></polyline>
-          <polyline points="7 3 7 8 15 8"></polyline>
-        </svg>
-        <span>Transacciones & SAVEPOINT</span>
-      </a>
-
-      <!-- 6. Concurrencia & Bloqueos (Entrega 3) -->
-      <a *ngIf="authService.tieneAcceso('/concurrencia')" routerLink="/concurrencia" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-        <span>Concurrencia & Bloqueos</span>
-      </a>
-
-      <!-- 7. Optimizador CBO & Índices (Entrega 3) -->
-      <a *ngIf="authService.tieneAcceso('/optimizador-cbo')" routerLink="/optimizador-cbo" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"></line>
-          <line x1="12" y1="20" x2="12" y2="4"></line>
-          <line x1="6" y1="20" x2="6" y2="14"></line>
-        </svg>
-        <span>Optimizador CBO</span>
-      </a>
-
-      <!-- 8. Data Studio (ROL_GERENTE / SUPER_ADMIN) -->
-      <a *ngIf="authService.tieneAcceso('/analitica')" routerLink="/analitica" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-        <span>Data Studio</span>
-      </a>
-
-      <!-- 9. Auditoría (ROL_AUDITOR / SUPER_ADMIN) -->
-      <a *ngIf="authService.tieneAcceso('/auditoria')" routerLink="/auditoria" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          <polyline points="9 12 11 14 15 10"></polyline>
-        </svg>
-        <span>Auditoría</span>
-      </a>
-
-      <!-- 10. Tablespaces (ROL_AUDITOR / SUPER_ADMIN) -->
-      <a *ngIf="authService.tieneAcceso('/tablespace')" routerLink="/tablespace" routerLinkActive="activo" class="enlace-pildora">
-        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-        </svg>
-        <span>Tablespaces</span>
-      </a>
-    </nav>
-
-    <!-- Zona de Usuario y Autenticación en la Barra Superior -->
-    <div class="zona-usuario-barra">
-      <!-- Usuario NO autenticado (Huésped) -->
-      <button 
-        *ngIf="!authService.estaAutenticado()" 
-        type="button" 
-        class="btn-iniciar-sesion" 
-        (click)="abrirLogin()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        <span>Iniciar Sesión / Registro</span>
-      </button>
-
-      <!-- Usuario Autenticado -->
-      <div *ngIf="authService.estaAutenticado()" class="chip-usuario-sesion">
-        <div class="avatar-usuario">
-          <span>{{ authService.usuarioActual()?.nombreCompleto?.charAt(0) || 'U' }}</span>
+<!-- ========================================================================= -->
+<!-- MODO 1: PORTAL PÚBLICO PARA VIAJEROS (SIN AUTENTICAR)                     -->
+<!-- ========================================================================= -->
+<ng-container *ngIf="!authService.estaAutenticado(); else workspaceStaff">
+  <header class="navbar-viajero">
+    <div class="navbar-viajero-inner">
+      <a routerLink="/catalogo" class="marca">
+        <div class="logo-emblema" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 19.5h20L12 2z" />
+            <path d="M12 10.5l-4.5 9h9l-4.5-9z" fill="rgba(255,255,255,0.28)" />
+            <circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+          </svg>
         </div>
-        <div class="datos-usuario-nav">
-          <span class="nombre-usuario-nav">{{ authService.usuarioActual()?.nombreCompleto }}</span>
-          <span class="badge-rol-nav">{{ authService.usuarioActual()?.descripcionRol }}</span>
+        <div class="marca-textos">
+          <span class="marca-titulo">TurismoUQ</span>
+          <small class="marca-subtitulo">Quindío · Colombia</small>
         </div>
-        <button 
-          type="button" 
-          class="btn-cerrar-sesion" 
-          (click)="cerrarSesion()" 
-          title="Cerrar sesión de {{ authService.usuarioActual()?.usuario }}">
+      </a>
+
+      <nav class="nav-viajero-links" aria-label="Navegación Principal">
+        <a routerLink="/catalogo" routerLinkActive="activo" class="enlace-viajero">
+          <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+          <span>Explorar Alojamientos</span>
+        </a>
+
+        <a routerLink="/reservas" routerLinkActive="activo" class="enlace-viajero">
+          <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <path d="M9 16l2 2 4-4"></path>
+          </svg>
+          <span>Reservar Estadía</span>
+        </a>
+      </nav>
+
+      <div class="zona-acciones-viajero">
+        <button type="button" class="btn-ingresar-staff" (click)="abrirLogin()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Acceso Equipo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="cuerpo-viajero">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer-viajero">
+    <div class="footer-inner">
+      <span><strong>TurismoUQ</strong> · Red de Alojamientos Verificados del Paisaje Cultural Cafetero</span>
+      <span class="footer-meta">12 Municipios del Quindío · Reservas en Línea</span>
+    </div>
+  </footer>
+</ng-container>
+
+<!-- ========================================================================= -->
+<!-- MODO 2: WORKSPACE PROFESIONAL CON SIDEBAR (USUARIOS AUTENTICADOS)         -->
+<!-- ========================================================================= -->
+<ng-template #workspaceStaff>
+  <div class="workspace-shell">
+    <!-- Backdrop móvil -->
+    <div class="sidebar-backdrop" *ngIf="sidebarAbierto()" (click)="cerrarSidebar()"></div>
+
+    <!-- Barra Lateral de Navegación -->
+    <aside class="sidebar-nav" [class.abierto]="sidebarAbierto()" aria-label="Menú Principal de Gestión">
+      <div class="sidebar-header">
+        <a routerLink="/catalogo" (click)="cerrarSidebar()" class="marca">
+          <div class="logo-emblema" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 19.5h20L12 2z" />
+              <path d="M12 10.5l-4.5 9h9l-4.5-9z" fill="rgba(255,255,255,0.28)" />
+              <circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+          </div>
+          <div class="marca-textos">
+            <span class="marca-titulo">TurismoUQ</span>
+            <small class="marca-subtitulo">Suite de Gestión</small>
+          </div>
+        </a>
+        <button type="button" class="btn-cerrar-drawer" (click)="cerrarSidebar()" aria-label="Cerrar menú">✕</button>
+      </div>
+
+      <nav class="sidebar-grupos">
+        <!-- Grupo 1: Portal Viajeros -->
+        <div class="grupo-nav" *ngIf="tieneAccesoGrupo(['/catalogo', '/reservas'])">
+          <span class="grupo-titulo">Portal Viajeros</span>
+          <a *ngIf="authService.tieneAcceso('/catalogo')" routerLink="/catalogo" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+            </svg>
+            <span>Explorar Destinos</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/reservas')" routerLink="/reservas" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <path d="M9 16l2 2 4-4"></path>
+            </svg>
+            <span>Nueva Reserva</span>
+          </a>
+        </div>
+
+        <!-- Grupo 2: Operación Hotelera -->
+        <div class="grupo-nav" *ngIf="tieneAccesoGrupo(['/recepcion', '/liquidaciones'])">
+          <span class="grupo-titulo">Operación y Finanzas</span>
+          <a *ngIf="authService.tieneAcceso('/recepcion')" routerLink="/recepcion" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Recepción &amp; Check-In</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/liquidaciones')" routerLink="/liquidaciones" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+              <line x1="6" y1="15" x2="10" y2="15"></line>
+            </svg>
+            <span>Liquidaciones</span>
+          </a>
+        </div>
+
+        <!-- Grupo 3: Inteligencia & Control -->
+        <div class="grupo-nav" *ngIf="tieneAccesoGrupo(['/analitica', '/auditoria'])">
+          <span class="grupo-titulo">Reportes y Control</span>
+          <a *ngIf="authService.tieneAcceso('/analitica')" routerLink="/analitica" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>Reportes &amp; Analítica</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/auditoria')" routerLink="/auditoria" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            <span>Tarifas y Auditoría</span>
+          </a>
+        </div>
+
+        <!-- Grupo 4: Ingeniería & Motor -->
+        <div class="grupo-nav" *ngIf="tieneAccesoGrupo(['/transacciones', '/concurrencia', '/optimizador-cbo', '/tablespace'])">
+          <span class="grupo-titulo">Arquitectura y Motor</span>
+          <a *ngIf="authService.tieneAcceso('/transacciones')" routerLink="/transacciones" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            <span>Transacciones</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/concurrencia')" routerLink="/concurrencia" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>Concurrencia</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/optimizador-cbo')" routerLink="/optimizador-cbo" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Optimizador CBO</span>
+          </a>
+          <a *ngIf="authService.tieneAcceso('/tablespace')" routerLink="/tablespace" routerLinkActive="activo" (click)="cerrarSidebar()" class="nav-item">
+            <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+            <span>Almacenamiento</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="tarjeta-usuario-sidebar">
+          <div class="avatar-usuario">
+            <span>{{ authService.usuarioActual()?.nombreCompleto?.charAt(0) || 'U' }}</span>
+          </div>
+          <div class="datos-usuario-sidebar">
+            <span class="nombre-usuario-sidebar">{{ authService.usuarioActual()?.nombreCompleto }}</span>
+            <span class="badge-rol-sidebar">{{ authService.usuarioActual()?.descripcionRol }}</span>
+          </div>
+        </div>
+        <button type="button" class="btn-logout-sidebar" (click)="cerrarSesion()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
             <line x1="21" y1="12" x2="9" y2="12"></line>
           </svg>
+          <span>Cerrar Sesión</span>
         </button>
       </div>
+    </aside>
 
-      <!-- Estado Motor Oracle -->
-      <div class="estado-motor">
-        <div class="pildora-estado" title="Conexión activa al motor Oracle Database 21c Express Edition">
-          <span class="punto-pulso"></span>
-          <span class="texto-estado">Oracle 21c</span>
+    <!-- Columna de Contenido Principal -->
+    <div class="workspace-main">
+      <header class="topbar-workspace">
+        <div class="topbar-izq">
+          <button type="button" class="btn-hamburguesa" (click)="toggleSidebar()" aria-label="Abrir menú">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <span class="topbar-saludo">Hola, <strong>{{ authService.usuarioActual()?.nombreCompleto }}</strong></span>
         </div>
-      </div>
+
+        <div class="topbar-der">
+          <span class="pildora-rol-top">{{ authService.usuarioActual()?.descripcionRol }}</span>
+          <div class="pildora-estado" title="Servicio operativo">
+            <span class="punto-pulso"></span>
+            <span class="texto-estado">Sistema Activo</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="cuerpo-workspace">
+        <router-outlet></router-outlet>
+      </main>
     </div>
   </div>
-</header>
-
-<main class="cuerpo-aplicacion">
-  <router-outlet></router-outlet>
-</main>
+</ng-template>
 
 <!-- Modal de Autenticación y Registro -->
 <app-login-modal *ngIf="mostrarModalLogin()" (cerrar)="cerrarLogin()"></app-login-modal>

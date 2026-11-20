@@ -5,27 +5,11 @@
       <span class="insignia insignia-lock">Bloqueo Pesimista Fila a Fila</span>
       <span class="insignia insignia-db">Oracle 21c XE</span>
     </div>
-    <h2>Concurrencia, Bloqueos & Prevención de Sobreventa</h2>
+    <h2>Concurrencia, Bloqueos y Prevención de Sobreventa</h2>
     <p class="subtexto">
-      Mecanismo de aislamiento transaccional mediante <code>SELECT ... FOR UPDATE WAIT 5</code> implementado en <code>sp_reserva_concurrente_for_update</code> para evitar el fenómeno de "Double Booking" bajo concurrencia extrema de usuarios.
+      Simulación interactiva del aislamiento con <code>SELECT ... FOR UPDATE WAIT 5</code> en <code>sp_reserva_concurrente_for_update</code> para impedir el <em>Double Booking</em> (anomalía Write Skew) cuando dos usuarios reservan simultáneamente.
     </p>
   </header>
-
-  <!-- Banner Informativo -->
-  <div class="banner-intro-pilar">
-    <div class="icono-intro-pilar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-    </div>
-    <div>
-      <h4>Manejo Robusto de Esperas Transaccionales</h4>
-      <p>
-        Cuando dos clientes intentan reservar la misma habitación para las mismas fechas en el mismo instante, la primera sesión bloquea exclusivamente la fila. La cláusula <code>WAIT 5</code> asegura que la segunda sesión espere pacientemente hasta 5 segundos sin colgar indefinidamente la aplicación web. Si la primera confirma, la segunda detecta el solapamiento y aborta limpiamente.
-      </p>
-    </div>
-  </div>
 
   <!-- Stepper de Pasos -->
   <div class="tarjeta tarjeta-stepper">
@@ -111,18 +95,24 @@ COMMIT; -> Candado liberado exitosamente.</span></code></pre>
 <span class="c-keyword">WHERE</span>  id_habitacion = 1
 <span class="c-keyword">FOR UPDATE WAIT</span> 5;
 
-<span class="c-espera" *ngIf="pasoActual === 3">... Esperando liberación de fila (enqueue TX - row lock) ...
-Temporizador de seguridad: 5 segundos máximos.</span>
-<span class="c-output" *ngIf="pasoActual === 4">-- Sesión A confirmó su reserva:
-ORA-20002: La habitación ya se encuentra reservada en el rango solicitado.
-Rollback ejecutado limpiamente. ¡Sin sobreventa!</span></code></pre>
+<span class="c-espera" *ngIf="pasoActual === 3">... Esperando liberación de fila (enq: TX - row lock contention) ...
+Temporizador de seguridad: WAIT 5 segundos máximos.</span>
+<span class="c-output" *ngIf="pasoActual === 4">-- Tras superar WAIT 5 o re-evaluar disponibilidad después del COMMIT:
+ORA-20005 / ORA-20002: Recurso Bloqueado o habitación ya reservada.
+Rollback ejecutado limpiamente. ¡Sin sobreventa ni Write Skew!</span></code></pre>
         </div>
       </div>
     </div>
 
     <!-- Explicación del Paso Activo -->
     <div class="caja-explicacion-paso">
-      <div class="icono-paso-info">ℹ</div>
+      <div class="icono-paso-info">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
       <div class="contenido-paso-info">
         <div *ngIf="pasoActual === 1">
           <strong>Paso 1: Adquisición del Candado Exclusivo</strong>

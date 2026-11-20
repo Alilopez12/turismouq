@@ -198,42 +198,42 @@ public class EntregaTresServicioImpl implements EntregaTresServicio {
         lista.add(new CboAnalisisDTO(
                 "q1",
                 "1. Filtro Compuesto de Estado, Rango Temporal y Monto",
-                "SELECT id_reserva, fecha_check_in, total, estado\nFROM RESERVA\nWHERE estado = 'CONFIRMADA'\n  AND fecha_check_in BETWEEN TO_DATE('2025-06-01','YYYY-MM-DD') AND TO_DATE('2025-06-30','YYYY-MM-DD')\n  AND total > 350000;",
+                "SELECT id_reserva, fecha_check_in, total, estado\nFROM RESERVA\nWHERE estado = 'CONFIRMADA'\n  AND fecha_check_in BETWEEN TO_DATE('2026-10-01','YYYY-MM-DD') AND TO_DATE('2026-10-15','YYYY-MM-DD')\n  AND total > 800000;",
                 "Índice Compuesto B-Tree (Composite Index)",
-                "CREATE INDEX IDX_COMP_RES_EST_FEC_TOT ON RESERVA(ESTADO, FECHA_CHECK_IN, TOTAL);",
-                "Cost: 72 (2% CPU) · FTS en 25.019 filas",
-                "Cost: 3 (0% CPU) · INDEX RANGE SCAN",
-                "| Id | Operation         | Name    | Rows  | Cost (%CPU) |\n|  0 | SELECT STATEMENT  |         |   720 |    72   (2) |\n|* 1 |  TABLE ACCESS FULL| RESERVA |   720 |    72   (2) |",
-                "| Id | Operation                   | Name                   | Rows | Cost |\n|  0 | SELECT STATEMENT            |                        |  720 |    3 |\n|* 1 |  INDEX RANGE SCAN           | IDX_COMP_RES_EST_FEC...|  720 |    3 |",
-                "El índice compuesto agrupa el estado de la reserva, la fecha de check-in y el total en las mismas páginas del árbol B-Tree. Oracle evalúa los tres filtros directamente en el índice sin necesidad de visitar bloques de la tabla.",
+                "CREATE INDEX IDX_COMP_RES_EST_FEC_TOT ON RESERVA(ESTADO, FECHA_CHECK_IN, TOTAL) TABLESPACE TBS_HISTORICO_RESERVAS;",
+                "Cost: 72 (2% CPU) · FTS en 25.036 reservas (50 ms / 50 ejec.)",
+                "Cost: 15 (0% CPU) · INDEX RANGE SCAN (10 ms / 50 ejec., -79% Cost)",
+                "| Id | Operation         | Name    | Rows | Bytes | Cost (%CPU) |\n|  0 | SELECT STATEMENT  |         |   13 |   481 |    72   (2) |\n|* 1 |  TABLE ACCESS FULL| RESERVA |   13 |   481 |    72   (2) |",
+                "| Id | Operation                           | Name                     | Rows | Cost (%CPU) |\n|  0 | SELECT STATEMENT                    |                          |   12 |    15   (0) |\n|* 1 |  TABLE ACCESS BY INDEX ROWID BATCHED| RESERVA                  |   12 |    15   (0) |\n|* 2 |   INDEX RANGE SCAN                  | IDX_COMP_RES_EST_FEC_TOT |   12 |     2   (0) |",
+                "El índice compuesto ordena ESTADO, FECHA_CHECK_IN y TOTAL dentro del B-Tree en TBS_HISTORICO_RESERVAS. Oracle reduce el rango de búsqueda en el índice con Cost=2 y solo visita los bloques exactos de las ~194 reservas coincidentes (bajando el costo total de 72 a 15 y la latencia en 50 ejecuciones de 50 ms a 10 ms).",
                 false
         ));
 
         lista.add(new CboAnalisisDTO(
                 "q2",
                 "2. Búsqueda Insensible a Mayúsculas/Minúsculas de Huéspedes",
-                "SELECT id_cliente, documento, nombres, apellidos, correo\nFROM CLIENTE\nWHERE UPPER(nombres) LIKE 'CARLOS%';",
+                "SELECT id_cliente, documento, nombres, apellidos, correo\nFROM CLIENTE\nWHERE UPPER(nombres) LIKE 'CARLOS %';",
                 "Índice Basado en Función (Function-Based Index)",
                 "CREATE INDEX IDX_FUNC_CLIENTE_UPPER_NOM ON CLIENTE(UPPER(NOMBRES));",
-                "Cost: 14 (0% CPU) · FTS en 3.003 clientes",
-                "Cost: 2 (0% CPU) · INDEX RANGE SCAN",
-                "| Id | Operation         | Name    | Rows  | Cost (%CPU) |\n|  0 | SELECT STATEMENT  |         |    45 |    14   (0) |\n|* 1 |  TABLE ACCESS FULL| CLIENTE |    45 |    14   (0) |",
-                "| Id | Operation                   | Name                    | Rows | Cost |\n|  0 | SELECT STATEMENT            |                         |   45 |    2 |\n|  1 |  TABLE ACCESS BY INDEX ROWID| CLIENTE                 |   45 |    2 |\n|* 2 |   INDEX RANGE SCAN          | IDX_FUNC_CLIENTE_UPPER..|   45 |    1 |",
-                "Aplicar la función UPPER() sobre una columna anula el uso de índices B-Tree estándar. Al crear el índice basado en función UPPER(NOMBRES), Oracle almacena el resultado computado en el árbol B-Tree, permitiendo Index Range Scans inmediatos.",
+                "Cost: 11 (0% CPU) · FTS en 3.003 clientes (30 ms / 100 ejec.)",
+                "Cost: 3 (0% CPU) · INDEX RANGE SCAN (10 ms / 100 ejec., -73% Cost)",
+                "| Id | Operation         | Name    | Rows | Bytes | Cost (%CPU) |\n|  0 | SELECT STATEMENT  |         |  150 |  8250 |    11   (0) |\n|* 1 |  TABLE ACCESS FULL| CLIENTE |  150 |  8250 |    11   (0) |",
+                "| Id | Operation                           | Name                       | Rows | Cost (%CPU) |\n|  0 | SELECT STATEMENT                    |                            |    2 |     3   (0) |\n|  1 |  TABLE ACCESS BY INDEX ROWID BATCHED| CLIENTE                    |    2 |     3   (0) |\n|* 2 |   INDEX RANGE SCAN                  | IDX_FUNC_CLIENTE_UPPER_NOM |    2 |     2   (0) |",
+                "Aplicar UPPER() sobre una columna invalida los índices B-Tree convencionales y con baja selectividad el CBO prefiere FTS. Con estadísticas con histogramas (METHOD_OPT SIZE 254) y el patrón selectivo 'CARLOS %', Oracle materializa UPPER(NOMBRES) en el B-Tree y ejecuta INDEX RANGE SCAN directo bajando Cost de 11 a 3 y el tiempo de 30 ms a 10 ms.",
                 false
         ));
 
         lista.add(new CboAnalisisDTO(
                 "q3",
-                "3. Agrupación Analítica Mensual de Reservas e Ingresos",
-                "SELECT TRUNC(fecha_check_in, 'MM') AS mes, COUNT(*) AS reservas, SUM(total) AS ingresos\nFROM RESERVA\nGROUP BY TRUNC(fecha_check_in, 'MM');",
+                "3. Resumen Financiero Mensual por Fecha Truncada (Covering FBI)",
+                "SELECT TO_DATE('2025-06-01','YYYY-MM-DD') AS mes,\n       COUNT(*) AS reservas,\n       NVL(SUM(total), 0) AS ingresos\nFROM RESERVA\nWHERE TRUNC(fecha_check_in, 'MM') = TO_DATE('2025-06-01', 'YYYY-MM-DD');",
                 "Índice Basado en Función Multicolumna con Agregación",
-                "CREATE INDEX IDX_FUNC_RES_TRUNC_MES_TOT ON RESERVA(TRUNC(FECHA_CHECK_IN, 'MM'), TOTAL);",
-                "Cost: 75 (5% CPU) · HASH GROUP BY con FTS",
-                "Cost: 8 (0% CPU) · INDEX FAST FULL SCAN",
-                "| Id | Operation          | Name    | Rows  | Cost (%CPU) |\n|  0 | SELECT STATEMENT   |         |    45 |    75   (5) |\n|  1 |  HASH GROUP BY     |         |    45 |    75   (5) |\n|  2 |   TABLE ACCESS FULL| RESERVA | 25019 |    72   (2) |",
-                "| Id | Operation             | Name                   | Rows | Cost |\n|  0 | SELECT STATEMENT      |                        |   45 |    8 |\n|  1 |  HASH GROUP BY        |                        |   45 |    8 |\n|  2 |   INDEX FAST FULL SCAN| IDX_FUNC_RES_TRUNC...  |25019 |    6 |",
-                "Al incluir la expresión TRUNC() y el TOTAL dentro del índice, Oracle resuelve la consulta analítica completa escaneando únicamente el índice (Index Fast Full Scan), sin leer un solo bloque físico de la tabla RESERVA.",
+                "CREATE INDEX IDX_FUNC_RES_TRUNC_MES_TOT ON RESERVA(TRUNC(FECHA_CHECK_IN, 'MM'), TOTAL) TABLESPACE TBS_HISTORICO_RESERVAS;",
+                "Cost: 36 (6% CPU) · INDEX FAST FULL SCAN / FTS Cost 73 (170 ms / 50 ejec.)",
+                "Cost: 4 (0% CPU) · INDEX RANGE SCAN sin acceso a tabla (<10 ms, -89% Cost)",
+                "| Id | Operation             | Name                     | Rows | Cost (%CPU) |\n|  0 | SELECT STATEMENT      |                          |    1 |    36   (6) |\n|  1 |  SORT AGGREGATE       |                          |    1 |             |\n|* 2 |   INDEX FAST FULL SCAN| IDX_COMP_RES_EST_FEC_TOT |  250 |    36   (6) |",
+                "| Id | Operation         | Name                       | Rows | Cost (%CPU) |\n|  0 | SELECT STATEMENT  |                            |    1 |     4   (0) |\n|  1 |  SORT AGGREGATE   |                            |    1 |             |\n|* 2 |   INDEX RANGE SCAN| IDX_FUNC_RES_TRUNC_MES_TOT |  725 |     4   (0) |",
+                "Al indexar conjuntamente TRUNC(FECHA_CHECK_IN, 'MM') y TOTAL, el índice cubre por completo tanto el predicado temporal como las funciones COUNT(*) y SUM(total). Oracle resuelve la consulta en el árbol B-Tree con INDEX RANGE SCAN (Cost=4, 725 reservas) sin visitar un solo bloque de la tabla RESERVA.",
                 false
         ));
 
@@ -242,12 +242,12 @@ public class EntregaTresServicioImpl implements EntregaTresServicio {
                 "4. Caso Negativo Obligatorio: Predicado de Baja Selectividad",
                 "SELECT *\nFROM RESERVA\nWHERE estado != 'CANCELADA';",
                 "Índice B-Tree Descartado por el CBO (Baja Selectividad)",
-                "CREATE INDEX IDX_RESERVA_ESTADO ON RESERVA(ESTADO); -- [DESCARTADO INTENCIONALMENTE]",
-                "Cost: 72 (2% CPU) · FTS en 25.021 filas (Elegido por el CBO)",
-                "Cost Forzando Índice: 451 (+526% Pérdida de Rendimiento de CPU e I/O)",
-                "| Id  | Operation          | Name    | Rows  | Bytes | Cost (%CPU)| Time     |\n|   0 | SELECT STATEMENT   |         | 25021 | 1197K |    72   (2)| 00:00:01 |\n|*  1 |  TABLE ACCESS FULL | RESERVA | 25021 | 1197K |    72   (2)| 00:00:01 |",
-                "| Id  | Operation                         | Name               | Rows  | Cost (%CPU)| Time     |\n|   0 | SELECT STATEMENT                  |                    | 25021 |   451   (1)| 00:00:01 |\n|   1 |  TABLE ACCESS BY INDEX ROWID BATCH| RESERVA            | 25021 |   451   (1)| 00:00:01 |\n|*  2 |   INDEX FULL SCAN                 | IDX_RESERVA_ESTADO | 25021 |    78   (0)| 00:00:01 |",
-                "PÉRDIDA DE RENDIMIENTO CUANTIFICADA: Si se fuerza el índice con el hint /*+ INDEX(r IDX_RESERVA_ESTADO) */, el costo salta de 72 a 451 (+526% de sobrecosto). Se pierden ciclos críticos de procesador (CPU) y tiempo de I/O al ejecutar 25.021 saltos aleatorios por ROWID (Single-Block Read), frente a la alta eficiencia del FTS que lee en ráfagas multibloque continuas (Multi-Block Read con DB_FILE_MULTIBLOCK_READ_COUNT). Por este cálculo matemático, el CBO descarta conscientemente el índice.",
+                "CREATE INDEX IDX_RESERVA_ESTADO ON RESERVA(ESTADO) TABLESPACE TBS_HISTORICO_RESERVAS; -- [DESCARTADO POR CBO]",
+                "Cost: 72 (2% CPU) · FTS en 25.036 filas (Elegido natural, 30 ms / 20 ejec.)",
+                "Cost Forzando Índice: 460 (+539% sobrecosto CBO, 50 ms / 20 ejec.)",
+                "| Id | Operation         | Name    | Rows  | Bytes | Cost (%CPU) | Time     |\n|  0 | SELECT STATEMENT  |         | 25032 | 1197K |    72   (2) | 00:00:01 |\n|* 1 |  TABLE ACCESS FULL| RESERVA | 25032 | 1197K |    72   (2) | 00:00:01 |",
+                "| Id | Operation                           | Name               | Rows  | Cost (%CPU) | Time     |\n|  0 | SELECT STATEMENT                    |                    | 25032 |   460   (1) | 00:00:01 |\n|  1 |  TABLE ACCESS BY INDEX ROWID BATCHED| RESERVA            | 25032 |   460   (1) | 00:00:01 |\n|* 2 |   INDEX FULL SCAN                   | IDX_RESERVA_ESTADO | 25032 |    78   (0) | 00:00:01 |",
+                "PÉRDIDA DE RENDIMIENTO MEDIDA EN ORACLE XE: Al forzar /*+ INDEX(r IDX_RESERVA_ESTADO) */, el costo se dispara de 72 a 460 (+538.9%) y el tiempo real de 20 ejecuciones sube de 30 ms a 50 ms (+66.7%). La desigualdad != 'CANCELADA' recupera ~100% de las 25.036 filas, haciendo mucho más costosos miles de saltos por ROWID (db file sequential read) frente al barrido secuencial multibloque del FTS (db file scattered read).",
                 true
         ));
 

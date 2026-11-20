@@ -1,28 +1,35 @@
 <div class="contenedor">
   <!-- Editorial Hero Banner + Search Bar -->
   <section class="hero-catalogo">
+    <div class="hero-decoracion" aria-hidden="true">
+      <svg viewBox="0 0 600 220" fill="none" preserveAspectRatio="xMaxYMax slice">
+        <path d="M120 220 Q230 95 360 155 T600 100 L600 220 Z" fill="rgba(44, 82, 63, 0.06)" />
+        <path d="M220 220 Q350 115 480 165 T600 140 L600 220 Z" fill="rgba(182, 93, 56, 0.07)" />
+      </svg>
+    </div>
+
     <div class="hero-contenido">
       <div class="hero-insignias">
-        <span class="pildora-hero-quindio">60 Alojamientos · 12 Municipios</span>
+        <span class="pildora-hero-quindio">Paisaje Cultural Cafetero · 12 Municipios</span>
       </div>
-      <h1 class="hero-titulo">Descubre estadías extraordinarias en el corazón del Quindío</h1>
+      <h1 class="hero-titulo">Encuentra estadías auténticas entre montañas de café y palmas de cera</h1>
       <p class="hero-subtitulo">
-        Fincas cafeteras, glampings, hoteles y hostales.
+        Fincas tradicionales, glampings panorámicos, hoteles boutique y hostales acogedores en Salento, Filandia, Armenia y todo el Quindío.
       </p>
     </div>
 
     <!-- Floating Search Bar Pill -->
     <div class="barra-busqueda-airbnb">
       <div class="campo-busqueda">
-        <label class="etiqueta-busqueda">
+        <label class="etiqueta-busqueda" for="filtroMunicipioSelect">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
           Destino / Municipio
         </label>
-        <select class="input-busqueda-limpio" [(ngModel)]="idMunicipioSeleccionado" (change)="cargarAlojamientos()">
-          <option [ngValue]="null">Todos los 12 Municipios</option>
+        <select id="filtroMunicipioSelect" class="input-busqueda-limpio" [(ngModel)]="idMunicipioSeleccionado" (change)="cargarAlojamientos()">
+          <option [ngValue]="null">Todos los municipios del Quindío</option>
           <option *ngFor="let m of municipios" [ngValue]="m.idMunicipio">{{ m.nombre }}</option>
         </select>
       </div>
@@ -30,15 +37,15 @@
       <div class="divisor-busqueda"></div>
 
       <div class="campo-busqueda">
-        <label class="etiqueta-busqueda">
+        <label class="etiqueta-busqueda" for="filtroTipoSelect">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          Categoría de Estadía
+          Tipo de Hospedaje
         </label>
-        <select class="input-busqueda-limpio" [(ngModel)]="idTipoSeleccionado" (change)="cargarAlojamientos()">
-          <option [ngValue]="null">Todas las categorías</option>
+        <select id="filtroTipoSelect" class="input-busqueda-limpio" [(ngModel)]="idTipoSeleccionado" (change)="cargarAlojamientos()">
+          <option [ngValue]="null">Todas las experiencias</option>
           <option *ngFor="let t of tiposAlojamiento" [ngValue]="t.idTipoAlojamiento">{{ t.nombre }}</option>
         </select>
       </div>
@@ -46,17 +53,18 @@
       <div class="divisor-busqueda"></div>
 
       <div class="campo-busqueda campo-busqueda-texto">
-        <label class="etiqueta-busqueda">
+        <label class="etiqueta-busqueda" for="busquedaTextoInput">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          Búsqueda Instantánea
+          Búsqueda Rápida
         </label>
         <input
+          id="busquedaTextoInput"
           type="text"
           class="input-busqueda-limpio"
-          placeholder="Nombre de finca, anfitrión o vereda..."
+          placeholder="Nombre de finca, anfitrión o sector..."
           [(ngModel)]="busquedaTexto"
         />
       </div>
@@ -72,7 +80,7 @@
           Limpiar
         </button>
         <button type="button" class="btn-buscar-coral" (click)="cargarAlojamientos()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
@@ -82,7 +90,7 @@
     </div>
   </section>
 
-  <!-- Category Strip -->
+  <!-- Category Strip + Sort Controls -->
   <div class="franja-categorias">
     <div class="lista-categorias">
       <button
@@ -97,7 +105,7 @@
           <rect x="14" y="14" width="7" height="7" rx="1"></rect>
           <rect x="3" y="14" width="7" height="7" rx="1"></rect>
         </svg>
-        <span>Todos ({{ alojamientosFiltrados.length }})</span>
+        <span>Todos</span>
       </button>
 
       <button
@@ -107,70 +115,101 @@
         [class.activa]="idTipoSeleccionado === t.idTipoAlojamiento"
         (click)="seleccionarTipoRapido(t.idTipoAlojamiento)"
       >
-        <!-- Icono Finca -->
         <svg *ngIf="t.nombre.toLowerCase().includes('finca')" class="icono-cat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V10.5z"></path>
         </svg>
-        <!-- Icono Glamping -->
         <svg *ngIf="t.nombre.toLowerCase().includes('glamping')" class="icono-cat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 2 22 22 22 12 2"></polygon>
           <path d="M12 12l-4 10h8l-4-10z"></path>
         </svg>
-        <!-- Icono Hotel -->
         <svg *ngIf="t.nombre.toLowerCase().includes('hotel')" class="icono-cat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+          <path d="M9 22v-4h6v4"></path>
           <line x1="9" y1="6" x2="9.01" y2="6"></line>
           <line x1="15" y1="6" x2="15.01" y2="6"></line>
-          <line x1="9" y1="10" x2="9.01" y2="10"></line>
-          <line x1="15" y1="10" x2="15.01" y2="10"></line>
-          <line x1="9" y1="14" x2="9.01" y2="14"></line>
-          <line x1="15" y1="14" x2="15.01" y2="14"></line>
-          <path d="M9 22v-4h6v4"></path>
         </svg>
-        <!-- Icono Hostal / Otro -->
         <svg *ngIf="!t.nombre.toLowerCase().includes('finca') && !t.nombre.toLowerCase().includes('glamping') && !t.nombre.toLowerCase().includes('hotel')" class="icono-cat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 4v16"></path>
           <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
           <path d="M2 17h20"></path>
-          <path d="M6 8v9"></path>
         </svg>
         <span>{{ t.nombre }}</span>
       </button>
     </div>
 
-    <div class="resumen-resultados" *ngIf="!cargando">
-      Mostrando <strong>{{ alojamientosFiltrados.length }}</strong> propiedades verificadas
+    <div class="controles-resultados">
+      <div class="resumen-resultados" *ngIf="!cargando">
+        <strong>{{ alojamientosFiltrados.length }}</strong> alojamientos disponibles
+      </div>
+      <select class="select-orden" [(ngModel)]="ordenSeleccionado" aria-label="Ordenar alojamientos">
+        <option value="destacados">Ordenar: Destacados</option>
+        <option value="capacidad">Mayor capacidad</option>
+        <option value="nombre">Alfabético (A-Z)</option>
+      </select>
     </div>
   </div>
 
   <!-- Estado de Carga -->
   <div *ngIf="cargando" class="estado-mensaje">
     <div class="spinner-coral"></div>
-    <p>Cargando alojamientos disponibles...</p>
+    <p>Buscando los mejores alojamientos en el Quindío...</p>
   </div>
 
   <!-- Cuadrícula de Alojamientos -->
   <div *ngIf="!cargando" class="cuadricula-alojamientos">
     <article *ngFor="let a of alojamientosFiltrados" class="tarjeta-propiedad">
-      <!-- Portada Visual de la Tarjeta -->
-      <div class="portada-propiedad" [ngClass]="obtenerClasePortada(a.tipoAlojamiento.nombre)">
-        <!-- Ilustración arquitectónica abstracta de fondo -->
-        <svg class="patron-portada" viewBox="0 0 200 120" fill="none" aria-hidden="true">
-          <path d="M-20 120 L50 45 L115 120 Z" fill="rgba(255,255,255,0.08)" />
-          <path d="M60 120 L135 30 L215 120 Z" fill="rgba(255,255,255,0.12)" />
-          <circle cx="165" cy="32" r="14" fill="rgba(255,255,255,0.14)" />
+      <!-- Portada Ilustrada por Categoría -->
+      <div class="portada-propiedad" [ngClass]="obtenerClasePortada(a.tipoAlojamiento.nombre, a.idAlojamiento)">
+        <!-- Escena Finca Cafetera -->
+        <svg *ngIf="esTipoPortada(a.tipoAlojamiento.nombre, 'finca')" class="patron-portada" viewBox="0 0 320 150" fill="none" aria-hidden="true">
+          <circle cx="268" cy="36" r="22" fill="rgba(255,255,255,0.14)" />
+          <path d="M-10 150 Q70 78 165 122 T335 88 L335 150 Z" fill="rgba(255,255,255,0.09)" />
+          <path d="M85 150 L145 96 L205 150 Z" fill="rgba(255,255,255,0.12)" />
+          <rect x="115" y="122" width="60" height="28" fill="rgba(255,255,255,0.16)" />
+          <path d="M40 150 L40 94 M32 104 Q40 90 48 104 M28 116 Q40 100 52 116" stroke="rgba(255,255,255,0.22)" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+        <!-- Escena Glamping -->
+        <svg *ngIf="esTipoPortada(a.tipoAlojamiento.nombre, 'glamping')" class="patron-portada" viewBox="0 0 320 150" fill="none" aria-hidden="true">
+          <circle cx="46" cy="30" r="2.2" fill="rgba(255,255,255,0.45)" />
+          <circle cx="95" cy="22" r="1.8" fill="rgba(255,255,255,0.4)" />
+          <circle cx="255" cy="34" r="2.5" fill="rgba(255,255,255,0.45)" />
+          <path d="M0 150 Q95 95 190 130 T320 105 L320 150 Z" fill="rgba(255,255,255,0.08)" />
+          <path d="M135 150 A52 52 0 0 1 239 150 Z" fill="rgba(255,255,255,0.16)" />
+          <polygon points="187,108 166,150 208,150" fill="rgba(255,255,255,0.22)" />
+        </svg>
+
+        <!-- Escena Hotel -->
+        <svg *ngIf="esTipoPortada(a.tipoAlojamiento.nombre, 'hotel')" class="patron-portada" viewBox="0 0 320 150" fill="none" aria-hidden="true">
+          <path d="M0 150 L0 112 Q95 75 215 118 L320 90 L320 150 Z" fill="rgba(255,255,255,0.08)" />
+          <rect x="195" y="64" width="76" height="86" rx="4" fill="rgba(255,255,255,0.14)" />
+          <rect x="208" y="78" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+          <rect x="227" y="78" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+          <rect x="246" y="78" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+          <rect x="208" y="100" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+          <rect x="227" y="100" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+          <rect x="246" y="100" width="12" height="12" rx="2" fill="rgba(255,255,255,0.25)" />
+        </svg>
+
+        <!-- Escena Hostal -->
+        <svg *ngIf="!esTipoPortada(a.tipoAlojamiento.nombre, 'finca') && !esTipoPortada(a.tipoAlojamiento.nombre, 'glamping') && !esTipoPortada(a.tipoAlojamiento.nombre, 'hotel')" class="patron-portada" viewBox="0 0 320 150" fill="none" aria-hidden="true">
+          <circle cx="258" cy="40" r="24" fill="rgba(255,255,255,0.11)" />
+          <path d="M0 150 Q120 96 240 132 T320 112 L320 150 Z" fill="rgba(255,255,255,0.09)" />
+          <rect x="112" y="96" width="96" height="54" rx="6" fill="rgba(255,255,255,0.14)" />
+          <path d="M128 150 V126 A12 12 0 0 1 152 126 V150 Z" fill="rgba(255,255,255,0.2)" />
+          <path d="M168 150 V126 A12 12 0 0 1 192 126 V150 Z" fill="rgba(255,255,255,0.2)" />
         </svg>
 
         <div class="portada-fila-superior">
           <span class="insignia-favorito">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
             </svg>
-            Favorito en Quindío
+            {{ obtenerEtiquetaDestacado(a.idAlojamiento) }}
           </span>
 
           <span class="pildora-rating">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="#C88A35" stroke="none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#F2B84B" stroke="none">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
             </svg>
             {{ obtenerCalificacion(a.idAlojamiento) }}
@@ -181,14 +220,14 @@
           <span class="insignia" [ngClass]="obtenerClaseTipo(a.tipoAlojamiento.nombre)">
             {{ a.tipoAlojamiento.nombre }}
           </span>
-          <span class="id-propiedad">ID #{{ a.idAlojamiento }}</span>
+          <span class="ubicacion-pill-portada">{{ a.municipio.nombre }}</span>
         </div>
       </div>
 
       <!-- Cuerpo de la Tarjeta -->
       <div class="cuerpo-propiedad">
         <div class="ubicacion-propiedad">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
@@ -200,17 +239,15 @@
 
         <div class="chips-atributos">
           <div class="chip-atributo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             <span>Hasta <strong>{{ a.capacidad }} huéspedes</strong></span>
           </div>
 
           <div class="chip-atributo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
             </svg>
             <span>{{ a.telefono }}</span>
@@ -222,14 +259,14 @@
             {{ a.propietario.nombres.charAt(0) }}
           </div>
           <div class="info-anfitrion">
-            <span class="etiqueta-anfitrion">Anfitrión Verificado</span>
+            <span class="etiqueta-anfitrion">Anfitrión</span>
             <strong class="nombre-anfitrion">{{ a.propietario.nombres }}</strong>
           </div>
         </div>
 
         <div class="acciones-tarjeta">
           <a [routerLink]="['/alojamientos', a.idAlojamiento]" class="btn btn-primario ancho-completo btn-explorar">
-            <span>Ver Habitaciones & Tarifas</span>
+            <span>Ver Habitaciones y Tarifas</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -247,6 +284,6 @@
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
     </svg>
-    <span>No se encontraron alojamientos con los criterios seleccionados. Prueba limpiando los filtros de búsqueda.</span>
+    <span>No encontramos alojamientos con esos filtros. Intenta explorar todos los municipios.</span>
   </div>
 </div>

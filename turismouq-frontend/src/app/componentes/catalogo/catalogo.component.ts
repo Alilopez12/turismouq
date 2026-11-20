@@ -22,6 +22,7 @@ export class CatalogoComponent implements OnInit {
   idMunicipioSeleccionado: number | null = null;
   idTipoSeleccionado: number | null = null;
   busquedaTexto: string = '';
+  ordenSeleccionado: 'destacados' | 'capacidad' | 'nombre' = 'destacados';
 
   constructor(
     private turismoService: TurismoService,
@@ -35,16 +36,22 @@ export class CatalogoComponent implements OnInit {
 
   get alojamientosFiltrados(): Alojamiento[] {
     const termino = this.busquedaTexto.trim().toLowerCase();
-    if (!termino) {
-      return this.alojamientos;
+    let lista = !termino
+      ? [...this.alojamientos]
+      : this.alojamientos.filter((a) =>
+          a.nombre?.toLowerCase().includes(termino) ||
+          a.municipio?.nombre?.toLowerCase().includes(termino) ||
+          a.direccion?.toLowerCase().includes(termino) ||
+          a.propietario?.nombres?.toLowerCase().includes(termino) ||
+          a.tipoAlojamiento?.nombre?.toLowerCase().includes(termino)
+        );
+
+    if (this.ordenSeleccionado === 'capacidad') {
+      lista.sort((a, b) => (b.capacidad || 0) - (a.capacidad || 0));
+    } else if (this.ordenSeleccionado === 'nombre') {
+      lista.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
     }
-    return this.alojamientos.filter((a) =>
-      a.nombre?.toLowerCase().includes(termino) ||
-      a.municipio?.nombre?.toLowerCase().includes(termino) ||
-      a.direccion?.toLowerCase().includes(termino) ||
-      a.propietario?.nombres?.toLowerCase().includes(termino) ||
-      a.tipoAlojamiento?.nombre?.toLowerCase().includes(termino)
-    );
+    return lista;
   }
 
   cargarFiltros(): void {
@@ -111,12 +118,22 @@ export class CatalogoComponent implements OnInit {
     return 'insignia-hostal';
   }
 
-  obtenerClasePortada(nombreTipo: string): string {
+  obtenerClasePortada(nombreTipo: string, idAlojamiento = 0): string {
     const tipo = nombreTipo?.toLowerCase() || '';
-    if (tipo.includes('finca')) return 'portada-finca';
-    if (tipo.includes('glamping')) return 'portada-glamping';
-    if (tipo.includes('hotel')) return 'portada-hotel';
-    return 'portada-hostal';
+    const v = (idAlojamiento || 0) % 2 === 0 ? 'a' : 'b';
+    if (tipo.includes('finca')) return `portada-finca portada-var-${v}`;
+    if (tipo.includes('glamping')) return `portada-glamping portada-var-${v}`;
+    if (tipo.includes('hotel')) return `portada-hotel portada-var-${v}`;
+    return `portada-hostal portada-var-${v}`;
+  }
+
+  esTipoPortada(nombreTipo: string, clave: 'finca' | 'glamping' | 'hotel'): boolean {
+    return (nombreTipo || '').toLowerCase().includes(clave);
+  }
+
+  obtenerEtiquetaDestacado(idAlojamiento: number): string {
+    const etiquetas = ['Favorito en Quindío', 'Vista al Valle', 'Café de Origen', 'Recomendado'];
+    return etiquetas[(idAlojamiento || 0) % etiquetas.length];
   }
 
   obtenerCalificacion(idAlojamiento: number): string {

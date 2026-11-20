@@ -4,9 +4,17 @@
 -- MOTOR: ORACLE XE 21c (PDB: XEPDB1)
 -- ============================================================================
 
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 SET LINESIZE 250;
 SET PAGESIZE 100;
+SET SQLBLANKLINES ON;
 
 PROMPT ========================================================================
 PROMPT CONSULTA 1: Ocupación por municipio y mes con PIVOT (12 meses)
@@ -55,19 +63,15 @@ SELECT
         WHEN GROUPING(m.nombre) = 1 THEN 'TOTAL GENERAL'
         ELSE m.nombre
     END AS municipio,
-
     CASE
         WHEN GROUPING(ta.nombre) = 1 THEN 'TOTAL'
         ELSE ta.nombre
     END AS tipo_alojamiento,
-
     CASE
         WHEN GROUPING(t.nombre) = 1 THEN 'TOTAL'
         ELSE t.nombre
     END AS temporada,
-
     SUM(r.total) AS ingresos
-
 FROM MUNICIPIO m
 JOIN ALOJAMIENTO a
     ON m.id_municipio = a.id_municipio
@@ -167,8 +171,31 @@ ORDER BY r.fecha_check_in;
 PROMPT ========================================================================
 PROMPT CONSULTA 6: Vista materializada de ocupación mensual (MV_OCUPACION_MENSUAL)
 PROMPT ========================================================================
+BEGIN
+    EXECUTE IMMEDIATE '
+        CREATE MATERIALIZED VIEW MV_OCUPACION_MENSUAL
+        BUILD IMMEDIATE
+        REFRESH COMPLETE ON DEMAND
+        AS
+        SELECT
+            m.nombre AS municipio,
+            TRUNC(r.fecha_check_in, ''MM'') AS mes,
+            COUNT(DISTINCT r.id_reserva) AS total_reservas
+        FROM MUNICIPIO m
+        JOIN ALOJAMIENTO a ON m.id_municipio = a.id_municipio
+        JOIN HABITACION h ON a.id_alojamiento = h.id_alojamiento
+        JOIN RESERVA_HABITACION rh ON h.id_habitacion = rh.id_habitacion
+        JOIN RESERVA r ON rh.id_reserva = r.id_reserva
+        GROUP BY m.nombre, TRUNC(r.fecha_check_in, ''MM'')
+    ';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -12006 THEN RAISE; END IF;
+END;
+/
+
 -- Refresco bajo demanda de la vista
-EXEC DBMS_MVIEW.REFRESH('TURISMO_UQ.MV_OCUPACION_MENSUAL', 'C');
+EXEC DBMS_MVIEW.REFRESH('MV_OCUPACION_MENSUAL', 'C');
 
 SELECT *
 FROM MV_OCUPACION_MENSUAL
@@ -216,3 +243,62 @@ JOIN RESERVA r
     ON rh.id_reserva = r.id_reserva
 GROUP BY ta.nombre
 ORDER BY ingresos_totales DESC;
+
+
+PROMPT ========================================================================
+PROMPT CONSULTA 9: Habitación con más reservas en Temporada Alta (RANK)
+PROMPT ========================================================================
+SELECT *
+FROM (
+    SELECT
+        h.id_habitacion,
+        h.numero_nombre AS habitacion,
+        h.tipo_cama,
+        a.nombre AS alojamiento,
+        m.nombre AS municipio,
+        COUNT(DISTINCT r.id_reserva) AS reservas_temporada_alta,
+        SUM(rh.subtotal) AS ingresos_temporada_alta,
+        RANK() OVER (ORDER BY COUNT(DISTINCT r.id_reserva) DESC) AS puesto
+    FROM HABITACION h
+    JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+    JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+    JOIN RESERVA_HABITACION rh ON h.id_habitacion = rh.id_habitacion
+    JOIN RESERVA r ON rh.id_reserva = r.id_reserva
+    WHERE r.estado != 'CANCELADA'
+      AND EXISTS (
+          SELECT 1
+          FROM PERIODO_TEMPORADA pt
+          WHERE pt.id_temporada = 2
+            AND r.fecha_check_in <= pt.fecha_fin
+            AND (r.fecha_check_out - 1) >= pt.fecha_inicio
+      )
+    GROUP BY h.id_habitacion, h.numero_nombre, h.tipo_cama, a.nombre, m.nombre
+)
+WHERE puesto <= 10
+ORDER BY puesto, id_habitacion;
+
+
+PROMPT ========================================================================
+PROMPT CONSULTA 10: Listado de clientes con más municipios visitados (LISTAGG)
+PROMPT ========================================================================
+SELECT *
+FROM (
+    SELECT
+        c.id_cliente,
+        c.documento,
+        c.nombres || ' ' || c.apellidos AS cliente,
+        COUNT(DISTINCT m.id_municipio) AS municipios_visitados,
+        COUNT(DISTINCT r.id_reserva) AS total_reservas,
+        NVL(SUM(r.total), 0) AS gasto_total,
+        LISTAGG(DISTINCT m.nombre, ', ') WITHIN GROUP (ORDER BY m.nombre) AS listado_municipios
+    FROM CLIENTE c
+    JOIN RESERVA r ON c.id_cliente = r.id_cliente
+    JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva
+    JOIN HABITACION h ON rh.id_habitacion = h.id_habitacion
+    JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+    JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+    WHERE r.estado != 'CANCELADA'
+    GROUP BY c.id_cliente, c.documento, c.nombres, c.apellidos
+    ORDER BY municipios_visitados DESC, total_reservas DESC, gasto_total DESC
+)
+WHERE ROWNUM <= 30;

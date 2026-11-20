@@ -491,6 +491,69 @@ public class AnaliticaServicioImpl implements AnaliticaServicio {
 
 
     @Override
+    public List<Map<String, Object>> obtenerHabitacionTopTemporadaAlta() {
+        String sql = """
+            SELECT *
+            FROM (
+                SELECT
+                    h.id_habitacion,
+                    h.numero_nombre AS habitacion,
+                    h.tipo_cama,
+                    a.nombre AS alojamiento,
+                    m.nombre AS municipio,
+                    COUNT(DISTINCT r.id_reserva) AS reservas_temporada_alta,
+                    SUM(rh.subtotal) AS ingresos_temporada_alta,
+                    RANK() OVER (ORDER BY COUNT(DISTINCT r.id_reserva) DESC) AS puesto
+                FROM HABITACION h
+                JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+                JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+                JOIN RESERVA_HABITACION rh ON h.id_habitacion = rh.id_habitacion
+                JOIN RESERVA r ON rh.id_reserva = r.id_reserva
+                WHERE r.estado != 'CANCELADA'
+                  AND EXISTS (
+                      SELECT 1
+                      FROM PERIODO_TEMPORADA pt
+                      WHERE pt.id_temporada = 2
+                        AND r.fecha_check_in <= pt.fecha_fin
+                        AND (r.fecha_check_out - 1) >= pt.fecha_inicio
+                  )
+                GROUP BY h.id_habitacion, h.numero_nombre, h.tipo_cama, a.nombre, m.nombre
+            )
+            WHERE puesto <= 10
+            ORDER BY puesto, id_habitacion
+        """;
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> obtenerClientesMasMunicipios() {
+        String sql = """
+            SELECT *
+            FROM (
+                SELECT
+                    c.id_cliente,
+                    c.documento,
+                    c.nombres || ' ' || c.apellidos AS cliente,
+                    COUNT(DISTINCT m.id_municipio) AS municipios_visitados,
+                    COUNT(DISTINCT r.id_reserva) AS total_reservas,
+                    NVL(SUM(r.total), 0) AS gasto_total,
+                    LISTAGG(DISTINCT m.nombre, ', ') WITHIN GROUP (ORDER BY m.nombre) AS listado_municipios
+                FROM CLIENTE c
+                JOIN RESERVA r ON c.id_cliente = r.id_cliente
+                JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva
+                JOIN HABITACION h ON rh.id_habitacion = h.id_habitacion
+                JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+                JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+                WHERE r.estado != 'CANCELADA'
+                GROUP BY c.id_cliente, c.documento, c.nombres, c.apellidos
+                ORDER BY municipios_visitados DESC, total_reservas DESC, gasto_total DESC
+            )
+            WHERE ROWNUM <= 30
+        """;
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    @Override
     @Transactional
     public Map<String, Object> actualizarTarifa(Long idHabitacion, Long idTemporada, Double nuevoPrecio) {
         if (idHabitacion == null || idTemporada == null || nuevoPrecio == null || nuevoPrecio <= 0) {

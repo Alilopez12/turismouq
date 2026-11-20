@@ -11,21 +11,20 @@
             <polyline points="2 17 12 22 22 17"></polyline>
             <polyline points="2 12 12 17 22 12"></polyline>
           </svg>
-          Business Intelligence &amp; Data Warehouse
+          Inteligencia de Negocios
         </span>
-        <span class="insignia-version">Entrega 1 · Oracle Database XE 21c</span>
         <span class="insignia-live">
           <span class="punto-live"></span>
-          25.000 Reservas Activas
+          10 Reportes en Tiempo Real
         </span>
       </div>
 
       <div class="titulo-con-insignia">
-        <h2>Módulo Analítico Avanzado</h2>
+        <h2>Reportes y Analítica Gerencial</h2>
       </div>
 
       <p class="subtexto">
-        Exploración multidimensional en tiempo real de las <strong>8 consultas analíticas obligatorias</strong> ejecutadas sobre el motor relacional de <strong>TurismoUQ</strong>. Selecciona un bloque de la matriz Bento para inspeccionar su sentencia SQL y visualizaciones ejecutivas.
+        Indicadores de ocupación, facturación por municipio y temporada, pasarelas de pago y comportamiento de huéspedes en el Quindío.
       </p>
     </div>
   </header>
@@ -162,7 +161,7 @@
       </div>
       <div class="bento-tile-bottom">
         <span class="pestana-texto">Vista Materializada</span>
-        <span class="pestana-sub">MV_OCUPACION_MENSUAL</span>
+        <span class="pestana-sub">Resumen Consolidado Mensual</span>
       </div>
     </button>
 
@@ -207,6 +206,47 @@
         <span class="pestana-sub">4 Tipologías del Quindío</span>
       </div>
     </button>
+
+    <!-- Q09: TOP HABITACION TEMPORADA ALTA -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 9" (click)="seleccionarPestana(9)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q09</span>
+          <span class="badge-tecnica">TOP RANK()</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Top Temporada Alta</span>
+        <span class="pestana-sub">Habitación Más Reservada</span>
+      </div>
+    </button>
+
+    <!-- Q10: CLIENTES CON MAS MUNICIPIOS -->
+    <button type="button" class="pestana bento-tile" [class.activa]="pestanaActiva === 10" (click)="seleccionarPestana(10)">
+      <div class="bento-tile-top">
+        <div class="bento-badges">
+          <span class="badge-q">Q10</span>
+          <span class="badge-tecnica">LISTAGG</span>
+        </div>
+        <div class="bento-icono-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pestana-icono">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span class="indicador-activo"></span>
+        </div>
+      </div>
+      <div class="bento-tile-bottom">
+        <span class="pestana-texto">Clientes Multi-Municipio</span>
+        <span class="pestana-sub">Exploradores del Quindío</span>
+      </div>
+    </button>
   </nav>
 
   <!-- ========================================================================= -->
@@ -214,8 +254,8 @@
   <!-- ========================================================================= -->
   <div *ngIf="cargando" class="estado-analitica">
     <div class="indicador-carga"></div>
-    <p class="carga-titulo">Ejecutando sentencia analítica en Oracle Database XE 21c...</p>
-    <span class="carga-sub">Procesando agregaciones sobre 25.000 registros históricos</span>
+    <p class="carga-titulo">Cargando reporte...</p>
+    <span class="carga-sub">Consultando métricas consolidadas en tiempo real</span>
   </div>
 
   <!-- ========================================================================= -->
@@ -241,21 +281,16 @@
     <div class="bloque-inspector-sql" *ngIf="infoConsultas[pestanaActiva]">
       <div class="barra-inspector" (click)="toggleSql(pestanaActiva)">
         <div class="info-tecnica">
-          <div class="macos-dots" aria-hidden="true">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-          <span class="etiqueta-q-ide">SQL #0{{ infoConsultas[pestanaActiva].numero }}</span>
-          <span class="etiqueta-tecnica">{{ infoConsultas[pestanaActiva].tecnica }}</span>
+          <span class="etiqueta-q-ide">Reporte #{{ infoConsultas[pestanaActiva].numero < 10 ? '0' + infoConsultas[pestanaActiva].numero : infoConsultas[pestanaActiva].numero }}</span>
           <span class="titulo-inspector">{{ infoConsultas[pestanaActiva].nombre }}</span>
+          <span class="etiqueta-tecnica">{{ infoConsultas[pestanaActiva].tecnica }}</span>
         </div>
         <button class="btn-toggle-sql" type="button" (click)="toggleSql(pestanaActiva); $event.stopPropagation()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-xs">
             <polyline points="16 18 22 12 16 6"></polyline>
             <polyline points="8 6 2 12 8 18"></polyline>
           </svg>
-          <span>{{ verSql[pestanaActiva] ? 'Ocultar SQL' : 'Ver Sentencia SQL Oficial' }}</span>
+          <span>{{ verSql[pestanaActiva] ? 'Ocultar SQL' : 'Ver Consulta SQL' }}</span>
         </button>
       </div>
       <div class="panel-sql" *ngIf="verSql[pestanaActiva]">
@@ -1103,6 +1138,146 @@
               </td>
               <td class="col-ingreso">
                 ${{ (((getProp(f, 'ingresos_totales') || getProp(f, 'total_ingresos') || 0) / ((getProp(f, 'total_reservas') || getProp(f, 'cantidad_reservas')) || 1)) | number:'1.0-0') }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 9. HABITACIÓN CON MÁS RESERVAS EN TEMPORADA ALTA (CONSULTA ADICIONAL 1) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 9" class="seccion-consulta">
+      <div class="cabecera-bloque">
+        <div>
+          <h4>Habitación Líder en Demanda de Temporada Alta (Top 10)</h4>
+          <p class="ayuda-visual">Cruza todas las reservas activas cuyas fechas coinciden con los períodos oficiales de <strong>Temporada Alta</strong> en el departamento.</p>
+        </div>
+      </div>
+
+      <div *ngIf="obtenerHabitacionGanadora() as topHab" class="spotlight-ganador-alta">
+        <div class="spotlight-corona">
+          <span class="badge-ganador-alta">#1 Ganadora Temporada Alta</span>
+          <span class="badge-muni-top">{{ getProp(topHab, 'municipio') }}</span>
+        </div>
+        <div class="spotlight-cuerpo">
+          <div>
+            <h3>{{ getProp(topHab, 'habitacion') }} <small class="id-hab-tag">ID #{{ getProp(topHab, 'id_habitacion') }}</small></h3>
+            <p class="spotlight-alojamiento">{{ getProp(topHab, 'alojamiento') }} · Cama {{ getProp(topHab, 'tipo_cama') }}</p>
+          </div>
+          <div class="spotlight-metricas">
+            <div class="metrica-destacada">
+              <span>Reservas Temporada Alta</span>
+              <strong>{{ getProp(topHab, 'reservas_temporada_alta') | number:'1.0-0' }}</strong>
+            </div>
+            <div class="metrica-destacada">
+              <span>Ingresos Acumulados</span>
+              <strong>${{ (getProp(topHab, 'ingresos_temporada_alta') || 0) | number:'1.0-0' }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Puesto</th>
+              <th>Habitación</th>
+              <th>Tipo de Cama</th>
+              <th>Alojamiento</th>
+              <th>Municipio</th>
+              <th>Reservas Temporada Alta</th>
+              <th class="col-ingreso">Ingresos Temporada Alta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of datosHabitacionTopAlta" [class.fila-ganadora]="+getProp(f, 'puesto') === 1">
+              <td>
+                <span class="badge-rank" [class.badge-rank-oro]="+getProp(f, 'puesto') === 1">#{{ getProp(f, 'puesto') }}</span>
+              </td>
+              <td>
+                <strong>{{ getProp(f, 'habitacion') }}</strong>
+                <small class="sub-id">ID #{{ getProp(f, 'id_habitacion') }}</small>
+              </td>
+              <td>{{ getProp(f, 'tipo_cama') }}</td>
+              <td>{{ getProp(f, 'alojamiento') }}</td>
+              <td>
+                <span class="chip-municipio">{{ getProp(f, 'municipio') }}</span>
+              </td>
+              <td>
+                <strong>{{ getProp(f, 'reservas_temporada_alta') | number:'1.0-0' }}</strong> reservas
+              </td>
+              <td class="col-ingreso">
+                <strong>${{ (getProp(f, 'ingresos_temporada_alta') || 0) | number:'1.0-0' }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 10. CLIENTES CON MÁS MUNICIPIOS VISITADOS (CONSULTA ADICIONAL 2) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="pestanaActiva === 10" class="seccion-consulta">
+      <div class="cabecera-bloque cabecera-q10">
+        <div>
+          <h4>Top Clientes Exploradores por Municipios Distintos Visitados</h4>
+          <p class="ayuda-visual">Ranking de huéspedes frecuentes del Quindío con conteo único de municipios y listado consolidado de destinos visitados.</p>
+        </div>
+        <div class="kpi-pill-q10">
+          <span>Récord de Cobertura:</span>
+          <strong>{{ obtenerMaximoMunicipiosCliente() }} / 12 municipios</strong>
+        </div>
+      </div>
+
+      <div class="barra-filtros-interna">
+        <div class="filtro-label-grupo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-filtro">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <label class="etiqueta-filtro" for="filtroClienteMuniInput">Filtrar cliente o municipio:</label>
+        </div>
+        <input
+          id="filtroClienteMuniInput"
+          type="text"
+          class="control-input-filtro"
+          [(ngModel)]="filtroClienteMuni"
+          placeholder="Buscar por nombre, documento o municipio (ej. Salento, Sofia...)">
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Documento</th>
+              <th>Municipios Visitados</th>
+              <th>Total Reservas</th>
+              <th class="col-ingreso">Gasto Acumulado</th>
+              <th>Listado de Municipios Visitados</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of obtenerClientesMunicipiosFiltrados(); let i = index">
+              <td><span class="badge-rank" [class.badge-rank-oro]="i === 0">#{{ i + 1 }}</span></td>
+              <td><strong>{{ getProp(c, 'cliente') }}</strong></td>
+              <td><code>{{ getProp(c, 'documento') }}</code></td>
+              <td>
+                <span class="badge-muni-top">{{ getProp(c, 'municipios_visitados') }} / 12</span>
+              </td>
+              <td>{{ getProp(c, 'total_reservas') | number:'1.0-0' }} reservas</td>
+              <td class="col-ingreso">
+                <strong>${{ (getProp(c, 'gasto_total') || 0) | number:'1.0-0' }}</strong>
+              </td>
+              <td>
+                <div class="chips-municipios">
+                  <span *ngFor="let muni of separarMunicipios(getProp(c, 'listado_municipios'))" class="chip-municipio">{{ muni }}</span>
+                </div>
               </td>
             </tr>
           </tbody>

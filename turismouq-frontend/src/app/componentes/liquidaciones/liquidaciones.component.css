@@ -46,12 +46,12 @@
 
 .fila-controles {
   display: grid;
-  grid-template-columns: 1fr 0.8fr 1fr auto;
-  gap: 1.15rem;
+  grid-template-columns: 0.85fr 0.6fr 1.25fr 1.1fr auto;
+  gap: 0.9rem;
   align-items: end;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1220px) {
   .fila-controles {
     grid-template-columns: 1fr 1fr;
   }
@@ -298,8 +298,24 @@
 
 .celda-moneda {
   font-family: var(--fuente-mono);
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   white-space: nowrap;
+}
+
+.propiedad-id-celda {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tarjeta-ledger .tabla-datos th {
+  padding: 0.72rem 0.58rem;
+  font-size: 0.72rem;
+}
+
+.tarjeta-ledger .tabla-datos td {
+  padding: 0.72rem 0.58rem;
+  font-size: 0.81rem;
 }
 
 .texto-bruto {

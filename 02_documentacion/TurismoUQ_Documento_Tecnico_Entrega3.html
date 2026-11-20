@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>TurismoUQ - Modelo, Decisiones de Diseño y Sustentación Entrega 3</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 14mm 14mm 16mm 14mm;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #241F1A;
+    background: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.48;
+  }
+  .page-break { page-break-before: always; break-before: page; }
+  .avoid-break { page-break-inside: avoid; break-inside: avoid; }
+
+  /* Portada / Banner Superior */
+  .hero {
+    background: linear-gradient(135deg, #203F30 0%, #2C523F 60%, #B65D38 100%);
+    color: #FFFFFF;
+    padding: 26px 28px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.16);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 8.2pt;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    margin: 0 0 6px;
+    font-size: 20pt;
+    line-height: 1.2;
+  }
+  .hero p {
+    margin: 0;
+    font-size: 10.2pt;
+    opacity: 0.92;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .meta-box {
+    background: rgba(255,255,255,0.13);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .meta-box small {
+    display: block;
+    font-size: 7.4pt;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .meta-box strong {
+    font-size: 9.2pt;
+  }
+
+  h2 {
+    color: #203F30;
+    font-size: 13.5pt;
+    border-bottom: 2px solid #C25B3B;
+    padding-bottom: 4px;
+    margin: 18px 0 9px;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  h3 {
+    color: #984928;
+    font-size: 11pt;
+    margin: 12px 0 6px;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  p { margin: 0 0 8px; }
+
+  .callout {
+    background: #FAF6F0;
+    border-left: 4px solid #C25B3B;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 10px 0;
+  }
+  .callout-green {
+    background: #EFF5F1;
+    border-left: 4px solid #2C523F;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 10px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 12px;
+    font-size: 8.7pt;
+  }
+  th, td {
+    border: 1px solid #DFD3C3;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #2C523F;
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+  tr:nth-child(even) td { background: #FCF9F5; }
+
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 7.6pt;
+    font-weight: 700;
+  }
+  .b-ok { background: #E3F3EA; color: #1E5631; }
+  .b-warn { background: #FDECE8; color: #9E2A1C; }
+  .b-tag { background: #F5EBE3; color: #984928; }
+
+  pre {
+    background: #1B2024;
+    color: #E7ECEF;
+    font-family: 'Consolas', 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    line-height: 1.38;
+    padding: 9px 11px;
+    border-radius: 7px;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 6px 0 10px;
+    border-left: 3px solid #C25B3B;
+  }
+
+  .two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .card {
+    border: 1px solid #DFD3C3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #FFFFFF;
+  }
+  .er-wrap {
+    border: 1px solid #DFD3C3;
+    border-radius: 10px;
+    padding: 8px;
+    background: #FCFBF9;
+    margin-bottom: 12px;
+  }
+  pre.pre-xplan {
+    font-size: 6.1pt;
+    line-height: 1.32;
+    white-space: pre;
+    overflow-x: hidden;
+    padding: 7px 8px;
+  }
+  .footer-note {
+    font-size: 8pt;
+    color: #6B6157;
+    margin-top: 14px;
+    border-top: 1px solid #E5DACD;
+    padding-top: 6px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ENCABEZADO / PORTADA EJECUTIVA -->
+  <div class="hero">
+    <div class="hero-eyebrow">Universidad del Quindío · Bases de Datos II (12338) · Proyecto Integrador Final</div>
+    <h1>TurismoUQ — Modelo Relacional, Decisiones de Diseño y Entrega 3</h1>
+    <p>Documento técnico integral: Modelo Entidad-Relación (16 tablas), justificación arquitectónica de reservas multi-habitación y multi-temporada, y evidencias empíricas verificadas sobre Oracle Database 21c XE (PDB <code>XEPDB1</code>).</p>
+    <div class="meta-grid">
+      <div class="meta-box"><small>Motor &amp; Esquema</small><strong>Oracle XE 21c · TURISMO_UQ</strong></div>
+      <div class="meta-box"><small>Volumen Verificado</small><strong>25.038 Reservas · 40.000 Serv.</strong></div>
+      <div class="meta-box"><small>Script Limpio</small><strong>14 Pasos / 0 Inválidos</strong></div>
+      <div class="meta-box"><small>Stack Full-Stack</small><strong>Spring Boot 3 + Angular</strong></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1: MODELO ENTIDAD-RELACIÓN -->
+  <h2>1. Modelo Entidad-Relación Completo del Sistema (Oracle XE 21c)</h2>
+  <p>El modelo relacional de <strong>TurismoUQ</strong> integra las 14 entidades base de negocio exigidas para la gestión turística del departamento del Quindío más las entidades operacionales de temporalidad, liquidación, auditoría y seguridad RBAC. El script maestro <code>01_basedatos/00_master_instalacion_completa.sql</code> despliega y puebla todo el esquema en una sola ejecución secuencial.</p>
+
+  <div class="er-wrap avoid-break">
+    <svg viewBox="0 0 920 560" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#6D5E52"/>
+        </marker>
+      </defs>
+
+      <!-- CONEXIONES (LÍNEAS FK) -->
+      <!-- MUNICIPIO -> ALOJAMIENTO -->
+      <line x1="165" y1="62" x2="245" y2="115" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="190" y="79" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- TIPO_ALOJAMIENTO -> ALOJAMIENTO -->
+      <line x1="165" y1="145" x2="245" y2="145" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="194" y="139" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- PROPIETARIO -> ALOJAMIENTO -->
+      <line x1="165" y1="230" x2="245" y2="175" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="190" y="218" font-size="9" fill="#984928" font-weight="700">1:N</text>
+
+      <!-- ALOJAMIENTO -> HABITACION -->
+      <line x1="405" y1="120" x2="480" y2="90" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="433" y="96" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- ALOJAMIENTO -> SERVICIO -->
+      <line x1="360" y1="196" x2="360" y2="255" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="366" y="228" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- ALOJAMIENTO -> LIQUIDACION_MENSUAL -->
+      <line x1="290" y1="196" x2="175" y2="330" stroke="#6D5E52" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+
+      <!-- HABITACION -> TARIFA -->
+      <line x1="635" y1="88" x2="725" y2="142" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="672" y="106" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- TEMPORADA -> TARIFA -->
+      <line x1="795" y1="252" x2="795" y2="215" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="801" y="236" font-size="9" fill="#984928" font-weight="700">1:N</text>
+      <!-- TEMPORADA -> PERIODO_TEMPORADA -->
+      <line x1="795" y1="316" x2="795" y2="352" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="801" y="337" font-size="9" fill="#984928" font-weight="700">1:N</text>
+
+      <!-- HABITACION -> RESERVA_HABITACION -->
+      <line x1="560" y1="128" x2="560" y2="195" stroke="#2C523F" stroke-width="1.8" marker-end="url(#arrow)"/>
+      <text x="566" y="165" font-size="9" fill="#2C523F" font-weight="700">1:N</text>
+      <!-- RESERVA -> RESERVA_HABITACION -->
+      <line x1="560" y1="342" x2="560" y2="288" stroke="#2C523F" stroke-width="1.8" marker-end="url(#arrow)"/>
+      <text x="566" y="317" font-size="9" fill="#2C523F" font-weight="700">1:N</text>
+
+      <!-- CLIENTE -> RESERVA -->
+      <line x1="560" y1="472" x2="560" y2="438" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="566" y="458" font-size="9" fill="#984928" font-weight="700">1:N</text>
+
+      <!-- SERVICIO -> RESERVA_SERVICIO -->
+      <line x1="425" y1="295" x2="455" y2="295" stroke="#6D5E52" stroke-width="1.4"/>
+      <line x1="360" y1="335" x2="360" y2="370" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <!-- RESERVA -> RESERVA_SERVICIO -->
+      <line x1="480" y1="395" x2="432" y2="395" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+      <!-- RESERVA -> PAGO -->
+      <line x1="642" y1="395" x2="725" y2="478" stroke="#2C523F" stroke-width="1.6" marker-end="url(#arrow)"/>
+      <text x="688" y="432" font-size="9" fill="#2C523F" font-weight="700">1:N</text>
+      <!-- RESERVA -> RESENA -->
+      <line x1="485" y1="425" x2="380" y2="480" stroke="#6D5E52" stroke-width="1.4" marker-end="url(#arrow)"/>
+      <text x="424" y="468" font-size="9" fill="#984928" font-weight="700">1:1 (UK)</text>
+
+      <!-- ENTIDAD MACRO HELPER CARDS -->
+      <!-- 1. MUNICIPIO -->
+      <rect x="14" y="20" width="150" height="66" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="14" y="20" width="150" height="20" rx="6" fill="#2C523F"/>
+      <text x="89" y="34" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">MUNICIPIO (12)</text>
+      <text x="22" y="54" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_MUNICIPIO</text>
+      <text x="22" y="68" font-size="8.2" fill="#241F1A">UK NOMBRE</text>
+
+      <!-- 2. TIPO_ALOJAMIENTO -->
+      <rect x="14" y="106" width="150" height="72" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="14" y="106" width="150" height="20" rx="6" fill="#2C523F"/>
+      <text x="89" y="120" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">TIPO_ALOJAMIENTO (4)</text>
+      <text x="22" y="140" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_TIPO_ALOJAMIENTO</text>
+      <text x="22" y="154" font-size="8.2" fill="#241F1A">UK NOMBRE · DESCRIPCION</text>
+
+      <!-- 3. PROPIETARIO -->
+      <rect x="14" y="196" width="150" height="86" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="14" y="196" width="150" height="20" rx="6" fill="#2C523F"/>
+      <text x="89" y="210" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">PROPIETARIO (20)</text>
+      <text x="22" y="230" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_PROPIETARIO</text>
+      <text x="22" y="244" font-size="8.2" fill="#241F1A">UK DOCUMENTO · NOMBRES</text>
+      <text x="22" y="258" font-size="8.2" fill="#241F1A">UK CORREO · TELEFONO</text>
+
+      <!-- 4. ALOJAMIENTO -->
+      <rect x="245" y="78" width="160" height="118" rx="6" fill="#FFFFFF" stroke="#B65D38" stroke-width="1.8"/>
+      <rect x="245" y="78" width="160" height="22" rx="6" fill="#B65D38"/>
+      <text x="325" y="93" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">ALOJAMIENTO (60)</text>
+      <text x="253" y="114" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_ALOJAMIENTO</text>
+      <text x="253" y="128" font-size="8.2" fill="#241F1A">NOMBRE · DIRECCION</text>
+      <text x="253" y="142" font-size="8.2" fill="#241F1A">TELEFONO · CAPACIDAD</text>
+      <text x="253" y="156" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_MUNICIPIO</text>
+      <text x="253" y="170" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_TIPO_ALOJAMIENTO</text>
+      <text x="253" y="184" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_PROPIETARIO</text>
+
+      <!-- 5. HABITACION -->
+      <rect x="480" y="24" width="160" height="104" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.6"/>
+      <rect x="480" y="24" width="160" height="22" rx="6" fill="#2C523F"/>
+      <text x="560" y="39" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">HABITACION (400)</text>
+      <text x="488" y="60" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_HABITACION</text>
+      <text x="488" y="74" font-size="8.2" fill="#241F1A">NUMERO_NOMBRE</text>
+      <text x="488" y="88" font-size="8.2" fill="#241F1A">CAPACIDAD · TIPO_CAMA</text>
+      <text x="488" y="102" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_ALOJAMIENTO</text>
+
+      <!-- 6. TARIFA -->
+      <rect x="725" y="110" width="175" height="104" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.6"/>
+      <rect x="725" y="110" width="175" height="22" rx="6" fill="#2C523F"/>
+      <text x="812" y="125" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">TARIFA (800)</text>
+      <text x="733" y="146" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_TARIFA</text>
+      <text x="733" y="160" font-size="8.2" fill="#241F1A">PRECIO_NOCHE (&gt;0)</text>
+      <text x="733" y="174" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK,UK</tspan> ID_HABITACION</text>
+      <text x="733" y="188" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK,UK</tspan> ID_TEMPORADA</text>
+
+      <!-- 7. TEMPORADA -->
+      <rect x="725" y="252" width="175" height="64" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="725" y="252" width="175" height="20" rx="6" fill="#2C523F"/>
+      <text x="812" y="266" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">TEMPORADA (2: BAJA/ALTA)</text>
+      <text x="733" y="286" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_TEMPORADA</text>
+      <text x="733" y="300" font-size="8.2" fill="#241F1A">UK NOMBRE</text>
+
+      <!-- 8. PERIODO_TEMPORADA -->
+      <rect x="725" y="352" width="175" height="92" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="725" y="352" width="175" height="20" rx="6" fill="#2C523F"/>
+      <text x="812" y="366" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">PERIODO_TEMPORADA (9)</text>
+      <text x="733" y="386" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_PERIODO</text>
+      <text x="733" y="400" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_TEMPORADA</text>
+      <text x="733" y="414" font-size="8.2" fill="#241F1A">NOMBRE_PERIODO</text>
+      <text x="733" y="428" font-size="8.2" fill="#241F1A">FECHA_INICIO · FECHA_FIN</text>
+
+      <!-- 9. RESERVA_HABITACION -->
+      <rect x="478" y="195" width="166" height="93" rx="6" fill="#FFF9F4" stroke="#B65D38" stroke-width="1.8"/>
+      <rect x="478" y="195" width="166" height="22" rx="6" fill="#B65D38"/>
+      <text x="561" y="210" fill="#FFF" font-size="9" font-weight="700" text-anchor="middle">RESERVA_HABITACION (M:N)</text>
+      <text x="486" y="232" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK,FK</tspan> ID_RESERVA</text>
+      <text x="486" y="246" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK,FK</tspan> ID_HABITACION</text>
+      <text x="486" y="260" font-size="8.2" fill="#241F1A">PRECIO_UNITARIO (Congelado)</text>
+      <text x="486" y="274" font-size="8.2" fill="#241F1A">SUBTOTAL</text>
+
+      <!-- 10. SERVICIO -->
+      <rect x="278" y="255" width="148" height="80" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="278" y="255" width="148" height="20" rx="6" fill="#2C523F"/>
+      <text x="352" y="269" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">SERVICIO (300)</text>
+      <text x="286" y="289" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_SERVICIO</text>
+      <text x="286" y="303" font-size="8.2" fill="#241F1A">NOMBRES · PRECIO</text>
+      <text x="286" y="317" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_ALOJAMIENTO</text>
+
+      <!-- 11. RESERVA -->
+      <rect x="480" y="342" width="162" height="96" rx="6" fill="#FFF9F4" stroke="#B65D38" stroke-width="2"/>
+      <rect x="480" y="342" width="162" height="22" rx="6" fill="#B65D38"/>
+      <text x="561" y="357" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">RESERVA (25.038)</text>
+      <text x="488" y="378" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_RESERVA</text>
+      <text x="488" y="392" font-size="8.2" fill="#241F1A">FECHA_CHECK_IN / OUT</text>
+      <text x="488" y="406" font-size="8.2" fill="#241F1A">TOTAL · ESTADO (CHK)</text>
+      <text x="488" y="420" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_CLIENTE</text>
+
+      <!-- 12. RESERVA_SERVICIO -->
+      <rect x="275" y="370" width="157" height="86" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="275" y="370" width="157" height="20" rx="6" fill="#2C523F"/>
+      <text x="353" y="384" fill="#FFF" font-size="9" font-weight="700" text-anchor="middle">RESERVA_SERVICIO (40.000)</text>
+      <text x="283" y="404" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK,FK</tspan> ID_RESERVA</text>
+      <text x="283" y="418" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK,FK</tspan> ID_SERVICIO</text>
+      <text x="283" y="432" font-size="8.2" fill="#241F1A">CANTIDAD · PRECIO · SUBTOT.</text>
+
+      <!-- 13. CLIENTE -->
+      <rect x="478" y="472" width="166" height="78" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.6"/>
+      <rect x="478" y="472" width="166" height="20" rx="6" fill="#2C523F"/>
+      <text x="561" y="486" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">CLIENTE (3.003)</text>
+      <text x="486" y="506" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_CLIENTE</text>
+      <text x="486" y="520" font-size="8.2" fill="#241F1A">UK DOCUMENTO · NOMBRES</text>
+      <text x="486" y="534" font-size="8.2" fill="#241F1A">APELLIDOS · UK CORREO</text>
+
+      <!-- 14. PAGO -->
+      <rect x="725" y="462" width="175" height="86" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="725" y="462" width="175" height="20" rx="6" fill="#2C523F"/>
+      <text x="812" y="476" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">PAGO (25.009)</text>
+      <text x="733" y="496" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_PAGO</text>
+      <text x="733" y="510" font-size="8.2" fill="#241F1A">MONTO · METODO_PAGO</text>
+      <text x="733" y="524" font-size="8.2" fill="#241F1A">ESTADO · FECHA_PAGO</text>
+      <text x="733" y="538" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_RESERVA</text>
+
+      <!-- 15. RESENA -->
+      <rect x="218" y="472" width="166" height="78" rx="6" fill="#FFFFFF" stroke="#2C523F" stroke-width="1.5"/>
+      <rect x="218" y="472" width="166" height="20" rx="6" fill="#2C523F"/>
+      <text x="301" y="486" fill="#FFF" font-size="9.5" font-weight="700" text-anchor="middle">RESENA</text>
+      <text x="226" y="506" font-size="8.2" fill="#241F1A"><tspan font-weight="700" fill="#B65D38">PK</tspan> ID_RESENA</text>
+      <text x="226" y="520" font-size="8.2" fill="#241F1A">PUNTUACION (1..5)</text>
+      <text x="226" y="534" font-size="8.2" fill="#2C523F"><tspan font-weight="700">FK</tspan> ID_CLIENTE · <tspan font-weight="700">FK,UK</tspan> ID_RESERVA</text>
+
+      <!-- 16. OPERACIÓN & GOBIERNO (LIQUIDACION / AUDITORIA / USUARIO_SISTEMA) -->
+      <rect x="14" y="330" width="180" height="220" rx="6" fill="#F6F3ED" stroke="#8C7A6B" stroke-dasharray="4,2" stroke-width="1.3"/>
+      <rect x="14" y="330" width="180" height="20" rx="6" fill="#5C5248"/>
+      <text x="104" y="344" fill="#FFF" font-size="9" font-weight="700" text-anchor="middle">GOBIERNO &amp; LIQUIDACIÓN</text>
+      <text x="22" y="366" font-size="8.2" font-weight="700" fill="#203F30">LIQUIDACION_MENSUAL (60/lote)</text>
+      <text x="22" y="379" font-size="7.8" fill="#4A423A">PK ID_LIQUIDACION · FK ID_ALOJ.</text>
+      <text x="22" y="391" font-size="7.8" fill="#4A423A">INGRESOS · COMISION · PAGO_NETO</text>
+      <line x1="22" y1="402" x2="184" y2="402" stroke="#D7CAB9"/>
+      <text x="22" y="417" font-size="8.2" font-weight="700" fill="#203F30">AUDITORIA_TARIFA &amp; LOG</text>
+      <text x="22" y="430" font-size="7.8" fill="#4A423A">TRG_AUDITORIA_TARIFA_STMT</text>
+      <text x="22" y="442" font-size="7.8" fill="#4A423A">PRECIO_ANT / NUEVO / FILAS_AFEC.</text>
+      <line x1="22" y1="453" x2="184" y2="453" stroke="#D7CAB9"/>
+      <text x="22" y="468" font-size="8.2" font-weight="700" fill="#203F30">USUARIO_SISTEMA</text>
+      <text x="22" y="481" font-size="7.8" fill="#4A423A">UK NOMBRE_USUARIO · ROL · ESTADO</text>
+      <line x1="22" y1="492" x2="184" y2="492" stroke="#D7CAB9"/>
+      <text x="22" y="507" font-size="8.2" font-weight="700" fill="#203F30">HISTORICO_RESERVA (TBS)</text>
+      <text x="22" y="520" font-size="7.8" fill="#4A423A">En TBS_HISTORICO_RESERVAS (50M+)</text>
+      <text x="22" y="538" font-size="7.8" font-weight="700" fill="#984928">MV_OCUPACION_MENSUAL (View Mat.)</text>
+    </svg>
+  </div>
+
+  <!-- SECCIÓN 2: DECISIONES DE DISEÑO OBLIGATORIAS -->
+  <div class="page-break"></div>
+  <h2>2. Justificación de Decisiones de Diseño Obligatorias</h2>
+  <div class="two-cols">
+    <div class="card avoid-break">
+      <h3>Decisión 1: Múltiples Habitaciones por Reserva (<code>RESERVA_HABITACION</code>)</h3>
+      <p><strong>Problema:</strong> Si <code>RESERVA</code> incluyera una única llave foránea <code>ID_HABITACION</code>, un grupo familiar o corporativo no podría reservar múltiples habitaciones bajo un solo localizador, pago y factura. Adicionalmente, consultar el precio vigente desde <code>TARIFA</code> alteraría históricamente reservas pasadas cuando el hotel suba tarifas.</p>
+      <p><strong>Solución Implementada:</strong></p>
+      <ul style="margin:4px 0 0 16px;padding:0;">
+        <li>Tabla asociativa <strong><code>RESERVA_HABITACION</code></strong> con llave primaria compuesta <code>PK(ID_RESERVA, ID_HABITACION)</code> (relación M:N).</li>
+        <li>Congelamiento contable de <code>PRECIO_UNITARIO</code> y <code>SUBTOTAL</code> en el instante de creación, aislando la facturación de futuros cambios en <code>TARIFA</code>.</li>
+        <li>Integridad garantizada por el trigger compuesto <strong><code>TRG_IMPEDIR_SOLAPAMIENTO_RES</code></strong> (evita <code>ORA-04091</code> verificando traslapes por habitación sin bloqueo mutante).</li>
+      </ul>
+    </div>
+    <div class="card avoid-break">
+      <h3>Decisión 2: Estadías que Cruzan Temporadas (<code>PERIODO_TEMPORADA</code>)</h3>
+      <p><strong>Problema:</strong> Una estancia del Quindío frecuentemente inicia en Temporada Baja (ej. 18 de diciembre) y culmina en Temporada Alta (ej. 22 de diciembre). Un único <code>ID_TEMPORADA</code> en <code>RESERVA</code> cobraría toda la estancia a tarifa baja o toda a tarifa alta, generando descuadres financieros.</p>
+      <p><strong>Solución Implementada:</strong></p>
+      <ul style="margin:4px 0 0 16px;padding:0;">
+        <li>Separación entre catálogo <code>TEMPORADA</code> (<code>1 = TEMPORADA BAJA</code>, <code>2 = TEMPORADA ALTA</code>) y vigencias calendario en <strong><code>PERIODO_TEMPORADA</code></strong> (9 períodos oficiales 2024–2026: Semana Santa, Mitad de Año, Fin de Año).</li>
+        <li>Regla de unicidad <code>UK_TAR_HAB_TEMP (ID_HABITACION, ID_TEMPORADA)</code> en <code>TARIFA</code> garantizando tarifa baja y alta por habitación (800 tarifas).</li>
+        <li>La función PL/SQL <code>PKG_TURISMO_UQ.fn_valor_estadia</code> evalúa <strong>noche por noche</strong> (<code>WHILE v_dia &lt; TRUNC(p_fecha_out)</code>), verificando cada fecha contra <code>PERIODO_TEMPORADA</code> (Prueba verificada: 5 noches mixtas = 2 baja + 3 alta = <code>$920,000 COP</code>).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: ENTREGA 1, ENTREGA 2 Y NUEVAS CONSULTAS Q09/Q10 -->
+  <h2>3. Consolidado Entregas 1 y 2 + Consultas Analíticas Adicionales (Q09 y Q10)</h2>
+  <p>Todas las sentencias analíticas están implementadas tanto en <code>01_basedatos/entrega_1/02_consultas_analisis.sql</code> como en el módulo Data Studio (<code>/analitica</code>) del aplicativo web Full-Stack.</p>
+
+  <div class="callout-green">
+    <strong>Arquitectura Física (Tablespace &amp; PL/SQL):</strong> El tablespace <code>TBS_HISTORICO_RESERVAS</code> (50 MB autoextendible hasta 2 GB, gestión local ASSM) aísla segmentos masivos e índices de Entrega 3 para reducir contención de I/O sobre <code>USERS</code>. La lógica de negocio reside encapsulada en <code>PKG_TURISMO_UQ</code> (cálculo de estadía, reservas, cotización desglosada, liquidación mensual con cursor explícito y pago atómico con <code>SAVEPOINT</code>).
+  </div>
+
+  <div class="two-cols">
+    <div class="card avoid-break">
+      <h3>Consulta Adicional Q09: Habitación con Más Reservas en Temporada Alta</h3>
+      <p>Cruza las reservas no canceladas cuyo rango intersecta con cualquier período de Temporada Alta (<code>pt.id_temporada = 2</code>) usando <code>EXISTS</code> + <code>RANK() OVER</code>.</p>
+      <table>
+        <thead><tr><th>Puesto</th><th>Habitación</th><th>Alojamiento / Mpio.</th><th class="num">Reservas Alta</th><th class="num">Ingresos</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-ok">#1</span></td><td><strong>Habitacion 106</strong> (#216)<br><small>Dos Camas Sencillas</small></td><td>Alojamiento UQ 31<br><small>Quimbaya</small></td><td class="num"><strong>24</strong></td><td class="num">$18.676.000</td></tr>
+          <tr><td>#2</td><td>Habitacion 103 (#143)</td><td>Alojamiento UQ 21 (Pijao)</td><td class="num">23</td><td class="num">$19.312.000</td></tr>
+          <tr><td>#2</td><td>Habitacion 105 (#173)</td><td>Alojamiento UQ 25 (Armenia)</td><td class="num">23</td><td class="num">$20.283.000</td></tr>
+          <tr><td>#4</td><td>Habitacion 102 (#177)</td><td>Alojamiento UQ 26 (Salento)</td><td class="num">22</td><td class="num">$17.294.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card avoid-break">
+      <h3>Consulta Adicional Q10: Clientes con Más Municipios Visitados</h3>
+      <p>Agrupa huéspedes activos mediante <code>COUNT(DISTINCT m.id_municipio)</code> y construye la lista ordenada de destinos visitados con <code>LISTAGG(DISTINCT m.nombre, ', ')</code>.</p>
+      <table>
+        <thead><tr><th>Cliente</th><th class="num">Mpios.</th><th class="num">Res.</th><th>Municipios Visitados (LISTAGG Real Oracle)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sofia Perez</strong><br><small>1000001574</small></td><td class="num"><strong>11/12</strong></td><td class="num">21</td><td><small>Armenia, Buenavista, Circasia, Córdoba, Filandia, Génova, La Tebaida, Montenegro, Pijao, Quimbaya, Salento</small></td></tr>
+          <tr><td><strong>David Gomez</strong><br><small>1000000458</small></td><td class="num"><strong>11/12</strong></td><td class="num">20</td><td><small>Buenavista, Calarcá, Circasia, Córdoba, Filandia, Génova, La Tebaida, Montenegro, Pijao, Quimbaya, Salento</small></td></tr>
+          <tr><td><strong>Camila Rodriguez</strong><br><small>1000002645</small></td><td class="num"><strong>11/12</strong></td><td class="num">19</td><td><small>Armenia, Buenavista, Calarcá, Circasia, Córdoba, Filandia, Génova, La Tebaida, Pijao, Quimbaya, Salento</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: ENTREGA 3 - TRANSACCIONES Y CONCURRENCIA -->
+  <h2>4. Entrega 3 — Transacciones Atómicas (SAVEPOINT) y Concurrencia</h2>
+
+  <h3>4.1 Transacción Reserva + Pago con Rollback Parcial (<code>01_transacciones_savepoint.sql</code>)</h3>
+  <p>El procedimiento <code>PKG_TURISMO_UQ.sp_registrar_reserva_con_pago</code> inserta <code>RESERVA</code> + <code>RESERVA_HABITACION</code> en estado <code>PENDIENTE</code>, marca el punto de control <code>SAVEPOINT pto_reserva_creada;</code> e intenta procesar el pago. Si la pasarela falla, ejecuta <code>ROLLBACK TO pto_reserva_creada;</code> dejando intacta la reserva para reintento sin pagos huérfanos.</p>
+  <pre>=== DEMOSTRACIÓN 1: FLUJO ATÓMICO EXITOSO (COMMIT COMPLETO) ===
+Resultado: TRANSACCIÓN ATÓMICA EXITOSA (COMMIT): Reserva #25121 confirmada y Pago #25041 registrado por $1,104,000 COP.
+Reserva ID: 25121 | Pago ID: 25041 | Estado: CONFIRMADA
+
+=== DEMOSTRACIÓN 2: DEMOSTRACIÓN DE ROLLBACK PARCIAL CON SAVEPOINT ===
+Resultado: DEMOSTRACIÓN DE ROLLBACK PARCIAL (SAVEPOINT): La pasarela rechazó el pago. Se ejecutó ROLLBACK TO pto_reserva_creada. La reserva #25122 se conservó en estado PENDIENTE sin perder los datos del huésped.
+Reserva ID: 25122 | Estado: PENDIENTE | Pago ID: NULL (NO EXISTE)
+Verificación de integridad: Pagos asociados en base de datos = 0</pre>
+
+  <h3>4.2 Experimento Documentado de Concurrencia en 2 Sesiones Reales (<code>02_concurrencia_bloqueos.sql</code>)</h3>
+  <p>Ejecutando dos sesiones simultáneas de Oracle SQL*Plus sobre <code>TURISMO_UQ</code> intentando reservar exactamente la misma habitación y fechas:</p>
+  <div class="two-cols">
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">ANTES: Sin <code>FOR UPDATE</code> (Anomalía Write Skew)</h3>
+      <p>Bajo el aislamiento por defecto <code>READ COMMITTED</code>, Sesión B no ve las inserciones sin confirmar de Sesión A. Ambas sesiones validan disponibilidad como <code>0</code> solapamientos y terminan confirmando el mismo rango de fechas:</p>
+      <pre>[E1 SESION A] Inicio: 23:30:22.27
+[E1 SESION A] Reserva sin COMMIT aun #25123 | Reteniendo 6s...
+[E1 SESION B] Inicio paralelo: 23:30:23.37
+[E1 SESION B] Reserva creada SIN BLOQUEO #25124 -&gt; WRITE SKEW!
+
+ID_RESERVA ID_HABITACION ID_CLIENTE FIN        FOUT       ESTADO
+---------- ------------- ---------- ---------- ---------- ----------
+     25123            15          1 2029-10-01 2029-10-05 CONFIRMADA
+     25124            15          2 2029-10-01 2029-10-05 CONFIRMADA</pre>
+    </div>
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">DESPUÉS: Con <code>SELECT ... FOR UPDATE WAIT 5</code></h3>
+      <p>Sesión A adquiere un bloqueo exclusivo <code>TX (mode 6)</code> sobre la fila de <code>HABITACION #20</code>. Sesión B queda encolada en <code>enq: TX - row lock contention</code>, espera 5 s y captura limpiamente <code>ORA-20005</code>:</p>
+      <pre>[MONITOR DBA V$SESSION/V$LOCK @ t=3s]
+SID_BLOQ=261 | SID_ESPERA=8 | TX request=6 | enq: TX - row lock contention
+
+[E2 SESION A] Inicio: 23:30:30.66 -&gt; Exito #25125 (Fin: 23:30:38.67)
+[E2 SESION B] Intenta hab #20: 23:30:31.70
+[E2 SESION B] BLOQUEO INTERCEPTADO (23:30:36.71) -&gt;
+ORA-20005: Recurso Bloqueado (Concurrencia): La habitacion 20 esta siendo
+reservada en este momento por otra transaccion activa.</pre>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: OPTIMIZACIÓN CBO -->
+  <div class="page-break"></div>
+  <h2>5. Optimización CBO: Índices Avanzados, Planes Reales y Caso Negativo</h2>
+  <p>Resultados obtenidos al ejecutar <code>01_basedatos/entrega_3/03_indices_optimizacion_cbo.sql</code> sobre las 25.036+ reservas y 3.003 clientes reales con estadísticas actualizadas (<code>METHOD_OPT =&gt; 'FOR ALL COLUMNS SIZE 254'</code>).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Consulta / Índice</th>
+        <th>Plan ANTES (Sin Índice)</th>
+        <th>Plan DESPUÉS (Con Índice)</th>
+        <th class="num">Costo CBO</th>
+        <th class="num">Tiempo Medido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Q1: Filtro Compuesto</strong><br><small><code>IDX_COMP_RES_EST_FEC_TOT</code><br><code>(ESTADO, FECHA_CHECK_IN, TOTAL)</code></small></td>
+        <td><code>TABLE ACCESS FULL RESERVA</code></td>
+        <td><code>INDEX RANGE SCAN IDX_COMP_RES_EST_FEC_TOT</code><br><small>194 filas reales</small></td>
+        <td class="num"><span class="badge b-ok">72 → 15 (-79,2%)</span></td>
+        <td class="num">50 ms → <strong>10 ms</strong><br><small>(50 ejec.)</small></td>
+      </tr>
+      <tr>
+        <td><strong>Q2: Búsqueda en Función</strong><br><small><code>IDX_FUNC_CLIENTE_UPPER_NOM</code><br><code>(UPPER(NOMBRES))</code></small></td>
+        <td><code>TABLE ACCESS FULL CLIENTE</code></td>
+        <td><code>INDEX RANGE SCAN IDX_FUNC_CLIENTE_UPPER_NOM</code><br><small>Patrón selectivo <code>'CARLOS %'</code></small></td>
+        <td class="num"><span class="badge b-ok">11 → 3 (-72,7%)</span></td>
+        <td class="num">30 ms → <strong>10 ms</strong><br><small>(100 ejec.)</small></td>
+      </tr>
+      <tr>
+        <td><strong>Q3: Covering FBI Mensual</strong><br><small><code>IDX_FUNC_RES_TRUNC_MES_TOT</code><br><code>(TRUNC(FECHA_CHECK_IN,'MM'), TOTAL)</code></small></td>
+        <td><code>INDEX FAST FULL SCAN</code> / FTS (73)</td>
+        <td><code>INDEX RANGE SCAN</code> (Index-Only)<br><small>0 bloques leídos de tabla (725 res.)</small></td>
+        <td class="num"><span class="badge b-ok">36 → 4 (-88,9%)</span></td>
+        <td class="num">170 ms → <strong>&lt;10 ms</strong><br><small>(50 ejec.)</small></td>
+      </tr>
+      <tr>
+        <td><strong>Q4: Caso Negativo</strong><br><small><code>IDX_RESERVA_ESTADO</code><br><code>WHERE estado != 'CANCELADA'</code></small></td>
+        <td><strong>Plan Natural CBO:</strong><br><code>TABLE ACCESS FULL</code></td>
+        <td><strong>Plan Forzado con Hint:</strong><br><code>INDEX FULL SCAN + ROWID</code></td>
+        <td class="num"><span class="badge b-warn">72 → 460 (+539%)</span></td>
+        <td class="num">30 ms → <strong>50 ms</strong><br><small>(20 ejec.)</small></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-cols">
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">Planes Reales <code>DBMS_XPLAN.DISPLAY</code> — Q1, Q2 y Q3</h3>
+      <pre class="pre-xplan">-- Q1 DESPUÉS (Índice Compuesto en TBS_HISTORICO_RESERVAS):
+| Id | Operation                    | Name                     |Rows|Cost|
+|  0 | SELECT STATEMENT             |                          | 12 | 15 |
+|* 1 |  TABLE ACCESS BY INDEX ROWID | RESERVA                  | 12 | 15 |
+|* 2 |   INDEX RANGE SCAN           | IDX_COMP_RES_EST_FEC_TOT | 12 |  2 |
+
+-- Q2 DESPUÉS (Índice Basado en Función UPPER):
+| Id | Operation                    | Name                       |Rows|Cost|
+|  0 | SELECT STATEMENT             |                            |  2 |  3 |
+|  1 |  TABLE ACCESS BY INDEX ROWID | CLIENTE                    |  2 |  3 |
+|* 2 |   INDEX RANGE SCAN           | IDX_FUNC_CLIENTE_UPPER_NOM |  2 |  2 |
+
+-- Q3 DESPUÉS (Covering Index-Only Range Scan sin tabla):
+| Id | Operation         | Name                       |Rows|Cost|
+|  0 | SELECT STATEMENT  |                            |  1 |  4 |
+|  1 |  SORT AGGREGATE   |                            |  1 |    |
+|* 2 |   INDEX RANGE SCAN| IDX_FUNC_RES_TRUNC_MES_TOT |725 |  4 |</pre>
+    </div>
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">Caso Negativo Obligatorio — Por qué el CBO descarta el Índice</h3>
+      <pre class="pre-xplan">-- NATURAL CBO (GANA FTS):
+| Id | Operation         | Name    | Rows  | Bytes |Cost(%CPU)|
+|  0 | SELECT STATEMENT  |         | 25032 | 1197K |  72  (2) |
+|* 1 |  TABLE ACCESS FULL| RESERVA | 25032 | 1197K |  72  (2) |
+
+-- HINT /*+ INDEX(r IDX_RESERVA_ESTADO) */ (SE DEGRADA +539%):
+| Id | Operation                    | Name               | Rows  |Cost|
+|  0 | SELECT STATEMENT             |                    | 25032 |460 |
+|  1 |  TABLE ACCESS BY INDEX ROWID | RESERVA            | 25032 |460 |
+|* 2 |   INDEX FULL SCAN            | IDX_RESERVA_ESTADO | 25032 | 78 |</pre>
+      <p style="font-size:8.6pt;"><strong>Sustentación Física:</strong> El predicado <code>estado != 'CANCELADA'</code> tiene selectividad ~100% (25.036 filas). Usar el índice obliga a leer 78 bloques de índice + efectuar más de 25.000 saltos aleatorios por <code>ROWID</code> (<code>db file sequential read</code>), mientras que el <em>Full Table Scan</em> barre contiguamente la tabla mediante <code>db file scattered read</code> multibloque en menos tiempo (30 ms vs 50 ms) y 6.4x menor costo.</p>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: SEGURIDAD, ROLES, VISTAS Y PERFIL -->
+  <h2>6. Seguridad: Roles, Vistas de Recepción, Perfil e Instalación Limpia</h2>
+  <div class="two-cols">
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">Matriz de Roles Oracle (<code>04_seguridad_roles_vistas_perfil.sql</code>)</h3>
+      <table>
+        <thead><tr><th>Rol / Usuario Oracle</th><th>Alcance &amp; Privilegios Reales</th></tr></thead>
+        <tbody>
+          <tr><td><code>ROL_RECEPCION</code><br><small><code>USR_RECEPCION_01</code></small></td><td><strong>Solo 3 Vistas</strong> (<code>V_RECEPCION_CHECKIN_HOY</code>, <code>_DISPONIBILIDAD</code>, <code>_VOUCHER_RESERVA</code>) + <code>EXECUTE PKG_TURISMO_UQ</code>. Cero acceso a tablas base.</td></tr>
+          <tr><td><code>ROL_ADMIN_ALOJAMIENTO</code><br><small><code>USR_ADMIN_01</code></small></td><td><code>SELECT/UPDATE</code> en <code>ALOJAMIENTO</code>, CRUD completo en <code>HABITACION</code>, <code>SELECT</code> en <code>TARIFA</code>, <code>LIQUIDACION_MENSUAL</code> y <code>RESERVA</code>.</td></tr>
+          <tr><td><code>ROL_GERENTE</code><br><small><code>USR_GERENTE_01</code></small></td><td>Lectura financiera (<code>ALOJAMIENTO</code>, <code>RESERVA</code>, <code>PAGO</code>, <code>LIQUIDACION_MENSUAL</code>, <code>MV_OCUPACION_MENSUAL</code>) + <code>EXECUTE PKG_TURISMO_UQ</code>.</td></tr>
+          <tr><td><code>ROL_AUDITOR</code><br><small><code>USR_AUDITOR_01</code></small></td><td><code>SELECT</code> exclusivo forense en <code>AUDITORIA_TARIFA</code>, <code>LOG_SENTENCIA_TARIFA</code>, <code>RESERVA</code> y <code>PAGO</code>. Cero privilegios DML.</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:8.6pt;"><strong>Límites de Sesión (<code>DBA_PROFILES</code> - <code>PRF_TURISMO_SEGURIDAD</code>):</strong> <code>SESSIONS_PER_USER=3</code> · <code>CPU_PER_CALL=6000</code> · <code>IDLE_TIME=15 min</code> · <code>CONNECT_TIME=120 min</code> · <code>FAILED_LOGIN_ATTEMPTS=3</code> · <code>PASSWORD_LOCK_TIME=1</code> · <code>PASSWORD_LIFE_TIME=90</code>.</p>
+    </div>
+    <div class="card avoid-break">
+      <h3 style="margin-top:0;">Prueba en Vivo con <code>USR_RECEPCION_01</code> y Script Maestro</h3>
+      <pre>SQL&gt; SELECT COUNT(*) FROM TURISMO_UQ.V_RECEPCION_CHECKIN_HOY;
+RESERVAS_VISTA_CHECKIN = 1778
+
+SQL&gt; SELECT id_reserva, cliente_titular, alojamiento, habitacion, estado_reserva
+     FROM TURISMO_UQ.V_RECEPCION_VOUCHER_RESERVA WHERE ROWNUM &lt;= 3;
+431 | Juan Garcia      | Alojamiento Turistico UQ 1 | Habitacion 102 | FINALIZADA
+462 | David Torres     | Alojamiento Turistico UQ 1 | Habitacion 101 | FINALIZADA
+463 | Carlos Rodriguez | Alojamiento Turistico UQ 1 | Habitacion 107 | FINALIZADA
+
+SQL&gt; SELECT COUNT(*) FROM TURISMO_UQ.RESERVA;
+ERROR en línea 1: ORA-00942: la tabla o vista no existe  &lt;-- ACCESO PROHIBIDO DEMOSTRADO</pre>
+      <div class="callout" style="margin-bottom:0;">
+        <strong>Validación de Despliegue Limpio:</strong> Se ejecutó de arriba a abajo <code>00_master_instalacion_completa.sql</code> (14 pasos) sobre un esquema virgen temporal <code>TURISMO_UQ_TEST</code> obteniendo <strong>ExitCode=0</strong>, creación automática de las 16 tablas, carga masiva (25.000 reservas / 40.000 servicios), suite de pruebas PL/SQL (<code>ORA-20001/2/3</code>) y <strong>0 objetos inválidos</strong> en <code>USER_OBJECTS</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    TurismoUQ · Universidad del Quindío · Documento Técnico Oficial de Diseño y Evidencias Oracle 21c XE · Generado desde resultados verificados en vivo
+  </div>
+</body>
+</html>

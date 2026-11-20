@@ -33,22 +33,28 @@
       </div>
 
       <div class="grupo-control">
-        <label class="etiqueta">ID Alojamiento (Opcional)</label>
+        <label class="etiqueta">Alojamiento</label>
+        <select class="control-input" [(ngModel)]="idAlojamientoFiltro">
+          <option [ngValue]="null">Todos los alojamientos ({{ alojamientos.length || 60 }})</option>
+          <option *ngFor="let a of alojamientos" [ngValue]="a.idAlojamiento">
+            {{ a.nombre }} · {{ a.municipio.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="grupo-control">
+        <label class="etiqueta">Buscar Propiedad o Propietario</label>
         <input
-          type="number"
-          min="1"
-          step="1"
+          type="text"
           class="control-input"
-          placeholder="Todos los 60 alojamientos"
-          [(ngModel)]="idAlojamientoFiltro"
-          (keydown)="bloquearNegativos($event)"
-          (input)="validarIdAlojamiento()"
+          placeholder="Ej: Salento, Finca, Morales..."
+          [(ngModel)]="filtroTexto"
         />
       </div>
 
       <div class="acciones-liquidacion">
-        <button *ngIf="idAlojamientoFiltro" type="button" class="btn btn-esquema" (click)="idAlojamientoFiltro = null">
-          <span>Limpiar Filtro ID</span>
+        <button *ngIf="idAlojamientoFiltro || filtroTexto" type="button" class="btn btn-esquema" (click)="idAlojamientoFiltro = null; filtroTexto = ''">
+          <span>Limpiar Filtros</span>
         </button>
 
         <button class="btn btn-primario" (click)="ejecutarLiquidacionMasiva()" [disabled]="procesandoLiquidacion">
@@ -136,7 +142,7 @@
     <div class="cabecera-ledger">
       <div>
         <h3>Libro Mayor de Liquidaciones Consolidadas</h3>
-        <p class="subtexto-ledger">Registros almacenados en la tabla <code>LIQUIDACION_ALOJAMIENTO</code></p>
+        <p class="subtexto-ledger">Detalle de ingresos por estadía, servicios adicionales, comisión y transferencia neta</p>
       </div>
       <span class="pildora-periodo">Periodo {{ mesSeleccionado }}/{{ anioSeleccionado }}</span>
     </div>
@@ -150,29 +156,28 @@
       <table class="tabla-datos">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Propiedad / Alojamiento</th>
             <th>Municipio</th>
-            <th>Propietario Titular</th>
-            <th>Reservas</th>
+            <th>Propietario</th>
+            <th>Res.</th>
             <th>Hospedaje</th>
             <th>Servicios</th>
             <th>Total Bruto</th>
-            <th>Comisión (10%)</th>
-            <th>Pago Neto Dueño</th>
+            <th>Comisión 10%</th>
+            <th>Neto Dueño</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let l of liquidacionesFiltradas">
             <td>
-              <span class="id-aloj-mono">#{{ l.idAlojamiento }}</span>
-            </td>
-            <td>
-              <strong class="nombre-propiedad-ledger">{{ l.nombreAlojamiento }}</strong>
+              <div class="propiedad-id-celda">
+                <span class="id-aloj-mono">#{{ l.idAlojamiento }}</span>
+                <strong class="nombre-propiedad-ledger">{{ l.nombreAlojamiento }}</strong>
+              </div>
             </td>
             <td>
               <span class="pildora-municipio-tabla">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>

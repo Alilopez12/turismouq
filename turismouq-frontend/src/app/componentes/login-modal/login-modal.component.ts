@@ -105,7 +105,7 @@ export class LoginModalComponent {
       },
       error: (err) => {
         this.cargando = false;
-        this.mensajeError = err?.error?.mensaje || 'Error al registrar el usuario en Oracle XE.';
+        this.mensajeError = err?.error?.mensaje || 'Error al registrar el usuario.';
       }
     });
   }

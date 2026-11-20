@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TurismoService } from '../../servicios/turismo.service';
-import { LiquidacionItem } from '../../modelos/modelos';
+import { Alojamiento, LiquidacionItem } from '../../modelos/modelos';
 
 @Component({
   selector: 'app-liquidaciones',
@@ -16,6 +16,8 @@ export class LiquidacionesComponent implements OnInit {
   mesSeleccionado: number = 3;
   anioSeleccionado: number = 2025;
   idAlojamientoFiltro: number | null = null;
+  filtroTexto = '';
+  alojamientos: Alojamiento[] = [];
 
   liquidaciones: LiquidacionItem[] = [];
   cargando = true;
@@ -44,6 +46,10 @@ export class LiquidacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.turismoService.obtenerAlojamientos().subscribe({
+      next: (lista) => { this.alojamientos = lista || []; this.cdr.detectChanges(); },
+      error: () => {}
+    });
     this.consultar();
   }
 
@@ -93,24 +99,33 @@ export class LiquidacionesComponent implements OnInit {
       next: (procesados) => {
         this.procesandoLiquidacion = false;
         this.tipoAlerta = 'exito';
-        this.mensajeAlerta = `Liquidación masiva completada exitosamente. Se procesaron ${procesados} alojamientos con el cursor explícito.`;
+        this.mensajeAlerta = `Liquidación mensual completada exitosamente para ${procesados} alojamientos.`;
         this.consultar();
         this.cdr.detectChanges();
       },
       error: (err) => {
         this.procesandoLiquidacion = false;
         this.tipoAlerta = 'error';
-        this.mensajeAlerta = err.error?.mensaje || 'Error al ejecutar liquidación masiva en Oracle XE';
+        this.mensajeAlerta = err.error?.mensaje || 'Error al ejecutar la liquidación mensual';
         this.cdr.detectChanges();
       }
     });
   }
 
   get liquidacionesFiltradas(): LiquidacionItem[] {
-    if (!this.idAlojamientoFiltro || this.idAlojamientoFiltro <= 0) {
-      return this.liquidaciones;
+    let lista = this.liquidaciones;
+    if (this.idAlojamientoFiltro && this.idAlojamientoFiltro > 0) {
+      lista = lista.filter(l => l.idAlojamiento === Number(this.idAlojamientoFiltro));
     }
-    return this.liquidaciones.filter(l => l.idAlojamiento === Number(this.idAlojamientoFiltro));
+    const q = this.filtroTexto.trim().toLowerCase();
+    if (q) {
+      lista = lista.filter(l =>
+        (l.nombreAlojamiento || '').toLowerCase().includes(q) ||
+        (l.municipio || '').toLowerCase().includes(q) ||
+        (l.propietario || '').toLowerCase().includes(q)
+      );
+    }
+    return lista;
   }
 
   calcularTotalBruto(): number {

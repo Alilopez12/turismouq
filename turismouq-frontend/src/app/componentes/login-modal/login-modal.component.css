@@ -17,11 +17,12 @@
 
 .modal-contenedor {
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 22px;
   max-width: 540px;
+  max-height: 92vh;
+  overflow-y: auto;
   width: 100%;
   box-shadow: 0 25px 60px -15px rgba(28, 48, 38, 0.35), 0 0 0 1px rgba(44, 82, 63, 0.08);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);

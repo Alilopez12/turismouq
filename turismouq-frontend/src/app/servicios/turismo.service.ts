@@ -145,6 +145,16 @@ export class TurismoService {
       .pipe(map(r => r.datos));
   }
 
+  obtenerHabitacionTopTemporadaAlta(): Observable<any[]> {
+    return this.http.get<RespuestaApi<any[]>>(`${this.urlBase}/analitica/habitacion-top-temporada-alta`)
+      .pipe(map(r => r.datos));
+  }
+
+  obtenerClientesMasMunicipios(): Observable<any[]> {
+    return this.http.get<RespuestaApi<any[]>>(`${this.urlBase}/analitica/clientes-mas-municipios`)
+      .pipe(map(r => r.datos));
+  }
+
   obtenerAuditoriaTarifas(): Observable<AuditoriaTarifaItem[]> {
     return this.http.get<RespuestaApi<AuditoriaTarifaItem[]>>(`${this.urlBase}/analitica/auditoria-tarifas`)
       .pipe(map(r => r.datos));

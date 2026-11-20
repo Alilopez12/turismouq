@@ -8,17 +8,17 @@
   --color-primario: #B65D38;
   --color-primario-oscuro: #984928;
   --color-primario-claro: #FBF1EB;
-  --color-secundario: #2C523F;
-  --color-secundario-hover: #203F30;
-  --color-secundario-claro: #EDF4F0;
+  --color-secundario: #204231;
+  --color-secundario-hover: #173225;
+  --color-secundario-claro: #ECF3EF;
   --color-acento-oro: #C88A35;
   --color-acento-oro-claro: #FDF6EC;
-  --color-fondo: #FAF8F5;
+  --color-fondo: #F7F4EE;
   --color-tarjeta: #FFFFFF;
-  --color-texto: #28231D;
-  --color-texto-apagado: #6E645B;
-  --color-borde: #EADBCE;
-  --color-borde-fuerte: #D6C7B7;
+  --color-texto: #231F1B;
+  --color-texto-apagado: #685E54;
+  --color-borde: #E8DFD3;
+  --color-borde-fuerte: #D5C8B8;
   --color-exito: #2D6A4F;
   --color-peligro: #B23B2B;
   --color-aviso: #B8731F;
@@ -344,4 +344,30 @@ select.control-input {
   color: #4D3A27;
   border: 1px solid #E6D9C8;
   border-left: 4px solid #C88A35;
+}
+
+/* Impresión limpia (Comprobantes / Vouchers) */
+@media print {
+  .topbar-navegacion,
+  .navbar-viajero,
+  .footer-viajero,
+  .sidebar-nav,
+  .sidebar-backdrop,
+  .topbar-workspace,
+  .pie-pagina,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #FFFFFF !important;
+  }
+
+  .workspace-shell {
+    display: block !important;
+  }
+
+  .cuerpo-workspace {
+    padding: 0 !important;
+  }
 }

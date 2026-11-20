@@ -3,12 +3,12 @@
   <header class="encabezado-recepcion">
     <div class="info-encabezado">
       <div class="insignias-cabecera">
-        <span class="insignia insignia-recepcion">Módulo Operativo de Recepción</span>
-        <span class="insignia insignia-db">Vistas Seguras Oracle 21c</span>
+        <span class="insignia insignia-recepcion">Atención al Huésped</span>
+        <span class="insignia insignia-db">Panel de Turno</span>
       </div>
-      <h2>Recepción, Check-In & Emisión de Vouchers</h2>
+      <h2>Recepción, Check-In y Vouchers</h2>
       <p class="subtexto">
-        Gestión diaria de arribos de huéspedes, consulta de disponibilidad de habitaciones en tiempo real y emisión de comprobantes oficiales mediante vistas protegidas.
+        Gestiona las llegadas del día, consulta disponibilidad en tiempo real y emite comprobantes oficiales para tus huéspedes.
       </p>
     </div>
 
@@ -62,8 +62,8 @@
     <div class="tarjeta-panel">
       <div class="panel-cabecera-con-filtro">
         <div>
-          <h3>Llegadas Programadas para Hoy (Check-In)</h3>
-          <p class="panel-subtexto">Consulta de huéspedes con reserva confirmada en la vista <code>V_RECEPCION_CHECKIN_HOY</code>.</p>
+          <h3>Llegadas Programadas (Check-In)</h3>
+          <p class="panel-subtexto">Listado de huéspedes confirmados listos para ingreso y entrega de llaves.</p>
         </div>
         <div class="caja-buscador">
           <input 
@@ -71,21 +71,32 @@
             class="input-buscar" 
             placeholder="Buscar por cliente, documento, alojamiento o # reserva..." 
             [(ngModel)]="filtroCheckin" />
-          <button type="button" class="btn-recargar" (click)="cargarCheckinHoy()" title="Actualizar datos">
-            ↻
+          <button type="button" class="btn-recargar" (click)="cargarCheckinHoy()" title="Actualizar lista">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
           </button>
         </div>
       </div>
 
       <div *ngIf="cargandoCheckin" class="estado-cargando">
         <div class="spinner"></div>
-        <span>Consultando V_RECEPCION_CHECKIN_HOY en Oracle...</span>
+        <span>Cargando lista de llegadas...</span>
       </div>
 
       <div *ngIf="!cargandoCheckin && checkinsFiltrados.length === 0" class="estado-vacio">
-        <div class="icono-vacio">📅</div>
-        <h4>No hay arribos registrados para el día de hoy</h4>
-        <p>No se encontraron reservas con fecha de check-in correspondiente al día de hoy en Oracle XE.</p>
+        <div class="icono-vacio">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <h4>Sin llegadas pendientes</h4>
+        <p>No se encontraron reservas que coincidan con la búsqueda.</p>
       </div>
 
       <div class="tabla-contenedor" *ngIf="!cargandoCheckin && checkinsFiltrados.length > 0">
@@ -97,10 +108,8 @@
               <th>Huésped Titular</th>
               <th>Contacto</th>
               <th>Alojamiento</th>
-              <th>Municipio</th>
               <th>Habitación</th>
               <th>Check-Out</th>
-              <th>Noches</th>
               <th>Estado</th>
               <th>Acción</th>
             </tr>
@@ -108,18 +117,26 @@
           <tbody>
             <tr *ngFor="let c of checkinsFiltrados">
               <td><strong class="codigo-res">#{{ c.idReserva }}</strong></td>
-              <td><code>{{ c.documentoHuesped }}</code></td>
+              <td><code class="doc-code">{{ c.documentoHuesped }}</code></td>
               <td>
                 <span class="nombre-huesped">{{ c.nombreHuesped }}</span>
               </td>
               <td>
                 <span class="telefono-huesped">{{ c.telefonoContacto || 'Sin teléfono' }}</span>
               </td>
-              <td>{{ c.alojamiento }}</td>
-              <td>{{ c.municipio }}</td>
+              <td>
+                <div class="celda-doble">
+                  <span class="aloj-nombre">{{ c.alojamiento }}</span>
+                  <small class="muni-sub">{{ c.municipio }}</small>
+                </div>
+              </td>
               <td><span class="badge-hab">{{ c.habitacion }}</span></td>
-              <td>{{ c.fechaCheckOut }}</td>
-              <td>{{ c.totalNoches }} noches</td>
+              <td>
+                <div class="celda-doble">
+                  <span class="fecha-out">{{ c.fechaCheckOut }}</span>
+                  <small class="noches-sub">{{ c.totalNoches }} noches</small>
+                </div>
+              </td>
               <td>
                 <span class="badge-pago pago-completo">
                   {{ c.estado }}
@@ -147,7 +164,7 @@
       <div class="panel-cabecera-con-filtro">
         <div>
           <h3>Habitaciones Disponibles en Tiempo Real</h3>
-          <p class="panel-subtexto">Inventario protegido por <code>V_RECEPCION_DISPONIBILIDAD</code> (sin acceso a tarifas confidenciales ni datos de propietarios).</p>
+          <p class="panel-subtexto">Inventario operativo por alojamiento, municipio, tipo de cama y aforo máximo.</p>
         </div>
         <div class="caja-buscador">
           <input 
@@ -155,15 +172,19 @@
             class="input-buscar" 
             placeholder="Filtrar por alojamiento, habitación o municipio..." 
             [(ngModel)]="filtroAlojamiento" />
-          <button type="button" class="btn-recargar" (click)="cargarDisponibilidad()" title="Actualizar datos">
-            ↻
+          <button type="button" class="btn-recargar" (click)="cargarDisponibilidad()" title="Actualizar disponibilidad">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
           </button>
         </div>
       </div>
 
       <div *ngIf="cargandoDisponibilidad" class="estado-cargando">
         <div class="spinner"></div>
-        <span>Consultando V_RECEPCION_DISPONIBILIDAD en Oracle...</span>
+        <span>Actualizando inventario de habitaciones...</span>
       </div>
 
       <div class="rejilla-habitaciones" *ngIf="!cargandoDisponibilidad">
@@ -212,6 +233,22 @@
               Consultar Voucher
             </button>
           </div>
+          <div class="chips-voucher-rapido">
+            <span class="lbl-rapido">Consultas rápidas:</span>
+            <button type="button" class="chip-voucher" [class.activo]="idReservaBuscar === 1" (click)="consultarVoucher(1)">Reserva #1</button>
+            <button type="button" class="chip-voucher" [class.activo]="idReservaBuscar === 2" (click)="consultarVoucher(2)">Reserva #2</button>
+            <button type="button" class="chip-voucher" [class.activo]="idReservaBuscar === 10" (click)="consultarVoucher(10)">Reserva #10</button>
+            <ng-container *ngFor="let c of checkins.slice(0, 2)">
+              <button
+                *ngIf="c.idReserva !== 1 && c.idReserva !== 2 && c.idReserva !== 10"
+                type="button"
+                class="chip-voucher"
+                [class.activo]="idReservaBuscar === c.idReserva"
+                (click)="consultarVoucher(c.idReserva)">
+                #{{ c.idReserva }} · {{ c.nombreHuesped }}
+              </button>
+            </ng-container>
+          </div>
         </div>
         <button type="button" class="btn-imprimir" (click)="imprimirVoucher()" *ngIf="voucherActual">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -225,7 +262,7 @@
 
       <div *ngIf="cargandoVoucher" class="estado-cargando">
         <div class="spinner"></div>
-        <span>Buscando comprobante oficial en Oracle XE...</span>
+        <span>Generando comprobante de estadía...</span>
       </div>
 
       <div *ngIf="errorVoucher" class="alerta alerta-error">
@@ -237,7 +274,11 @@
         <!-- Encabezado del Voucher -->
         <div class="voucher-top-banner">
           <div class="voucher-logo">
-            <div class="emblema-triangulo">▲</div>
+            <div class="emblema-triangulo">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 20h18L14.5 6.5a2 2 0 0 0-3.5 0L8 12l-1.5-2.5L3 20z"></path>
+              </svg>
+            </div>
             <div>
               <h3>TurismoUQ Quindío</h3>
               <small>Sistema Central de Alojamientos Turísticos</small>
@@ -306,7 +347,7 @@
         <!-- Sello de Recepción y Firma -->
         <div class="voucher-pie-firmas">
           <div class="nota-voucher">
-            <small>* Comprobante emitido a través de la vista protegida <code>V_RECEPCION_VOUCHER_RESERVA</code> para atención al huésped.</small>
+            <small>* Comprobante oficial de reserva y check-in emitido por Recepción TurismoUQ Quindío.</small>
           </div>
           <div class="sello-digital">
             <div class="sello-borde">

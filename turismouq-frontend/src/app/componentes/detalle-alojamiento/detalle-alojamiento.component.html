@@ -25,7 +25,6 @@
           </svg>
           4.95 · Anfitrión Verificado
         </span>
-        <span class="badge-id-alojamiento">ID #{{ alojamiento.idAlojamiento }}</span>
       </div>
 
       <h1 class="titulo-showcase">{{ alojamiento.nombre }}</h1>
@@ -99,10 +98,10 @@
             <div class="info-hab">
               <div class="fila-titulo-hab">
                 <h4>{{ h.numeroNombre }}</h4>
-                <span class="codigo-hab">HAB #{{ h.idHabitacion }}</span>
+                <span class="codigo-hab">Disponible</span>
               </div>
               <p class="detalle-cama">
-                <span>Configuración: <strong>{{ h.tipoCama || 'Cama Doble Estándar' }}</strong></span>
+                <span>Cama: <strong>{{ h.tipoCama || 'Cama Doble Estándar' }}</strong></span>
               </p>
             </div>
 
@@ -134,8 +133,8 @@
             </svg>
           </div>
           <div>
-            <h4>Cálculo Ponderado de Tarifas</h4>
-            <p>El procedimiento <code>PKG_TURISMO_UQ.sp_cotizar_desglose</code> evalúa día por día si tu estadía cruza fechas de temporada alta o baja para liquidar el desglose exacto.</p>
+            <h4>Tarifa Transparente por Temporada</h4>
+            <p>Evaluamos cada noche de tu estadía según nuestro calendario oficial de temporada alta y baja, mostrándote el desglose exacto antes de confirmar.</p>
           </div>
         </div>
 
@@ -146,8 +145,8 @@
             </svg>
           </div>
           <div>
-            <h4>Protección Anti-Solapamiento</h4>
-            <p>Al confirmar tu reserva, el disparador en la base de datos verifica la disponibilidad real en la tabla <code>RESERVA</code> para evitar cruces de fecha.</p>
+            <h4>Disponibilidad Garantizada al Instante</h4>
+            <p>Tu habitación queda protegida automáticamente contra reservas simultáneas o cruces de fechas desde el momento en que confirmas.</p>
           </div>
         </div>
       </div>
@@ -248,7 +247,7 @@
             </div>
 
             <div class="fila-resumen fila-ponderacion">
-              <span>Ponderación PL/SQL</span>
+              <span>Modalidad aplicada</span>
               <span class="badge-ponderacion">{{ cotizacion.descripcionTemporadas }}</span>
             </div>
           </div>

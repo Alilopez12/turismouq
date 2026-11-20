@@ -85,6 +85,22 @@ public class AnaliticaControlador {
         ));
     }
 
+    @GetMapping("/habitacion-top-temporada-alta")
+    public ResponseEntity<RespuestaApiDTO<List<Map<String, Object>>>> obtenerHabitacionTopTemporadaAlta() {
+        return ResponseEntity.ok(RespuestaApiDTO.exito(
+                "Consulta 9: Habitación con más reservas en temporada alta",
+                analiticaServicio.obtenerHabitacionTopTemporadaAlta()
+        ));
+    }
+
+    @GetMapping("/clientes-mas-municipios")
+    public ResponseEntity<RespuestaApiDTO<List<Map<String, Object>>>> obtenerClientesMasMunicipios() {
+        return ResponseEntity.ok(RespuestaApiDTO.exito(
+                "Consulta 10: Listado de clientes con más municipios visitados",
+                analiticaServicio.obtenerClientesMasMunicipios()
+        ));
+    }
+
     @GetMapping("/auditoria-tarifas")
     public ResponseEntity<RespuestaApiDTO<List<Map<String, Object>>>> obtenerAuditoriaTarifas() {
         return ResponseEntity.ok(RespuestaApiDTO.exito(

@@ -140,10 +140,18 @@
   padding: 0.65rem 1rem;
   border: 1.5px solid #D9D2C5;
   border-radius: 10px;
-  font-size: 0.88rem;
-  min-width: 280px;
+  font-size: 0.86rem;
+  min-width: 340px;
+  max-width: 100%;
   background: #FCFBF9;
   font-family: inherit;
+}
+
+@media (max-width: 680px) {
+  .input-buscar {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 .input-buscar:focus {
@@ -205,25 +213,51 @@
 .tabla-recepcion {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
 }
 
 .tabla-recepcion th {
   background: #F8F5EE;
-  padding: 0.85rem 1rem;
+  padding: 0.75rem 0.65rem;
   text-align: left;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #4A5B51;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   border-bottom: 1.5px solid #E4DCCF;
+  white-space: nowrap;
 }
 
 .tabla-recepcion td {
-  padding: 0.95rem 1rem;
+  padding: 0.82rem 0.65rem;
   border-bottom: 1px solid #EFEAE0;
   color: #26382E;
+  vertical-align: middle;
+}
+
+.celda-doble {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.aloj-nombre,
+.fecha-out {
+  font-weight: 600;
+  color: #1F2E25;
+  white-space: nowrap;
+}
+
+.muni-sub,
+.noches-sub {
+  font-size: 0.75rem;
+  color: #6C7A71;
+}
+
+.doc-code {
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .tabla-recepcion tr:hover {
@@ -489,8 +523,15 @@
 }
 
 .emblema-triangulo {
-  font-size: 1.6rem;
-  color: #C25B3B;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--gradiente-coral, linear-gradient(135deg, #B65D38, #D17B56));
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .voucher-logo h3 {
@@ -657,6 +698,45 @@
 .sello-borde small {
   font-size: 0.65rem;
   letter-spacing: 0.1em;
+}
+
+.chips-voucher-rapido {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.lbl-rapido {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6C7A71;
+  margin-right: 0.15rem;
+}
+
+.chip-voucher {
+  padding: 0.28rem 0.72rem;
+  border-radius: 9999px;
+  background: #F6F2EB;
+  border: 1px solid #DDD4C6;
+  color: #3E4D44;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.chip-voucher:hover {
+  background: #ECE4D7;
+  border-color: #B65D38;
+  color: #8D4122;
+}
+
+.chip-voucher.activo {
+  background: #204231;
+  border-color: #204231;
+  color: #FFFFFF;
 }
 
 /* Reglas de Impresión */

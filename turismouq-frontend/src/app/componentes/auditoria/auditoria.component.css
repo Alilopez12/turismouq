@@ -609,6 +609,16 @@
   border-radius: 20px;
 }
 
+.tarjeta-bitacora .tabla-datos th {
+  padding: 0.72rem 0.58rem;
+  font-size: 0.72rem;
+}
+
+.tarjeta-bitacora .tabla-datos td {
+  padding: 0.75rem 0.58rem;
+  font-size: 0.8rem;
+}
+
 .cabecera-auditoria {
   display: flex;
   justify-content: space-between;

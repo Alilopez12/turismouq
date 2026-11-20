@@ -33,11 +33,14 @@ export class AnaliticaComponent implements OnInit {
   datosVistaMat: any[] = [];
   datosUnpivot: any[] = [];
   datosServicios: any[] = [];
+  datosHabitacionTopAlta: any[] = [];
+  datosClientesMunicipios: any[] = [];
 
   // Filtros
   fechaInicio = '2025-01-01';
   fechaFin = '2025-12-31';
   municipioSeleccionadoRank = 'TODOS';
+  filtroClienteMuni = '';
 
   // Control de acordeón SQL por consulta
   verSql: { [key: number]: boolean } = {};
@@ -253,6 +256,73 @@ JOIN RESERVA_HABITACION rh ON h.id_habitacion = rh.id_habitacion
 JOIN RESERVA r ON rh.id_reserva = r.id_reserva
 GROUP BY ta.nombre
 ORDER BY ingresos_totales DESC;`
+    },
+    9: {
+      numero: 9,
+      nombre: 'Habitación con Más Reservas en Temporada Alta',
+      tecnica: 'Ranking por demanda y cruce con calendario de Temporada Alta',
+      proposito: 'Identificar la habitación líder absoluta en demanda durante los períodos oficiales de Temporada Alta (Semana Santa, vacaciones de mitad de año y diciembre-enero).',
+      codigoSql: `-- ============================================================================
+-- CONSULTA 9: Habitación con más reservas en temporada alta
+-- ============================================================================
+SELECT *
+FROM (
+    SELECT
+        h.id_habitacion,
+        h.numero_nombre AS habitacion,
+        h.tipo_cama,
+        a.nombre AS alojamiento,
+        m.nombre AS municipio,
+        COUNT(DISTINCT r.id_reserva) AS reservas_temporada_alta,
+        SUM(rh.subtotal) AS ingresos_temporada_alta,
+        RANK() OVER (ORDER BY COUNT(DISTINCT r.id_reserva) DESC) AS puesto
+    FROM HABITACION h
+    JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+    JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+    JOIN RESERVA_HABITACION rh ON h.id_habitacion = rh.id_habitacion
+    JOIN RESERVA r ON rh.id_reserva = r.id_reserva
+    WHERE r.estado != 'CANCELADA'
+      AND EXISTS (
+          SELECT 1
+          FROM PERIODO_TEMPORADA pt
+          WHERE pt.id_temporada = 2
+            AND r.fecha_check_in <= pt.fecha_fin
+            AND (r.fecha_check_out - 1) >= pt.fecha_inicio
+      )
+    GROUP BY h.id_habitacion, h.numero_nombre, h.tipo_cama, a.nombre, m.nombre
+)
+WHERE puesto <= 10
+ORDER BY puesto, id_habitacion;`
+    },
+    10: {
+      numero: 10,
+      nombre: 'Listado de Clientes con Más Municipios Visitados',
+      tecnica: 'Conteo único de destinos y agrupación de municipios por huésped',
+      proposito: 'Identificar los huéspedes más exploradores del Quindío ordenados por la cantidad de municipios distintos visitados, concatenando en línea sus destinos.',
+      codigoSql: `-- ============================================================================
+-- CONSULTA 10: Listado de clientes con más municipios visitados (LISTAGG)
+-- ============================================================================
+SELECT *
+FROM (
+    SELECT
+        c.id_cliente,
+        c.documento,
+        c.nombres || ' ' || c.apellidos AS cliente,
+        COUNT(DISTINCT m.id_municipio) AS municipios_visitados,
+        COUNT(DISTINCT r.id_reserva) AS total_reservas,
+        NVL(SUM(r.total), 0) AS gasto_total,
+        LISTAGG(DISTINCT m.nombre, ', ') WITHIN GROUP (ORDER BY m.nombre) AS listado_municipios
+    FROM CLIENTE c
+    JOIN RESERVA r ON c.id_cliente = r.id_cliente
+    JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva
+    JOIN HABITACION h ON rh.id_habitacion = h.id_habitacion
+    JOIN ALOJAMIENTO a ON h.id_alojamiento = a.id_alojamiento
+    JOIN MUNICIPIO m ON a.id_municipio = m.id_municipio
+    WHERE r.estado != 'CANCELADA'
+    GROUP BY c.id_cliente, c.documento, c.nombres, c.apellidos
+    ORDER BY municipios_visitados DESC, total_reservas DESC, gasto_total DESC
+)
+WHERE ROWNUM <= 30;`
     }
   };
 
@@ -313,6 +383,18 @@ ORDER BY ingresos_totales DESC;`
       case 8:
         this.turismoService.obtenerServiciosNegocio().subscribe({
           next: d => { this.datosServicios = d || []; this.cargando = false; this.cdr.detectChanges(); },
+          error: e => { console.error(e); this.errorMensaje = 'No se pudo conectar con el backend o la consulta falló.'; this.cargando = false; this.cdr.detectChanges(); }
+        });
+        break;
+      case 9:
+        this.turismoService.obtenerHabitacionTopTemporadaAlta().subscribe({
+          next: d => { this.datosHabitacionTopAlta = d || []; this.cargando = false; this.cdr.detectChanges(); },
+          error: e => { console.error(e); this.errorMensaje = 'No se pudo conectar con el backend o la consulta falló.'; this.cargando = false; this.cdr.detectChanges(); }
+        });
+        break;
+      case 10:
+        this.turismoService.obtenerClientesMasMunicipios().subscribe({
+          next: d => { this.datosClientesMunicipios = d || []; this.cargando = false; this.cdr.detectChanges(); },
           error: e => { console.error(e); this.errorMensaje = 'No se pudo conectar con el backend o la consulta falló.'; this.cargando = false; this.cdr.detectChanges(); }
         });
         break;
@@ -511,5 +593,32 @@ ORDER BY ingresos_totales DESC;`
     const total = this.obtenerTotalIngresosTipos();
     if (total === 0) return 0;
     return Math.round((ingresos / total) * 100);
+  }
+
+  // --- Helpers Consulta 9 (Habitación Top Temporada Alta) ---
+  obtenerHabitacionGanadora(): any | null {
+    return this.datosHabitacionTopAlta.length > 0 ? this.datosHabitacionTopAlta[0] : null;
+  }
+
+  // --- Helpers Consulta 10 (Clientes con más municipios visitados) ---
+  obtenerClientesMunicipiosFiltrados(): any[] {
+    const termino = (this.filtroClienteMuni || '').trim().toLowerCase();
+    if (!termino) return this.datosClientesMunicipios;
+    return this.datosClientesMunicipios.filter(c => {
+      const nombre = (this.getProp(c, 'cliente') || '').toString().toLowerCase();
+      const doc = (this.getProp(c, 'documento') || '').toString().toLowerCase();
+      const munis = (this.getProp(c, 'listado_municipios') || '').toString().toLowerCase();
+      return nombre.includes(termino) || doc.includes(termino) || munis.includes(termino);
+    });
+  }
+
+  separarMunicipios(listado: any): string[] {
+    if (!listado) return [];
+    return listado.toString().split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+  }
+
+  obtenerMaximoMunicipiosCliente(): number {
+    if (this.datosClientesMunicipios.length === 0) return 0;
+    return Math.max(...this.datosClientesMunicipios.map(c => Number(this.getProp(c, 'municipios_visitados')) || 0));
   }
 }

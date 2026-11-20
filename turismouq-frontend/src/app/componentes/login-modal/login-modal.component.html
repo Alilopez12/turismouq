@@ -12,8 +12,8 @@
           </svg>
         </div>
         <div>
-          <h3>Autenticación y Control de Acceso</h3>
-          <p class="subtexto-cabecera">Acceso granular por roles definidos para TurismoUQ</p>
+          <h3>Acceso al Sistema</h3>
+          <p class="subtexto-cabecera">Ingresa con tu cuenta del equipo TurismoUQ</p>
         </div>
       </div>
       <button type="button" class="btn-cerrar" (click)="cerrarModal()" title="Cerrar modal">
@@ -84,9 +84,9 @@
               class="input-control" 
               placeholder="Ej: USR_RECEPCION_01 o admin" 
               [(ngModel)]="loginForm.usuario" 
-              name="usuario" 
+              name="turismouq_usuario" 
               required 
-              autocomplete="username" />
+              autocomplete="off" />
           </div>
         </div>
 
@@ -102,15 +102,15 @@
               class="input-control" 
               placeholder="••••••••••••" 
               [(ngModel)]="loginForm.contrasena" 
-              name="password" 
+              name="turismouq_clave" 
               required 
-              autocomplete="current-password" />
+              autocomplete="new-password" />
           </div>
         </div>
 
         <button type="submit" class="btn-primario-auth" [disabled]="cargando">
           <span *ngIf="!cargando">Acceder al Sistema</span>
-          <span *ngIf="cargando">Verificando en Oracle XE...</span>
+          <span *ngIf="cargando">Verificando credenciales...</span>
         </button>
       </form>
 
@@ -141,7 +141,7 @@
             class="chip-rol chip-gerente" 
             (click)="autollenarUsuario('USR_GERENTE_01', 'Turismo2026#')">
             <strong>Gerente</strong>
-            <small>Data Studio & Ocupación</small>
+            <small>Reportes & Ocupación</small>
           </button>
 
           <button 
@@ -213,7 +213,7 @@
         </div>
 
         <div class="campo-grupo">
-          <label class="etiqueta-campo">Rol Asignado en la Base de Datos</label>
+          <label class="etiqueta-campo">Perfil de Acceso</label>
           <select 
             class="input-control selector-rol" 
             [(ngModel)]="registroForm.rol" 
@@ -223,13 +223,13 @@
             </option>
           </select>
           <small class="ayuda-rol">
-            Cada rol otorga permisos y vistas exclusivas definidas según las reglas de negocio en Oracle 21c.
+            Cada perfil habilita únicamente las herramientas necesarias para tu rol dentro de la plataforma.
           </small>
         </div>
 
         <button type="submit" class="btn-primario-auth" [disabled]="cargando">
           <span *ngIf="!cargando">Registrar y Acceder</span>
-          <span *ngIf="cargando">Guardando en USUARIO_SISTEMA...</span>
+          <span *ngIf="cargando">Creando cuenta...</span>
         </button>
       </form>
     </div>

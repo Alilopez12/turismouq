@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TurismoService } from '../../servicios/turismo.service';
-import { Habitacion, ReservaItem, ReservaPeticion, ReservaRespuesta, CotizacionRespuesta } from '../../modelos/modelos';
+import { Alojamiento, Habitacion, ReservaItem, ReservaPeticion, ReservaRespuesta, CotizacionRespuesta } from '../../modelos/modelos';
 
 @Component({
   selector: 'app-formulario-reserva',
@@ -13,6 +13,12 @@ import { Habitacion, ReservaItem, ReservaPeticion, ReservaRespuesta, CotizacionR
   styleUrl: './formulario-reserva.component.css'
 })
 export class FormularioReservaComponent implements OnInit {
+
+  // Catálogo amigable para selector de propiedad y habitación
+  alojamientos: Alojamiento[] = [];
+  habitacionesAlojamiento: Habitacion[] = [];
+  idAlojamientoSeleccionado: number | null = null;
+  mostrarBancoPruebas = false;
 
   // Campos de la reserva
   idHabitacion: number = 1;
@@ -66,15 +72,57 @@ export class FormularioReservaComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+      if (params['idAlojamiento']) this.idAlojamientoSeleccionado = Number(params['idAlojamiento']);
       if (params['idHabitacion']) this.idHabitacion = Number(params['idHabitacion']);
       if (params['checkIn']) this.fechaCheckIn = params['checkIn'];
       if (params['checkOut']) this.fechaCheckOut = params['checkOut'];
+
+      if (this.idAlojamientoSeleccionado) {
+        this.cargarHabitacionesDeAlojamiento(this.idAlojamientoSeleccionado, false);
+      }
 
       this.calcularCotizacionLive();
       this.cdr.detectChanges();
     });
 
+    this.cargarAlojamientosSelector();
     this.cargarReservasRecientes();
+  }
+
+  cargarAlojamientosSelector(): void {
+    this.turismoService.obtenerAlojamientos().subscribe({
+      next: (lista) => {
+        this.alojamientos = lista || [];
+        if (!this.idAlojamientoSeleccionado && this.alojamientos.length > 0) {
+          this.idAlojamientoSeleccionado = this.alojamientos[0].idAlojamiento;
+          this.cargarHabitacionesDeAlojamiento(this.idAlojamientoSeleccionado, false);
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
+  }
+
+  alCambiarAlojamiento(): void {
+    if (this.idAlojamientoSeleccionado) {
+      this.cargarHabitacionesDeAlojamiento(this.idAlojamientoSeleccionado, true);
+    } else {
+      this.habitacionesAlojamiento = [];
+    }
+  }
+
+  cargarHabitacionesDeAlojamiento(idAloj: number, autoseleccionarPrimera: boolean): void {
+    this.turismoService.obtenerHabitaciones(idAloj).subscribe({
+      next: (habs) => {
+        this.habitacionesAlojamiento = habs || [];
+        if (autoseleccionarPrimera && this.habitacionesAlojamiento.length > 0) {
+          this.idHabitacion = this.habitacionesAlojamiento[0].idHabitacion;
+          this.calcularCotizacionLive();
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
   }
 
   calcularCotizacionLive(): void {

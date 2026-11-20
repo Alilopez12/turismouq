@@ -4,48 +4,84 @@
 -- MOTOR: ORACLE XE 21c (PDB: XEPDB1)
 -- ============================================================================
 
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 
--- 1. Creación de la tabla USUARIO_SISTEMA
+-- 1. Creación / Adecuación idempotente de USUARIO_SISTEMA
 BEGIN
     EXECUTE IMMEDIATE '
     CREATE TABLE USUARIO_SISTEMA (
         ID_USUARIO      NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        USUARIO         VARCHAR2(50) NOT NULL UNIQUE,
-        CONTRASENA      VARCHAR2(100) NOT NULL,
-        NOMBRE_COMPLETO VARCHAR2(100) NOT NULL,
-        CORREO          VARCHAR2(100) NOT NULL UNIQUE,
-        ROL             VARCHAR2(50) NOT NULL,
-        FECHA_CREACION  DATE DEFAULT SYSDATE NOT NULL,
-        CONSTRAINT CHK_USUARIO_ROL CHECK (
-            ROL IN (''ROL_RECEPCION'', ''ROL_ADMIN_ALOJAMIENTO'', ''ROL_GERENTE'', ''ROL_AUDITOR'', ''ROL_SUPER_ADMIN'')
-        )
+        NOMBRE_USUARIO  VARCHAR2(50) NOT NULL,
+        CORREO          VARCHAR2(120) NOT NULL,
+        CONTRASENA      VARCHAR2(256) NOT NULL,
+        ROL             VARCHAR2(40) NOT NULL,
+        ESTADO          VARCHAR2(20) DEFAULT ''ACTIVO'' NOT NULL,
+        NOMBRE_COMPLETO VARCHAR2(100),
+        CONSTRAINT UK_USUARIO_NOMBRE UNIQUE (NOMBRE_USUARIO),
+        CONSTRAINT UK_USUARIO_CORREO UNIQUE (CORREO)
     )';
     DBMS_OUTPUT.PUT_LINE('Tabla USUARIO_SISTEMA creada exitosamente.');
 EXCEPTION
     WHEN OTHERS THEN
         IF SQLCODE = -955 THEN
-            DBMS_OUTPUT.PUT_LINE('La tabla USUARIO_SISTEMA ya existe.');
-        ELSE RAISE; END IF;
+            DBMS_OUTPUT.PUT_LINE('La tabla USUARIO_SISTEMA ya existe; validando columnas...');
+        ELSE
+            RAISE;
+        END IF;
 END;
 /
 
--- 2. Poblado de usuarios predeterminados de cátedra
+-- Asegurar columna NOMBRE_COMPLETO si viene de esquema previo
+BEGIN
+    EXECUTE IMMEDIATE 'ALTER TABLE USUARIO_SISTEMA ADD (NOMBRE_COMPLETO VARCHAR2(100) DEFAULT ''Usuario TurismoUQ'')';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -1430 THEN RAISE; END IF;
+END;
+/
+
+-- Asegurar restricción CHK_USUARIO_ROL con todos los roles oficiales + Super Admin
+BEGIN
+    BEGIN
+        EXECUTE IMMEDIATE 'ALTER TABLE USUARIO_SISTEMA DROP CONSTRAINT CHK_USUARIO_ROL';
+    EXCEPTION
+        WHEN OTHERS THEN NULL;
+    END;
+    EXECUTE IMMEDIATE '
+        ALTER TABLE USUARIO_SISTEMA ADD CONSTRAINT CHK_USUARIO_ROL CHECK (
+            ROL IN (''RECEPCION'', ''ADMINISTRADOR'', ''GERENTE'', ''AUDITOR'', ''ADMIN_ALOJAMIENTO'',
+                    ''ROL_RECEPCION'', ''ROL_ADMIN_ALOJAMIENTO'', ''ROL_GERENTE'', ''ROL_AUDITOR'', ''ROL_SUPER_ADMIN'')
+        )
+    ';
+END;
+/
+
+-- 2. Poblado idempotente de usuarios predeterminados de cátedra y aplicación
 MERGE INTO USUARIO_SISTEMA u
 USING (
-    SELECT 'USR_RECEPCION_01' AS usuario, 'Recep2026#' AS contrasena, 'Laura Gómez (Recepcionista)' AS nombre_completo, 'recepcion@turismouq.com' AS correo, 'ROL_RECEPCION' AS rol FROM dual UNION ALL
-    SELECT 'USR_ADMIN_01', 'Admin2026#', 'Carlos Mendoza (Administrador Alojamientos)', 'admin.aloj@turismouq.com', 'ROL_ADMIN_ALOJAMIENTO' FROM dual UNION ALL
-    SELECT 'USR_GERENTE_01', 'Geren2026#', 'Diana Morales (Gerente TurismoUQ)', 'gerencia@turismouq.com', 'ROL_GERENTE' FROM dual UNION ALL
-    SELECT 'USR_AUDITOR_01', 'Audit2026#', 'Felipe Restrepo (Auditor de Cumplimiento)', 'auditoria@turismouq.com', 'ROL_AUDITOR' FROM dual UNION ALL
-    SELECT 'ADMIN_TOTAL', 'Turismo2026#', 'Administrador Principal (Super Admin DBA)', 'dba@turismouq.com', 'ROL_SUPER_ADMIN' FROM dual UNION ALL
-    SELECT 'admin', 'admin123', 'Administrador del Sistema', 'admin@turismouq.com', 'ROL_SUPER_ADMIN' FROM dual
-) d ON (u.USUARIO = d.usuario)
+    SELECT 'ADMIN_TOTAL' AS nombre_usuario, 'Turismo2026#' AS contrasena, 'Administrador Principal (Super Admin)' AS nombre_completo, 'dba@turismouq.com' AS correo, 'ROL_SUPER_ADMIN' AS rol, 'ACTIVO' AS estado FROM dual UNION ALL
+    SELECT 'admin', 'Turismo2026#', 'Administrador del Sistema', 'admin@turismouq.com', 'ROL_SUPER_ADMIN', 'ACTIVO' FROM dual UNION ALL
+    SELECT 'USR_RECEPCION_01', 'Turismo2026#', 'Laura Gómez (Recepcionista)', 'recepcion@turismouq.com', 'ROL_RECEPCION', 'ACTIVO' FROM dual UNION ALL
+    SELECT 'USR_ADMIN_01', 'Turismo2026#', 'Carlos Mendoza (Admin Alojamiento)', 'admin.aloj@turismouq.com', 'ROL_ADMIN_ALOJAMIENTO', 'ACTIVO' FROM dual UNION ALL
+    SELECT 'USR_GERENTE_01', 'Turismo2026#', 'Diana Morales (Gerente TurismoUQ)', 'gerencia@turismouq.com', 'ROL_GERENTE', 'ACTIVO' FROM dual UNION ALL
+    SELECT 'USR_AUDITOR_01', 'Turismo2026#', 'Felipe Restrepo (Auditor)', 'auditoria@turismouq.com', 'ROL_AUDITOR', 'ACTIVO' FROM dual
+) d ON (u.NOMBRE_USUARIO = d.nombre_usuario)
 WHEN MATCHED THEN
-    UPDATE SET u.CONTRASENA = d.contrasena, u.NOMBRE_COMPLETO = d.nombre_completo, u.CORREO = d.correo, u.ROL = d.rol
+    UPDATE SET u.CONTRASENA = d.contrasena,
+               u.NOMBRE_COMPLETO = d.nombre_completo,
+               u.CORREO = d.correo,
+               u.ROL = d.rol,
+               u.ESTADO = d.estado
 WHEN NOT MATCHED THEN
-    INSERT (USUARIO, CONTRASENA, NOMBRE_COMPLETO, CORREO, ROL, FECHA_CREACION)
-    VALUES (d.usuario, d.contrasena, d.nombre_completo, d.correo, d.rol, SYSDATE);
+    INSERT (NOMBRE_USUARIO, CONTRASENA, NOMBRE_COMPLETO, CORREO, ROL, ESTADO)
+    VALUES (d.nombre_usuario, d.contrasena, d.nombre_completo, d.correo, d.rol, d.estado);
 
 COMMIT;
 PROMPT Usuarios de sistema inicializados correctamente en USUARIO_SISTEMA.
-EXIT;

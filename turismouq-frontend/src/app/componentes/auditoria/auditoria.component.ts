@@ -24,6 +24,8 @@ export class AuditoriaComponent implements OnInit {
   mensajeTarifa: string = '';
   tipoMensajeTarifa: 'exito' | 'error' = 'exito';
   ultimoCambio: any = null;
+  mostrarSqlDml = false;
+  filtroAuditoria = '';
 
   constructor(
     private turismoService: TurismoService,
@@ -84,8 +86,7 @@ export class AuditoriaComponent implements OnInit {
         this.guardandoTarifa = false;
         this.tipoMensajeTarifa = 'exito';
         this.ultimoCambio = res;
-        this.mensajeTarifa = res.mensaje || 'Tarifa actualizada en Oracle. El trigger TRG_AUDITORIA_TARIFA_STMT registró la traza exitosamente.';
-        // Recargar inmediatamente la bitácora para que el nuevo log se observe al inicio
+        this.mensajeTarifa = res.mensaje || 'Tarifa actualizada y registrada en la bitácora de auditoría.';
         this.cargarAuditorias();
         this.cdr.detectChanges();
       },
@@ -97,5 +98,16 @@ export class AuditoriaComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  get registrosFiltrados(): AuditoriaTarifaItem[] {
+    const q = this.filtroAuditoria.trim().toLowerCase();
+    if (!q) return this.registros;
+    return this.registros.filter(r =>
+      String(r.ID_HABITACION || '').includes(q) ||
+      (r.TIPO_OPERACION || '').toLowerCase().includes(q) ||
+      (r.USUARIO_ORACLE || '').toLowerCase().includes(q) ||
+      (r.DETALLE_SENTENCIA || '').toLowerCase().includes(q)
+    );
   }
 }

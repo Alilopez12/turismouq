@@ -8,7 +8,14 @@
 --  con SAVEPOINT y demostración de un rollback parcial."
 -- ============================================================================
 
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 SET SERVEROUTPUT ON SIZE UNLIMITED;
 
 PROMPT ============================================================================
@@ -21,13 +28,24 @@ DECLARE
     v_total          NUMBER;
     v_estado_reserva VARCHAR2(25);
     v_mensaje        VARCHAR2(500);
+    v_fecha_in       DATE;
+    v_fecha_out      DATE;
 BEGIN
+    -- Calcular rango libre dinámico para garantizar idempotencia ante re-ejecuciones
+    SELECT GREATEST(NVL(MAX(r.fecha_check_out), DATE '2027-09-01') + 1, DATE '2027-09-01')
+    INTO v_fecha_in
+    FROM RESERVA r
+    JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva
+    WHERE rh.id_habitacion = 10
+      AND r.estado != 'CANCELADA';
+    v_fecha_out := v_fecha_in + 4;
+
     -- Ejecución con p_simular_fallo = 0 (cobro exitoso)
     PKG_TURISMO_UQ.sp_registrar_reserva_con_pago(
         p_id_cliente     => 1,
         p_id_habitacion  => 10,
-        p_fecha_in       => TO_DATE('2027-09-01', 'YYYY-MM-DD'),
-        p_fecha_out      => TO_DATE('2027-09-05', 'YYYY-MM-DD'),
+        p_fecha_in       => v_fecha_in,
+        p_fecha_out      => v_fecha_out,
         p_num_huespedes  => 2,
         p_metodo_pago    => 'TARJETA_CREDITO',
         p_simular_fallo  => 0,
@@ -54,13 +72,23 @@ DECLARE
     v_estado_reserva VARCHAR2(25);
     v_mensaje        VARCHAR2(500);
     v_conteo_pago    NUMBER;
+    v_fecha_in       DATE;
+    v_fecha_out      DATE;
 BEGIN
+    SELECT GREATEST(NVL(MAX(r.fecha_check_out), DATE '2027-09-10') + 1, DATE '2027-09-10')
+    INTO v_fecha_in
+    FROM RESERVA r
+    JOIN RESERVA_HABITACION rh ON r.id_reserva = rh.id_reserva
+    WHERE rh.id_habitacion = 12
+      AND r.estado != 'CANCELADA';
+    v_fecha_out := v_fecha_in + 4;
+
     -- Ejecución con p_simular_fallo = 1 (simula rechazo de pasarela tras crear reserva)
     PKG_TURISMO_UQ.sp_registrar_reserva_con_pago(
         p_id_cliente     => 2,
         p_id_habitacion  => 12,
-        p_fecha_in       => TO_DATE('2027-09-10', 'YYYY-MM-DD'),
-        p_fecha_out      => TO_DATE('2027-09-14', 'YYYY-MM-DD'),
+        p_fecha_in       => v_fecha_in,
+        p_fecha_out      => v_fecha_out,
         p_num_huespedes  => 2,
         p_metodo_pago    => 'PSE',
         p_simular_fallo  => 1,

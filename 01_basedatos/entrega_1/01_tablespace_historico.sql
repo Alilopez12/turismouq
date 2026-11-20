@@ -26,22 +26,43 @@
 --    un 70%, o mapear el datafile hacia discos de almacenamiento masivo secundario.
 -- ============================================================================
 
-ALTER SESSION SET CONTAINER = XEPDB1;
-
--- 1. Creación del Tablespace Dedicado
 BEGIN
-    EXECUTE IMMEDIATE '
-        CREATE TABLESPACE TBS_HISTORICO_RESERVAS
-        DATAFILE ''C:\APP\DELL\PRODUCT\21C\ORADATA\XE\XEPDB1\TBS_HISTORICO_RESERVAS01.DBF''
-        SIZE 50M
-        AUTOEXTEND ON NEXT 10M MAXSIZE 2G
-        EXTENT MANAGEMENT LOCAL
-        SEGMENT SPACE MANAGEMENT AUTO
-    ';
-    DBMS_OUTPUT.PUT_LINE('Tablespace TBS_HISTORICO_RESERVAS creado exitosamente.');
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CONTAINER = XEPDB1';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
+
+-- 1. Creación del Tablespace Dedicado (ruta explícita con respaldo portable)
+BEGIN
+    BEGIN
+        EXECUTE IMMEDIATE '
+            CREATE TABLESPACE TBS_HISTORICO_RESERVAS
+            DATAFILE ''C:\APP\DELL\PRODUCT\21C\ORADATA\XE\XEPDB1\TBS_HISTORICO_RESERVAS01.DBF''
+            SIZE 50M
+            AUTOEXTEND ON NEXT 10M MAXSIZE 2G
+            EXTENT MANAGEMENT LOCAL
+            SEGMENT SPACE MANAGEMENT AUTO
+        ';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLCODE IN (-959, -1543) THEN
+                NULL;
+            ELSE
+                -- Respaldo portable usando el directorio por defecto de la instancia Oracle
+                EXECUTE IMMEDIATE '
+                    CREATE TABLESPACE TBS_HISTORICO_RESERVAS
+                    DATAFILE ''TBS_HISTORICO_RESERVAS01.DBF''
+                    SIZE 50M
+                    AUTOEXTEND ON NEXT 10M MAXSIZE 2G
+                    EXTENT MANAGEMENT LOCAL
+                    SEGMENT SPACE MANAGEMENT AUTO
+                ';
+            END IF;
+    END;
+    DBMS_OUTPUT.PUT_LINE('Tablespace TBS_HISTORICO_RESERVAS listo.');
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE = -959 OR SQLCODE = -1543 THEN
+        IF SQLCODE IN (-959, -1543) THEN
             DBMS_OUTPUT.PUT_LINE('El tablespace TBS_HISTORICO_RESERVAS ya existe.');
         ELSE
             RAISE;
@@ -49,11 +70,22 @@ EXCEPTION
 END;
 /
 
--- 2. Otorgar cuota ilimitada al usuario de la aplicación
-ALTER USER TURISMO_UQ QUOTA UNLIMITED ON TBS_HISTORICO_RESERVAS;
+-- 2. Otorgar cuota ilimitada al usuario activo de la aplicación
+BEGIN
+    EXECUTE IMMEDIATE 'ALTER USER ' || SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') || ' QUOTA UNLIMITED ON TBS_HISTORICO_RESERVAS';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
 
--- 3. Conexión al esquema TURISMO_UQ y creación de tablas históricas
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+-- 3. Conexión al esquema destino y creación de tablas históricas
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 
 -- Tabla histórica de reservas archivadas
 BEGIN

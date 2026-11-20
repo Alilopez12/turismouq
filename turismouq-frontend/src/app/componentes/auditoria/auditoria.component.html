@@ -3,12 +3,12 @@
   <header class="encabezado-auditoria">
     <div>
       <div class="badges-seguridad">
-        <span class="insignia insignia-finca">Trazabilidad y Auditoría</span>
-        <span class="badge-trigger">TRG_AUDITORIA_TARIFA_STMT</span>
+        <span class="insignia insignia-finca">Trazabilidad y Control</span>
+        <span class="badge-trigger">Registro Inmutable</span>
       </div>
-      <h2>Auditoría de Sentencias sobre Tarifas</h2>
+      <h2>Tarifas y Bitácora de Auditoría</h2>
       <p class="subtexto">
-        Trazabilidad inmutable de eventos DML (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) registrada automáticamente por el <strong>disparador a nivel de sentencia</strong> en la base de datos Oracle XE.
+        Actualiza precios por habitación y temporada con registro automático de historial, responsable y fecha exacta de modificación.
       </p>
     </div>
 
@@ -32,15 +32,15 @@
           </svg>
         </div>
         <div>
-          <h3>Demostración en Vivo: Modificador de Tarifas</h3>
+          <h3>Ajuste de Tarifa por Habitación</h3>
           <p class="sub-modificador">
-            Ejecuta un <code>UPDATE TARIFA</code> directamente en Oracle XE para disparar el compound trigger <code>TRG_AUDITORIA_TARIFA_STMT</code> y verificar la bitácora al instante.
+            Modifica el precio nocturno de Temporada Baja o Alta; cada ajuste queda auditado de inmediato en la bitácora inferior.
           </p>
         </div>
       </div>
       <span class="badge-en-vivo">
         <span class="punto-verde-pulso"></span>
-        Conexión en Vivo a Oracle XE
+        Auditoría Activa
       </span>
     </div>
 
@@ -49,8 +49,8 @@
         <!-- Campo: Habitación -->
         <div class="campo-grupo">
           <label for="habitacionId" class="campo-etiqueta">
-            <span>ID Habitación (1 - 400)</span>
-            <span class="etiqueta-ayuda">Habitación registrada</span>
+            <span>ID Habitación</span>
+            <span class="etiqueta-ayuda">1 a 400</span>
           </label>
           <div class="input-habitacion-wrapper">
             <input
@@ -78,7 +78,7 @@
         <div class="campo-grupo">
           <label class="campo-etiqueta">
             <span>Temporada</span>
-            <span class="etiqueta-ayuda">ID_TEMPORADA</span>
+            <span class="etiqueta-ayuda">Tipo de Temporada</span>
           </label>
           <div class="selector-temporada-grupo">
             <label class="opcion-temporada" [class.seleccionada]="idTemporadaModificar === 1">
@@ -112,7 +112,7 @@
         <div class="campo-grupo">
           <label for="precioNoche" class="campo-etiqueta">
             <span>Nuevo Precio por Noche (COP)</span>
-            <span class="etiqueta-ayuda">PRECIO_NOCHE</span>
+            <span class="etiqueta-ayuda">Valor en COP</span>
           </label>
           <div class="input-precio-wrapper">
             <span class="prefijo-moneda">$</span>
@@ -146,8 +146,10 @@
       <!-- Barra de Acciones del Formulario -->
       <div class="acciones-modificador">
         <div class="explicacion-dml">
-          <span class="etiqueta-sql">SQL a Ejecutar:</span>
-          <code>
+          <button type="button" class="btn btn-esquema" style="padding:0.45rem 0.85rem;font-size:0.8rem;" (click)="mostrarSqlDml = !mostrarSqlDml">
+            {{ mostrarSqlDml ? 'Ocultar vista SQL' : 'Ver sentencia técnica' }}
+          </button>
+          <code *ngIf="mostrarSqlDml" style="margin-left:0.75rem;">
             UPDATE TARIFA SET precio_noche = {{ nuevoPrecioModificar | number:'1.0-0' }}
             WHERE id_habitacion = {{ idHabitacionModificar }} AND id_temporada = {{ idTemporadaModificar }};
           </code>
@@ -161,7 +163,7 @@
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
           <span *ngIf="guardandoTarifa" class="spinner-boton"></span>
-          <span>{{ guardandoTarifa ? 'Ejecutando en Oracle...' : 'Actualizar Tarifa y Disparar Trigger' }}</span>
+          <span>{{ guardandoTarifa ? 'Guardando tarifa...' : 'Guardar Nueva Tarifa' }}</span>
         </button>
       </div>
     </form>
@@ -222,37 +224,46 @@
           </svg>
         </div>
         <div>
-          <h3>Historial de Modificaciones en Tabla TARIFA</h3>
-          <p class="sub-bitacora">Monitoreo continuo sobre la tabla de auditoría <code>AUDITORIA_TARIFA</code></p>
+          <h3>Historial de Cambios de Tarifa</h3>
+          <p class="sub-bitacora">Eventos registrados de forma automática e inmutable</p>
         </div>
       </div>
 
-      <span class="contador-eventos" *ngIf="!cargando">
-        {{ registros.length }} eventos auditados
-      </span>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <input
+          type="text"
+          class="control-input"
+          style="width:255px;padding:0.45rem 0.85rem;font-size:0.84rem;"
+          placeholder="Filtrar habitación o usuario..."
+          [(ngModel)]="filtroAuditoria"
+        />
+        <span class="contador-eventos" *ngIf="!cargando">
+          {{ registrosFiltrados.length }} eventos auditados
+        </span>
+      </div>
     </div>
 
     <div *ngIf="cargando" class="estado-auditoria">
       <div class="spinner-coral"></div>
-      <p>Recuperando trazas de auditoría...</p>
+      <p>Cargando historial de auditoría...</p>
     </div>
 
-    <div class="tabla-contenedor" *ngIf="!cargando && registros.length > 0">
+    <div class="tabla-contenedor" *ngIf="!cargando && registrosFiltrados.length > 0">
       <table class="tabla-datos">
         <thead>
           <tr>
-            <th>ID Log</th>
-            <th>Operación DML</th>
+            <th>ID</th>
+            <th>Operación</th>
             <th>Habitación</th>
             <th>Temporada</th>
-            <th>Comparativa de Tarifa (Anterior → Nuevo)</th>
-            <th>Usuario Oracle</th>
+            <th>Cambio de Tarifa (Anterior → Nuevo)</th>
+            <th>Responsable</th>
             <th>Fecha y Hora</th>
-            <th>Detalle de Sentencia</th>
+            <th>Observación</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let a of registros">
+          <tr *ngFor="let a of registrosFiltrados">
             <td>
               <span class="id-log-mono">#{{ a.ID_AUDITORIA }}</span>
             </td>

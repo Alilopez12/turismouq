@@ -14,7 +14,7 @@ export class OptimizadorCboComponent implements OnInit {
 
   planesCbo: CboAnalisisItem[] = [];
   cargandoCbo = false;
-  cboActivoId: string = 'Q1';
+  cboActivoId: string = 'q1';
 
   constructor(
     private turismoService: TurismoService,
@@ -30,6 +30,12 @@ export class OptimizadorCboComponent implements OnInit {
     this.turismoService.obtenerPlanesCbo().subscribe({
       next: (res) => {
         this.planesCbo = res || [];
+        if (
+          this.planesCbo.length > 0 &&
+          !this.planesCbo.some(p => p.id?.toLowerCase() === this.cboActivoId.toLowerCase())
+        ) {
+          this.cboActivoId = this.planesCbo[0].id;
+        }
         this.cargandoCbo = false;
         this.cdr.detectChanges();
       },
@@ -46,6 +52,6 @@ export class OptimizadorCboComponent implements OnInit {
   }
 
   obtenerPlanActivo(): CboAnalisisItem | undefined {
-    return this.planesCbo.find(p => p.id === this.cboActivoId);
+    return this.planesCbo.find(p => p.id?.toLowerCase() === this.cboActivoId.toLowerCase());
   }
 }

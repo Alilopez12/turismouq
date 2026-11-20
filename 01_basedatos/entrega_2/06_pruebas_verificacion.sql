@@ -5,7 +5,14 @@
 -- ============================================================================
 
 SET SERVEROUTPUT ON SIZE UNLIMITED;
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 
 PROMPT ========================================================================
 PROMPT INICIANDO BATERIA DE PRUEBAS DE VERIFICACION PL/SQL

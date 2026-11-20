@@ -9,7 +9,14 @@
 --  y comparen el comportamiento antes y después."
 -- ============================================================================
 
-ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ;
+BEGIN
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') IN ('SYS', 'SYSTEM') THEN
+        EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = TURISMO_UQ';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END;
+/
 
 -- ============================================================================
 -- PROCEDIMIENTO ALMACENADO CON BLOQUEO PESIMISTA: SELECT ... FOR UPDATE
@@ -23,7 +30,8 @@ CREATE OR REPLACE PROCEDURE sp_reserva_concurrente_for_update(
     p_timeout_seg   IN  NUMBER DEFAULT 5,
     p_id_reserva    OUT NUMBER,
     p_total         OUT NUMBER,
-    p_mensaje       OUT VARCHAR2
+    p_mensaje       OUT VARCHAR2,
+    p_retener_seg   IN  NUMBER DEFAULT 0
 ) IS
     v_capacidad    NUMBER;
     v_id_hab_lock  NUMBER;
@@ -87,6 +95,11 @@ BEGIN
         p_id_reserva, p_id_habitacion, p_total, p_total
     );
 
+    IF NVL(p_retener_seg, 0) > 0 THEN
+        -- Mantiene temporalmente el TX lock sobre HABITACION para demostraciones de concurrencia
+        DBMS_SESSION.SLEEP(LEAST(p_retener_seg, 30));
+    END IF;
+
     COMMIT; -- Libera el bloqueo pesimista y hace visibles los cambios
 
     p_mensaje := 'Reserva exitosa #' || p_id_reserva || ' procesada con bloqueo pesimista.';
@@ -97,59 +110,66 @@ END sp_reserva_concurrente_for_update;
 -- PROTOCOLO DOCUMENTADO DEL EXPERIMENTO DE CONCURRENCIA PARA SUSTENTACIÓN
 -- ============================================================================
 /*
-PASO A PASO PARA DEMOSTRAR EN SQL DEVELOPER CON 2 HOJAS DE TRABAJO (SESIÓN A Y SESIÓN B):
+PASO A PASO PARA DEMOSTRAR EN SQL DEVELOPER / SQL*PLUS CON 2 SESIONES (SESIÓN A Y SESIÓN B):
 
 --------------------------------------------------------------------------------
-EXPERIMENTO 1: SIN CONTROL PESIMISTA (COMPORTAMIENTO ANTES)
+EXPERIMENTO 1: SIN CONTROL PESIMISTA (COMPORTAMIENTO ANTES - READ COMMITTED)
 --------------------------------------------------------------------------------
-[SESIÓN A - 10:00:00]:
+[SESIÓN A - t=0s]:
 DECLARE v_id NUMBER; v_tot NUMBER;
 BEGIN
-    -- Inicia transacción sin commit inmediato
-    PKG_TURISMO_UQ.sp_crear_reserva(1, 15, TO_DATE('2027-10-01','YYYY-MM-DD'), TO_DATE('2027-10-05','YYYY-MM-DD'), 2, v_id, v_tot);
-    -- NO EJECUTA COMMIT AÚN (simula retardo de usuario en pasarela)
+    PKG_TURISMO_UQ.sp_crear_reserva(1, 15, TO_DATE('2029-10-01','YYYY-MM-DD'), TO_DATE('2029-10-05','YYYY-MM-DD'), 2, v_id, v_tot);
+    DBMS_SESSION.SLEEP(6); -- Simula retardo antes del COMMIT (pasarela / usuario)
+    COMMIT;
 END;
 /
 
-[SESIÓN B - 10:00:02]:
+[SESIÓN B - t=1s]:
 DECLARE v_id NUMBER; v_tot NUMBER;
 BEGIN
-    -- Intenta reservar la MISMA habitación #15 en las MISMAS fechas
-    PKG_TURISMO_UQ.sp_crear_reserva(2, 15, TO_DATE('2027-10-01','YYYY-MM-DD'), TO_DATE('2027-10-05','YYYY-MM-DD'), 2, v_id, v_tot);
+    -- Intenta reservar la MISMA habitación #15 en las MISMAS fechas concurrentemente
+    PKG_TURISMO_UQ.sp_crear_reserva(2, 15, TO_DATE('2029-10-01','YYYY-MM-DD'), TO_DATE('2029-10-05','YYYY-MM-DD'), 2, v_id, v_tot);
+    COMMIT;
 END;
 /
---> Observación: Sesión B queda EN ESPERA (HANGING) bloqueada en la cola de encolamiento (Enqueue TX en modo X)
-    porque la transacción de Sesión A retiene el bloque de índice/fila.
-    Si Sesión A ejecuta COMMIT, Sesión B se desbloquea e inmediatamente falla con ORA-20002.
+--> Observación real medida en Oracle XE:
+    Bajo el aislamiento por defecto READ COMMITTED, Sesión B NO ve los datos sin confirmar
+    de Sesión A (v_solapados = 0) y tampoco se bloquea sobre filas inexistentes. Ambas sesiones
+    completan el INSERT produciendo un solapamiento real (Anomalía Write Skew / Double Booking).
 
 --------------------------------------------------------------------------------
-EXPERIMENTO 2: CON CONTROL PESIMISTA SELECT ... FOR UPDATE WAIT 5 (COMPORTAMIENTO DESPUÉS)
+EXPERIMENTO 2: CON BLOQUEO PESIMISTA SELECT ... FOR UPDATE WAIT 5 (DESPUÉS)
 --------------------------------------------------------------------------------
-[SESIÓN A - 10:00:00]:
+[SESIÓN A - t=0s]:
 VARIABLE res_id NUMBER;
 VARIABLE res_tot NUMBER;
-VARIABLE res_msg VARCHAR2(200);
-EXEC sp_reserva_concurrente_for_update(1, 20, TO_DATE('2027-11-01','YYYY-MM-DD'), TO_DATE('2027-11-05','YYYY-MM-DD'), 2, 5, :res_id, :res_tot, :res_msg);
+VARIABLE res_msg VARCHAR2(300);
+EXEC sp_reserva_concurrente_for_update(1, 20, TO_DATE('2029-11-01','YYYY-MM-DD'), TO_DATE('2029-11-05','YYYY-MM-DD'), 2, 5, :res_id, :res_tot, :res_msg, 8);
 
-[SESIÓN B - 10:00:01]:
-EXEC sp_reserva_concurrente_for_update(2, 20, TO_DATE('2027-11-01','YYYY-MM-DD'), TO_DATE('2027-11-05','YYYY-MM-DD'), 2, 5, :res_id, :res_tot, :res_msg);
---> Observación: Sesión B espera un máximo de 5 segundos. Como Sesión A retiene el bloqueo,
-    Sesión B no se congela indefinidamente sino que captura ORA-20005: 'Recurso Bloqueado: 
-    La habitación está siendo reservada por otra transacción activa', devolviendo control al cliente.
+[SESIÓN B - t=1s]:
+VARIABLE res_id NUMBER;
+VARIABLE res_tot NUMBER;
+VARIABLE res_msg VARCHAR2(300);
+EXEC sp_reserva_concurrente_for_update(2, 20, TO_DATE('2029-11-01','YYYY-MM-DD'), TO_DATE('2029-11-05','YYYY-MM-DD'), 2, 5, :res_id, :res_tot, :res_msg, 0);
+--> Observación real medida en Oracle XE:
+    Sesión A retiene un TX Lock exclusivo (lmode/request = 6, evento 'enq: TX - row lock contention')
+    sobre la fila de HABITACION #20 durante 8s. Sesión B queda serializada esperando hasta 5s
+    y luego intercepta ORA-30006 -> ORA-20005: 'Recurso Bloqueado (Concurrencia): La habitacion 20
+    esta siendo reservada en este momento por otra transaccion activa', evitando el double booking.
 
 --------------------------------------------------------------------------------
-CONSULTA DE MONITOREO DE BLOQUEOS (EJECUTAR DESDE SYS O DBA MIENTRAS OCURRE LA ESPERA):
+CONSULTA DE MONITOREO DE BLOQUEOS (EJECUTAR COMO SYS / DBA MIENTRAS OCURRE ESPERA):
 --------------------------------------------------------------------------------
-SELECT 
-    s1.sid AS sesion_bloqueadora,
-    s2.sid AS sesion_bloqueada,
+SELECT
+    s2.blocking_session AS sid_bloqueador,
+    s2.sid AS sid_bloqueado,
+    s2.username,
     l.type AS tipo_bloqueo,
-    l.lmode AS modo_bloqueo,
+    l.lmode AS modo_retenido,
     l.request AS modo_solicitado,
     s2.event AS evento_espera,
-    s2.seconds_in_wait AS segundos_en_espera
-FROM v$lock l
-JOIN v$session s1 ON l.sid = s1.sid
-JOIN v$session s2 ON s2.blocking_session = s1.sid
-WHERE l.request > 0;
+    s2.seconds_in_wait AS seg_espera
+FROM v$session s2
+JOIN v$lock l ON l.sid = s2.sid AND l.request > 0
+WHERE s2.blocking_session IS NOT NULL;
 */

@@ -1,0 +1,16 @@
+# Maven / Java Build Artifacts
+turismouq-backend/target/
+*.jar
+*.war
+*.class
+
+# Angular / Node Build Artifacts
+turismouq-frontend/dist/
+turismouq-frontend/.angular/
+turismouq-frontend/node_modules/
+
+# Logs, Temp & IDE
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
