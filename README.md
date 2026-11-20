@@ -1,12 +1,12 @@
 # TurismoUQ - Plataforma de Reservas Turísticas del Quindío
-**Asignatura:** Bases de Datos II (Código 12338)  
+**Asignatura:** Bases de Datos II   
 **Institución:** Universidad del Quindío - Facultad de Ingeniería de Sistemas y Computación  
 **Motor de Base de Datos:** Oracle Database 21c Express Edition (PDB: `XEPDB1`, Esquema: `TURISMO_UQ`)  
 **Stack Tecnológico:** Spring Boot 3 (Java 21) + Angular (HTML5 & CSS3)
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 turismouq/
@@ -68,7 +68,7 @@ turismouq/
 
 ---
 
-## 📊 Consultas Analíticas Implementadas (`02_consultas_analisis.sql` y `/analitica`)
+## Consultas Analíticas Implementadas (`02_consultas_analisis.sql` y `/analitica`)
 
 1. **Q01 (`PIVOT`):** Ocupación por municipio y mes (12 meses × 12 municipios).
 2. **Q02 (`ROLLUP` + `GROUPING`):** Subtotales jerárquicos de ingresos por municipio, tipo de alojamiento y temporada.
@@ -83,7 +83,7 @@ turismouq/
 
 ---
 
-## 🚀 Guía de Puesta en Marcha
+## Guía 
 
 ### 1. Base de Datos Oracle XE 21c (Instalación Limpia)
 Ejecutar de arriba a abajo en una sola pasada desde SQL*Plus o SQL Developer conectado en `XEPDB1` como `TURISMO_UQ` (o `SYSTEM`):
